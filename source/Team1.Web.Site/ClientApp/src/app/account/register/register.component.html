@@ -1,0 +1,182 @@
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-10">
+      <div class="text-center"><img [src]="logo" alt="Logo" class="img-fluid" /></div>
+      <h4>Register</h4>
+      <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+      <form class="form-horizontal" [cgBusy]="isBusy" name="form" (ngSubmit)="f.form.valid && submit()" [class.form-submitted]="f.submitted" #f="ngForm" novalidate>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group form-row">
+              <label for="email" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.email_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="email" class="form-control" id="email" name="email" [(ngModel)]="dto.email" #email="ngModel" email [autofocus]="true"
+                       [attr.maxlength]="dtoPropertyAttributes.email_Attributes.stringLength.maxLength" [required]="dtoPropertyAttributes.email_Attributes.required.value" />
+                <div *ngIf="email.invalid && (email.dirty || email.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="f.submitted && email.errors.required">
+                    {{dtoPropertyAttributes.email_Attributes | requiredErrorMessage}}
+                  </div>
+                  <div *ngIf="email.errors.email">
+                    {{dtoPropertyAttributes.email_Attributes.emailAddress.errorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="confirmEmail" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.confirmEmail_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="email" class="form-control" id="confirmEmail" name="confirmEmail" [(ngModel)]="dto.confirmEmail" #confirmEmail="ngModel" email
+                       [required]="dtoPropertyAttributes.confirmEmail_Attributes.required.value" pattern="{{emailEscaped}}" />
+                <div *ngIf="confirmEmail.invalid && (confirmEmail.dirty || confirmEmail.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="f.submitted && confirmEmail.errors.required">
+                    {{dtoPropertyAttributes.confirmEmail_Attributes | requiredErrorMessage}}
+                  </div>
+                  <div *ngIf="confirmEmail.errors.pattern">
+                    {{dtoPropertyAttributes.confirmEmail_Attributes.compare.errorMessage}}
+                  </div>
+                  <div *ngIf="confirmEmail.errors.email">
+                    {{dtoPropertyAttributes.confirmEmail_Attributes.emailAddress.errorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="firstName" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.firstName_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="text" id="firstName" name="firstName" [(ngModel)]="dto.firstName" #firstName="ngModel" class="form-control"
+                       [attr.maxlength]="dtoPropertyAttributes.firstName_Attributes.stringLength.maxLength" [required]="dtoPropertyAttributes.firstName_Attributes.required.value" />
+                <div *ngIf="f.submitted && firstName.invalid && (firstName.dirty || firstName.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="firstName.errors.required">
+                    {{dtoPropertyAttributes.firstName_Attributes | requiredErrorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="lastName" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.lastName_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="text" id="lastName" name="lastName" [(ngModel)]="dto.lastName" #lastName="ngModel" class="form-control"
+                       [attr.maxlength]="dtoPropertyAttributes.lastName_Attributes.stringLength.maxLength" [required]="dtoPropertyAttributes.lastName_Attributes.required.value" />
+                <div *ngIf="f.submitted && lastName.invalid && (lastName.dirty || lastName.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="lastName.errors.required">
+                    {{dtoPropertyAttributes.lastName_Attributes | requiredErrorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label class="control-label col-md-4" for="password"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.password_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="password" class="form-control" id="password" name="password" [(ngModel)]="dto.password" #password="ngModel"
+                       [required]="dtoPropertyAttributes.password_Attributes.required.value" />
+                <div *ngIf="f.submitted && password.invalid && (password.dirty || password.touched || f.submitted)" class="invalid-feedback d-block">{{dtoPropertyAttributes.password_Attributes | requiredErrorMessage}}</div>
+                <div class="form-text text-muted">
+                  <small>Password Requirements</small>
+                  <ul>
+                    <li><small>At least 12 characters</small></li>
+                    <li><small>At least 1 upper case and 1 lower case letter</small></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label class="control-label col-md-4" for="confirmPassword"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.confirmPassword_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" [(ngModel)]="dto.confirmPassword"
+                       #confirmPassword="ngModel" pattern="{{passwordEscaped}}" [required]="dtoPropertyAttributes.confirmPassword_Attributes.required.value" />
+                <div *ngIf="confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched || f.submitted)" class="invalid-feedback d-block">
+                  {{dtoPropertyAttributes.confirmPassword_Attributes.compare.errorMessage}}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group form-row">
+              <label for="birthDate" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.birthDate_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <div class="input-group">
+                  <input type="text" id="birthDate" [(ngModel)]="dto.birthDate" name="birthDate" class="form-control" #birthDate="ngModel"
+                         inputMaskDate bsDatepicker="dateMaskFormat" #dp="bsDatepicker" [maxDate]="maxBirthDate"
+                         [required]="dtoPropertyAttributes.birthDate_Attributes.required.value" />
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-info" (click)="dp.toggle()" type="button">
+                      <i class="far fa-calendar-alt"></i>
+                    </button>
+                  </div>
+                </div>
+                <div *ngIf="f.submitted && birthDate.invalid && (birthDate.dirty || birthDate.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="birthDate.errors.required">
+                    {{dtoPropertyAttributes.birthDate_Attributes | requiredErrorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="phone" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.phoneNumber_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="text" id="phone" name="phone" [(ngModel)]="dto.phoneNumber" #phone="ngModel" class="form-control" inputMaskPhone [required]="dtoPropertyAttributes.phoneNumber_Attributes.required.value" />
+                <div *ngIf="f.submitted && phone.invalid && (phone.dirty || phone.touched || f.submitted)" class="invalid-feedback d-block">
+                  <div *ngIf="phone.errors.required">
+                    {{dtoPropertyAttributes.phoneNumber_Attributes | requiredErrorMessage}}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="tripoliNumbers" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.tripoliNumber_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="text" id="tripoliNumbers" name="tripoliNumber" [(ngModel)]="dto.tripoliNumber" #tripoliNumbers="ngModel" class="form-control"
+                       [attr.maxlength]="dtoPropertyAttributes.tripoliNumber_Attributes.stringLength.maxLength"
+                       [required]="dtoPropertyAttributes.tripoliNumber_Attributes.required.value" />
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="narNumber" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.narNumber_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <input type="text" id="narNumber" name="narNumber" [(ngModel)]="dto.narNumber" #narNumbers="ngModel" class="form-control"
+                       [attr.maxlength]="dtoPropertyAttributes.narNumber_Attributes.stringLength.maxLength"
+                       [required]="dtoPropertyAttributes.narNumber_Attributes.required.value" />
+              </div>
+            </div>
+            <div class="form-group form-row">
+              <label for="certificationLevel" class="col-form-label col-md-4"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.certificationLevel_Attributes"></defaultLabel></label>
+              <div class="col-md-8">
+                <div class="form-check form-check-inline" *ngFor="let row of certLevels">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="radio" [(ngModel)]="dto.certificationLevel" name="certificationLevel" id="certificationLevel{{row.value}}" [value]="row.value">
+                    {{row.text}}
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group form-row">
+          <div class="col-sm-3">
+            <label for="role" class="col-form-label"><requiredField *ngIf="addressIsRequired"></requiredField>{{dtoPropertyAttributes.addresses_Attributes.name}}</label>
+            &nbsp;<button type="button" class="btn btn-sm btn-success" (click)="addAddress()"><i class="fas fa-plus"></i></button>
+          </div>
+          <div class="col-sm">
+            <div class="form-row" *ngFor="let row of dto.addresses;index as blah;" [class.toBeDeleted]="row.isDeleted">
+              <div class="col">
+                <addressEdit [(addressObj)]="row.addressObj" [isRequired]="addressIsRequired && !row.isDeleted" form="f!"></addressEdit>
+              </div>
+              <div class="col-auto">
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAddress(blah)" *ngIf="!row.isDeleted"><i class="fas fa-trash-alt" [class.fa-times]="row.addressId" [class.fa-trash-alt]="!row.addressId"></i></button>
+                <button type="button" class="btn btn-sm btn-warning" (click)="row.isDeleted = false" *ngIf="row.isDeleted"><i class="fas fa-undo"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-group text-right">
+          <button class="btn btn-primary" [disabled]="(f.form.invalid && f.submitted) || disableSubmit" accesskey="S"><i class="far fa-save"></i> Register</button>&nbsp;&nbsp;
+          <a [routerLink]="['/login']" class="btn btn-warning" accesskey="C"><i class="fas fa-times"></i> Cancel</a>
+        </div>
+        <div class="form-group text-right text-danger">
+          {{submitMessage}}
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

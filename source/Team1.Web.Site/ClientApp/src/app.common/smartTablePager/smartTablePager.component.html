@@ -1,0 +1,53 @@
+<div class="form-row">
+  <div class="col-sm-auto">
+    <div class="form-row">
+      <div class="col-auto">
+        <div class="form-control-plaintext">Display</div>
+      </div>
+      <div class="col-auto">
+        <select class="form-control" [(ngModel)]="pager.size" (change)="pager.changePageSize(pager.size)">
+          <option *ngFor="let o of pageSizes" [ngValue]="o">{{o}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm text-center">
+    <nav *ngIf="pager.isPreviousPageEnabled() || pager.isNextPageEnabled()">
+      <ul class="pagination justify-content-center mb-0">
+        <li class="page-item" [class.disabled]="pager.page == 1">
+          <button type="button" class="page-link" (click)="pager.selectPage(1)">First</button>
+        </li>
+        <li class="page-item" [class.disabled]="!pager.isPreviousPageEnabled()">
+          <button type="button" class="page-link" (click)="pager.selectPreviousPage()" aria-label="Previous">
+            <span aria-hidden="true" title="Previous">&laquo;</span>
+          </button>
+        </li>
+        <li class="page-item">
+          <div class="form-row mx-1">
+            <div class="col-auto">
+              <div class="form-control-plaintext">Page</div>
+            </div>
+            <div class="col-auto">
+              <input type="number" [(ngModel)]="pager.page" (change)="pageChange()" class="form-control pageWidth-form-control" />
+            </div>
+          </div>
+        </li>
+        <li class="page-item" [class.disabled]="!pager.isNextPageEnabled()">
+          <button type="button" class="page-link" (click)="pager.selectNextPage()" aria-label="Next">
+            <span aria-hidden="true" title="Next">&raquo;</span>
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="pager.page == numberPages()">
+          <button type="button" class="page-link" (click)="pager.selectPage(numberPages())">Last ({{numberPages()}})</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="col-sm-auto">
+    <div class="form-control-plaintext">
+      <em>{{pager.length > 0 ? pager.lowerBoundIndex + 1 : 0}}</em> - <em>
+        {{pager.length > 0 ? pager.higherBoundIndex + 1 : 0}}
+      </em> of <em>{{pager.length > 0 ? pager.length : 0}} </em>
+    </div>
+  </div>
+</div>

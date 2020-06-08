@@ -1,0 +1,35 @@
+<div class="modal-header">
+  <h4 class="modal-title">Location Add/Edit</h4>
+  <div class="col-sm">
+    <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+  </div>
+  <button type="button" class="close text-white" aria-label="Close" (click)="close('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [cgBusy]="isBusy" name="form" (ngSubmit)="f.form.valid && save(f)" [class.form-submitted]="f.submitted" #f="ngForm" novalidate>
+  <div class="modal-body">
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.locationName_Attributes" [dto]="dto" [predicate]="'locationName'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <textAreaMax [propertyAttributes]="dtoPropertyAttributes.locationDescription_Attributes" [dto]="dto" [predicate]="'locationDescription'" [dtoOriginal]="dtoOriginal" [form]="f"></textAreaMax>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.faaWaiver_Attributes" [dto]="dto" [predicate]="'faaWaiver'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <div class="form-group form-row">
+      <div class="col-sm-3">
+        <label class="col-form-label"><requiredField *ngIf="addressIsRequired"></requiredField>{{dtoPropertyAttributes.addressObj_Attributes.name}}</label>
+      </div>
+      <div class="col-sm">
+        <addressEdit [(addressObj)]="dto.addressObj" [isRequired]="addressIsRequired" form="f!"></addressEdit>
+      </div>
+    </div>
+    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.isActive_Attributes" [dto]="dto" [predicate]="'isActive'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+  </div>
+  <div class="modal-footer">
+    <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+    <modalDefaultFooterButtons [form]="f" (close)="close($event)"></modalDefaultFooterButtons>
+  </div>
+</form>

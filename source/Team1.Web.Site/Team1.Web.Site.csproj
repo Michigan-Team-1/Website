@@ -1,0 +1,394 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TypeScriptCompileBlocked>true</TypeScriptCompileBlocked>
+    <TypeScriptToolsVersion>Latest</TypeScriptToolsVersion>
+    <IsPackable>false</IsPackable>
+    <SpaRoot>ClientApp\</SpaRoot>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(SpaRoot)node_modules\**</DefaultItemExcludes>
+
+    <!-- Set this to true if you enable server-side prerendering -->
+    <BuildServerSideRenderer>false</BuildServerSideRenderer>
+    <UserSecretsId>9b9cbfb5-6ca8-4432-bf8c-4fef1c9f322d</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\APIDocumentation.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\APIDocumentation.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.MicrosoftAccount" Version="3.1.4" />
+    <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.5.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Don't publish the SPA source files, but do show them in the project files list -->
+    <Content Remove="$(SpaRoot)**" />
+    <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
+    <Compile Remove="ClientApp\dist\**" />
+    <Compile Remove="Resources\**" />
+    <Content Remove="ClientApp\dist\**" />
+    <Content Remove="Resources\**" />
+    <EmbeddedResource Remove="ClientApp\dist\**" />
+    <EmbeddedResource Remove="Resources\**" />
+    <None Remove="ClientApp\dist\**" />
+    <None Remove="Resources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="ClientApp\src\app.common\cache\api.cache.ts" />
+    <None Remove="ClientApp\src\app.common\cache\cache.interface.ts" />
+    <None Remove="ClientApp\src\app.common\components.ts" />
+    <None Remove="ClientApp\src\app.common\constants.ts" />
+    <None Remove="ClientApp\src\app.common\helpers\LowerCaseUrlSerializer.ts" />
+    <None Remove="ClientApp\src\app.common\helpers\Toaster.ts" />
+    <None Remove="ClientApp\src\app.common\imageViewer\imageVIewer.component.html" />
+    <None Remove="ClientApp\src\app.common\imageViewer\imageVIewer.component.ts" />
+    <None Remove="ClientApp\src\app.common\smartTablePager\smartTablePager.component.html" />
+    <None Remove="ClientApp\src\app.common\smartTablePager\smartTablePager.component.ts" />
+    <None Remove="ClientApp\src\app.common\userIdentityToken.interceptor.ts" />
+    <None Remove="ClientApp\src\app\account\confirmEmail\confirmEmail.component.html" />
+    <None Remove="ClientApp\src\app\account\twoFactorApps\twoFactorApps.component.html" />
+    <None Remove="ClientApp\src\app\account\twoFactorSetup\twoFactorSetup.component.html" />
+    <None Remove="ClientApp\src\app\account\twoFactorSetup\twoFactorSetup.component.resx" />
+    <None Remove="ClientApp\src\app\announcements\announcementAddEdit.component.html" />
+    <None Remove="ClientApp\src\app\announcements\announcementAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\announcements\announcements.component.html" />
+    <None Remove="ClientApp\src\app\announcements\announcements.module.ts" />
+    <None Remove="ClientApp\src\app\announcements\announcements.service.ts" />
+    <None Remove="ClientApp\src\app\appRouting.module.ts" />
+    <None Remove="ClientApp\src\app\dashboard\dashboard.module.ts" />
+    <None Remove="ClientApp\src\app\joinUs\joinUs.component.html" />
+    <None Remove="ClientApp\src\app\joinUs\joinUs.module.ts" />
+    <None Remove="ClientApp\src\app\layouts\footerNav\footerNav.component.html" />
+    <None Remove="ClientApp\src\app\layouts\layout.component.ts" />
+    <None Remove="ClientApp\src\app\layouts\layouts.module.ts" />
+    <None Remove="ClientApp\src\app\locations\locationAddEdit.component.html" />
+    <None Remove="ClientApp\src\app\locations\locationAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\locations\locations.component.html" />
+    <None Remove="ClientApp\src\app\locations\locations.module.ts" />
+    <None Remove="ClientApp\src\app\locations\locations.service.ts" />
+    <None Remove="ClientApp\src\app\manage\changePassword.component.html" />
+    <None Remove="ClientApp\src\app\manage\manage.component.html" />
+    <None Remove="ClientApp\src\app\manage\manage.module.ts" />
+    <None Remove="ClientApp\src\app\manage\manage.service.ts" />
+    <None Remove="ClientApp\src\app\pictures\pictureAddEdit.component.html" />
+    <None Remove="ClientApp\src\app\pictures\pictureAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\pictures\pictures.component.html" />
+    <None Remove="ClientApp\src\app\pictures\pictures.module.ts" />
+    <None Remove="ClientApp\src\app\pictures\pictures.service.ts" />
+    <None Remove="ClientApp\src\app\tasks - Copy (2)\taskAddEdit.component.html" />
+    <None Remove="ClientApp\src\app\tasks - Copy (2)\taskAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\tasks - Copy (2)\tasks.component.html" />
+    <None Remove="ClientApp\src\app\tasks - Copy (2)\tasks.module.ts" />
+    <None Remove="ClientApp\src\app\tasks - Copy (2)\tasks.service.ts" />
+    <None Remove="ClientApp\src\app\tasks\taskAddEdit.component.html" />
+    <None Remove="ClientApp\src\app\tasks\taskAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\tasks\tasks.component.html" />
+    <None Remove="ClientApp\src\app\tasks\tasks.module.ts" />
+    <None Remove="ClientApp\src\app\tasks\tasks.service.ts" />
+    <None Remove="ClientApp\src\app\users\userAddEdit.component.ts" />
+    <None Remove="ClientApp\src\app\users\users.module.ts" />
+    <None Remove="ClientApp\src\app\users\users.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ClientApp\e2e\tsconfig.e2e.json" />
+    <Content Include="ClientApp\package.json" />
+    <Content Include="ClientApp\src\app.common\imageViewer\imageViewer.component.html" />
+    <Content Include="ClientApp\src\app.common\smartTablePager\smartTablePager.component.html" />
+    <Content Include="ClientApp\src\app\account\confirmEmail\confirmEmail.component.html" />
+    <Content Include="ClientApp\src\app\account\twoFactorApps\twoFactorApps.component.html" />
+    <Content Include="ClientApp\src\app\account\twoFactorSetup\twoFactorSetup.component.html" />
+    <Content Include="ClientApp\src\app\announcements\announcementAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\announcements\announcements.component.html" />
+    <Content Include="ClientApp\src\app\pictures\pictureAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\pictures\pictures.component.html" />
+    <Content Include="ClientApp\src\app\joinUs\joinUs.component.html" />
+    <Content Include="ClientApp\src\app\manage\manage.component.html" />
+    <Content Include="ClientApp\src\app\manage\changePassword.component.html" />
+    <Content Include="ClientApp\src\app\events\eventAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\events\events.component.html" />
+    <Content Include="ClientApp\src\app\locations\locationAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\locations\locations.component.html" />
+    <Content Include="ClientApp\src\app\tasks\taskAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\tasks\tasks.component.html" />
+    <Content Include="ClientApp\src\assets\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="ClientApp\src\app.common\addressEdit\addressEdit.component.html" />
+    <Content Include="ClientApp\src\app\account\forgotPassword\forgotPassword.component.html" />
+    <Content Include="ClientApp\src\app\account\resetPassword\resetPassword.component.html" />
+    <Content Include="ClientApp\src\app\account\login\login.component.html" />
+    <Content Include="ClientApp\src\app\account\register\register.component.html" />
+    <Content Include="ClientApp\src\app\account\twoFactor\twoFactor.component.html" />
+    <Content Include="ClientApp\src\app\users\userAddEdit.component.html" />
+    <Content Include="ClientApp\src\app\users\users.component.html" />
+    <Content Include="ClientApp\src\app\dashboard\dashboard.component.html" />
+    <Content Include="ClientApp\src\app\layouts\selectLanguage\selectLanguage.component.html" />
+    <Content Include="ClientApp\src\app\layouts\sideNavMenu\sideNavMenu.component.html" />
+    <Content Include="ClientApp\src\app\layouts\footerNav\footerNav.component.html" />
+    <Content Include="ClientApp\src\app\layouts\navLinks\navLinks.component.html" />
+    <Content Include="ClientApp\src\app\layouts\topNavMenu\topNavMenu.component.html" />
+    <Content Include="ClientApp\src\tsconfig.app.json" />
+    <Content Include="ClientApp\src\tsconfig.spec.json" />
+    <Content Include="ClientApp\tsconfig.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Services.Email\Services.Email.csproj" />
+    <ProjectReference Include="..\Services.Filemanager\Services.FileManager.csproj" />
+    <ProjectReference Include="..\Team1.Entities\Team1.Entities.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure.UserIdentity\Team1.Infrastructure.UserIdentity.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure\Team1.Infrastructure.csproj" />
+    <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app.common\addressEdit\addressEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\cache\cache.interface.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\cache\api.cache.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\helpers\LowerCaseUrlSerializer.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\imageViewer\imageViewer.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\pipes.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\directives.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\components.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\constants.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\helpers\object.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\helpers\toaster.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\services\common.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\smartTablePager\smartTablePager.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\userIdentityToken.interceptor.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\appRouting.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app.common\services\authGuards.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\account\account.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pictures\pictureAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pictures\pictures.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\pictures\pictures.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\joinUs\joinUs.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\dashboard\dashboard.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\layouts.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\layouts\layout.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\announcements\announcementAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\announcements\announcements.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\announcements\announcements.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\manage\manage.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\manage\manage.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\events\eventAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\events\events.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\events\events.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\locations\locationAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\locations\locations.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\locations\locations.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\tasks\taskAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\tasks\tasks.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\tasks\tasks.service.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\users\userAddEdit.component.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\users\users.module.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\users\users.service.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="ClientApp\src\app\account\login\login.component.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ClientApp\src\app\layouts\topNavMenu\topNavMenu.component.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ClientApp\src\app\layouts\navLinks\navLinks.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="ClientApp\src\app\users\users.component.resx">
+      <Generator></Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ClientApp\src\app.common\apis\AccountController.ts">
+      <CustomToolNamespace>Controllers\AccountController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\AddressesController.ts">
+      <CustomToolNamespace>Controllers\AddressesController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\AnnouncementsController.ts">
+      <CustomToolNamespace>Controllers\AnnouncementsController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\CompaniesController.ts">
+      <CustomToolNamespace>Controllers\CompaniesController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\CountriesController.ts">
+      <CustomToolNamespace>Controllers\CountriesController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\EventsController - Copy.ts">
+      <CustomToolNamespace>Controllers\EventsController - Copy.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\EventsController.ts">
+      <CustomToolNamespace>Controllers\EventsController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\GoverningDistrictsController.ts">
+      <CustomToolNamespace>Controllers\GoverningDistrictsController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\LocationsController.ts">
+      <CustomToolNamespace>Controllers\LocationsController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\ManageController.ts">
+      <CustomToolNamespace>Controllers\ManageController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\PicturesController.ts">
+      <CustomToolNamespace>Controllers\PicturesController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\RolesController.ts">
+      <CustomToolNamespace>Controllers\RolesController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\TasksController.ts">
+      <CustomToolNamespace>Controllers\TasksController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\UsersController.ts">
+      <CustomToolNamespace>Controllers\UsersController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\AccountDtos.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\AccountDtos.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\AddressDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\AddressDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\AddressObjDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\AddressObjDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\AnnouncementDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\AnnouncementDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\CompanyDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\CompanyDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\CountryDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\CountryDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\DocumentObjDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\DocumentObjDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\EventDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\EventDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\EventLocationDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\EventLocationDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\GoverningDistrictDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\GoverningDistrictDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\LocationDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\LocationDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\PictureDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\PictureDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\RoleDataDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\RoleDataDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\RoleDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\RoleDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\SelectOptionDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Helpers\SelectOptionDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\TaskDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\TaskDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\TaskMemberTypeDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\TaskMemberTypeDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\TokenDtos.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Token\TokenDtos.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\TokenUserDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Token\TokenUserDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\UserDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Users\UserDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\UserMemberTypeDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Users\UserMemberTypeDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\UserPoliciesDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Token\UserPoliciesDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\dtos\UserProfileDto.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\Dtos\Users\UserProfileDto.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\enums\GalleryTypeEnum.ts">
+      <CustomToolNamespace>..\Team1.Model\Enums\GalleryTypeEnum.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\enums\MemberTypeEnum.ts">
+      <CustomToolNamespace>..\Team1.Model\Enums\MemberTypeEnum.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\enums\TaskCategoryEnum.ts">
+      <CustomToolNamespace>..\Team1.Model\Enums\TaskCategoryEnum.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\serverConstants\AllowedFileExtensions.ts">
+      <CustomToolNamespace>..\Team1.Infrastructure\BusinessLogic\AllowedFileExtensions.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\serverConstants\PolicyNames.ts">
+      <CustomToolNamespace>Infrastructure\UserIdentity\Policies\PolicyNames.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\serverConstants\Role.ts">
+      <CustomToolNamespace>..\Team1.Model\UserIdentity\Role.cs</CustomToolNamespace>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ClientApp\src\app.common\formComponents\selects\" />
+    <Folder Include="uploads\" />
+  </ItemGroup>
+
+  <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
+    <!-- Ensure Node.js is installed -->
+    <Exec Command="node --version" ContinueOnError="true">
+      <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+    </Exec>
+    <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+    <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+  </Target>
+
+  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --prod" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --prod" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
+
+    <!-- Include the newly-built files in the publish output -->
+    <ItemGroup>
+      <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
+      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
+      <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="(if exist &quot;$(TargetDir)*old.dll&quot; del &quot;$(TargetDir)*old.dll&quot;) &amp; (if exist &quot;$(TargetDir)*.dll&quot; ren &quot;$(TargetDir)*.dll&quot; *.old.dll)" />
+  </Target>
+
+</Project>

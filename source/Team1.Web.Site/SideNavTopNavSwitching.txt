@@ -1,0 +1,37 @@
+﻿Switching from side-Nav to top-Nav:
+
+1.  go to layout.component.cshtml and comment out <side-nav-menu></side-nav-menu>
+2.  go to site.scss and comment out:
+
+.body-content {
+    padding-left: 12.4rem;
+}
+
+
+@media (max-width: 768px) {
+    .body-content {
+        padding-left: 15px;
+    }
+}
+
+3.  Go to topNavMenu.cshtml and remove the CSS class "justify-content-end" from the <div> and "topNav-hide-md" from the <ul>
+
+
+
+Switching from top-Nav to side-Nav:
+
+1.  go to layout.component.cshtml and UNcomment out <side-nav-menu></side-nav-menu>
+2.  go to site.scss and UNcomment out:
+
+.body-content {
+    padding-left: 12.4rem;
+}
+
+
+@media (max-width: 768px) {
+    .body-content {
+        padding-left: 15px;
+    }
+}
+
+3.  Go to topNavMenu.cshtml and add the CSS class "justify-content-end" to the <div> and "topNav-hide-md" to the <ul>

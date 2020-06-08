@@ -1,0 +1,48 @@
+<div>
+  <div [cgBusy]="isBusy">
+    <div class="row" *ngIf="pictures.length > 0">
+      <div class="col bg-secondary">
+        <carousel [noPause]="false">
+          <slide *ngFor="let row of pictures; let blah=index">
+            <div class="text-center imageZoomIn" (click)="showImage(pictureUrlFunction(row.pictureId))">
+              <img [src]="pictureUrlFunction(row.pictureId) | secureImage | async" alt="Picture" class="img-fluid carousel-slide" />
+              <div class="carousel-caption">
+                <p>{{row.description}}</p>
+              </div>
+            </div>
+          </slide>
+        </carousel>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm col-lg-8">
+        <h4>Announcements</h4>
+        <div *ngFor="let row of announcements">
+          <div class="card bg-light mb-2">
+            <div class="card-header">{{row.title}}</div>
+            <div class="card-body" [innerHtml]="row.body"></div>
+            <div class="card-footer text-muted">Posted on {{row.startShowingOnDate | defaultDate}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-auto col-lg-4">
+        <h4>Events</h4>
+        <div *ngFor="let row of events">
+          <div class="card bg-light mb-2">
+            <div class="card-header">{{row.name}}</div>
+            <div class="card-body">
+              <div class="card-text">
+                <div>Date {{row.eventDate | defaultDate}}</div>
+                <div *ngIf="row.eventAlternateDate">Alternate Date {{row.eventAlternateDate | defaultDate}}</div>
+              </div>
+              <div *ngFor="let location of row.locations; index as blah;">
+                {{blah == 0 ? 'At' : 'Alternate'}} <a href="https://www.bing.com/maps?where1={{getAddress(location)}}" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-map-marked"></i> {{location.locationName}} <i class="fas fa-external-link-alt"></i></a>
+                <div class="card-text" *ngIf="location.faaWaiver">Altitude {{location.faaWaiver}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

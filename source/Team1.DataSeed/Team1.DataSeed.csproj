@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UserSecretsId>1858ec2f-1bd9-418b-8913-d891c324fd1d</UserSecretsId>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="SeedData\Countries.csv" />
+    <None Remove="SeedData\GoverningDistricts.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="SeedData\Countries.csv" />
+    <EmbeddedResource Include="SeedData\GoverningDistricts.csv" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.1.4" PrivateAssets="All" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="3.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Team1.Entities\Team1.Entities.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure.UserIdentity\Team1.Infrastructure.UserIdentity.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure\Team1.Infrastructure.csproj" />
+    <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
+  </ItemGroup>
+
+</Project>

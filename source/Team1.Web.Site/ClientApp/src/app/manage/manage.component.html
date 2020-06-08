@@ -1,0 +1,82 @@
+<form name="form" (ngSubmit)="f.form.valid && save(f)" [class.form-submitted]="f.submitted" #f="ngForm" novalidate>
+  <div [cgBusy]="isBusy">
+    <div class="row mb-3">
+      <div class="col-sm">
+        <h3>Manage Profile</h3>
+      </div>
+      <div class="col-sm">
+        <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+      </div>
+      <div class="col-sm-auto text-sm-right">
+        <button type="submit" class="btn btn-primary mr-2" [disabled]="(f.form.invalid && f.submitted)" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.firstName_Attributes" [dto]="dto" [predicate]="'firstName'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.lastName_Attributes" [dto]="dto" [predicate]="'lastName'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <spudEmail [propertyAttributes]="dtoPropertyAttributes.email_Attributes" [dto]="dto" [predicate]="'email'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudEmail>
+    <spudPhone [propertyAttributes]="dtoPropertyAttributes.phoneNumber_Attributes" [dto]="dto" [predicate]="'phoneNumber'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudPhone>
+    <inputDate [propertyAttributes]="dtoPropertyAttributes.birthDate_Attributes" [dto]="dto" [predicate]="'birthDate'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </inputDate>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.tripoliNumber_Attributes" [dto]="dto" [predicate]="'tripoliNumber'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.narNumber_Attributes" [dto]="dto" [predicate]="'narNumber'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <div class="form-group form-row">
+      <label for="certificationLevel" class="col-form-label col-sm-3"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.certificationLevel_Attributes"></defaultLabel></label>
+      <div class="col-sm-9">
+        <div class="form-check form-check-inline" *ngFor="let row of certLevels">
+          <label class="form-check-label">
+            <input class="form-check-input" type="radio" [(ngModel)]="dto.certificationLevel" name="certificationLevel" id="certificationLevel{{row.value}}" [value]="row.value">
+            {{row.text}}
+          </label>
+        </div>
+      </div>
+    </div>
+    <!--<div class="form-group form-row">
+    <div class="offset-sm-3 col-sm-9">
+      <div class="form-check">
+        <label class="form-check-label">
+          <input type="checkbox" id="twoFactorEnabled" name="isActive" [(ngModel)]="dto.twoFactorEnabled" class="form-check-input" />
+          {{dtoPropertyAttributes.twoFactorEnabled_Attributes.name}}
+        </label>
+      </div>
+    </div>
+  </div>-->
+    <div class="form-group form-row">
+      <div class="offset-sm-3 col-sm-9">
+        <button type="button" class="btn btn-secondary" (click)="changePassword()"><i class="fas fa-key"></i> Change Password</button>
+      </div>
+    </div>
+    <div class="form-group form-row">
+      <div class="col-sm-3">
+        <label for="role" class="col-form-label"><requiredField *ngIf="addressIsRequired"></requiredField>{{dtoPropertyAttributes.addresses_Attributes.name}}</label>
+        &nbsp;<button type="button" class="btn btn-sm btn-success" (click)="addAddress()"><i class="fas fa-plus"></i></button>
+      </div>
+      <div class="col-sm">
+        <div class="form-row" *ngFor="let row of dto.addresses;index as blah;" [class.toBeDeleted]="row.isDeleted">
+          <div class="col">
+            <addressEdit [(addressObj)]="row.addressObj" [isRequired]="addressIsRequired && !row.isDeleted" form="f!"></addressEdit>
+          </div>
+          <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeAddress(blah)" *ngIf="!row.isDeleted"><i class="fas fa-trash-alt" [class.fa-times]="row.addressId" [class.fa-trash-alt]="!row.addressId"></i></button>
+            <button type="button" class="btn btn-sm btn-warning" (click)="row.isDeleted = false" *ngIf="row.isDeleted"><i class="fas fa-undo"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfMemberEmails_Attributes" [dto]="dto" [predicate]="'optOutOfMemberEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfGeneralEmails_Attributes" [dto]="dto" [predicate]="'optOutOfGeneralEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+  </div>
+  <div class="modal-footer">
+    <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+    <button type="submit" class="btn btn-primary" [disabled]="(f.form.invalid && f.submitted)" accesskey="S"><i class="far fa-save"></i> Save</button>
+  </div>
+</form>

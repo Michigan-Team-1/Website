@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "importHelpers": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "sourceMap": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "paths": {
+    },
+    "lib": [ "es2017", "dom" ],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "baseUrl": "./src/"
+  }
+  //"exclude": [ "bin", "node_modules" ],
+  //"atom": { "rewriteTsconfig": false }
+}

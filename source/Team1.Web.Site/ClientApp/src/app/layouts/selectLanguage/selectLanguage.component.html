@@ -1,0 +1,40 @@
+<!--@page
+
+@using Microsoft.AspNetCore.Builder
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Options
+@using Microsoft.AspNetCore.Mvc.RazorPages
+
+@inject IViewLocalizer Localizer
+@inject IOptions<RequestLocalizationOptions> LocOptions
+
+@{
+    var requestCulture = HttpContext.Features.Get<IRequestCultureFeature>();
+    var cultureItems = LocOptions.Value.SupportedUICultures
+        .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })
+        .ToList();
+    var returnUrl = "~/";// string.IsNullOrEmpty(HttpContext.Request.Path) ? "~/" : $"~{HttpContext.Request.Path.Value}";
+}-->
+
+<!--<div class="col" title="@Localizer["Request culture provider:"] @requestCulture?.Provider?.GetType().Name">
+  <form id="selectLanguage" asp-controller="Home"
+        asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
+        method="post" class="form-inline" role="form">
+    <label asp-for="@requestCulture.RequestCulture.UICulture.Name">@Localizer["Language"] &nbsp;</label>
+    <select name="culture" class=""
+            onchange="this.form.submit();"
+            asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems"></select>
+  </form> 
+</div>-->
+
+<div class="col" title="">
+  <form id="selectLanguage" asp-controller="Home"
+        asp-action="SetLanguage" asp-route-returnUrl="@returnUrl"
+        method="post" class="form-inline" role="form">
+    <label asp-for="@requestCulture.RequestCulture.UICulture.Name">Language &nbsp;</label>
+    <select name="culture" class=""
+            onchange="this.form.submit();"
+            asp-for="@requestCulture.RequestCulture.UICulture.Name" asp-items="cultureItems"></select>
+  </form>
+</div>

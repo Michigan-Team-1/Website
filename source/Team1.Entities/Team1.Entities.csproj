@@ -1,0 +1,71 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20171211121837_v1.cs" />
+    <Compile Remove="Migrations\20171214141110_v1.cs" />
+    <Compile Remove="Migrations\20180411153458_v1.cs" />
+    <Compile Remove="Migrations\20180522161659_v1.cs" />
+    <Compile Remove="Migrations\20180712115228_v1.cs" />
+    <Compile Remove="Migrations\20180712134917_v1.cs" />
+    <Compile Remove="Migrations\20180918112251_v1.cs" />
+    <Compile Remove="Migrations\20181015131217_v1.0.cs" />
+    <Compile Remove="Migrations\20181030005533_v1.0.cs" />
+    <Compile Remove="Migrations\20181030011351_v1.0.cs" />
+    <Compile Remove="Migrations\20181204015434_v1.0.cs" />
+    <Compile Remove="Migrations\20181209003937_v1.0.cs" />
+    <Compile Remove="Migrations\20181218024213_v1.0.cs" />
+    <Compile Remove="Migrations\20181229232252_v1.0.cs" />
+    <Compile Remove="Migrations\20190115030207_v1.0.cs" />
+    <Compile Remove="Migrations\20190116011614_v1.0.cs" />
+    <Compile Remove="Migrations\20190120031701_v1.0.cs" />
+    <Compile Remove="Migrations\20190127184105_v1.0.cs" />
+    <Compile Remove="Migrations\20190127210940_v1.0.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.4" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.4" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Team1.Infrastructure.UserIdentity\Team1.Infrastructure.UserIdentity.csproj" />
+    <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="UserIdentity\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="UserIdentity\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+</Project>

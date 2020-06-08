@@ -1,0 +1,25 @@
+<div class="modal-header">
+  <h4 class="modal-title">Upload Document</h4>
+  <button type="button" class="close text-white" aria-label="Close" (click)="close('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [cgBusy]="isBusy" name="form" (ngSubmit)="f.form.valid && add(f)" [class.form-submitted]="f.submitted" #f="ngForm" novalidate>
+  <div class="modal-body">
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+    <div><h4>{{title}}</h4></div>
+    <p>Please select file(s) for the required documentation and then click save to upload them.</p>
+    <div class="form-group" *ngIf="allowMultiple || files.length == 0">
+      <input #fileInput type="file" class="form-control-file" id="fileUpload" (change)="handleFileInput($event.target.files)" [multiple]="allowMultiple">
+    </div>
+    <div class="form-group">
+      <div class="form-control-plaintext" *ngFor="let file of files;index as blah">
+        <button type="button" class="btn btn-sm btn-danger" (click)="remove(blah)"><span class="fas fa-trash-alt"></span></button> {{file.name}}
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="submit" class="btn btn-primary" [disabled]="(f.form.invalid && f.submitted)" accesskey="S"><i class="fas fa-plus"></i> Add</button>
+    <button type="button" class="btn btn-warning" (click)="close('Close click')" accesskey="C"><i class="fas fa-window-close"></i> Cancel</button>
+  </div>
+</form>

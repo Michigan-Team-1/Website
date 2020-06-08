@@ -1,0 +1,11 @@
+@import '../../../styles/variables.scss';
+
+/* Top Nav hidden when side nav is used */
+
+@media (min-width: $sideNavBreakPoint) {
+  .topNav-hide-md {
+    display: none;
+  }
+}
+
+/* end top nav **************************/

@@ -1,0 +1,48 @@
+<div class="modal-header">
+  <h4 class="modal-title">Event Add/Edit</h4>
+  <div class="col-sm">
+    <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+  </div>
+  <button type="button" class="close text-white" aria-label="Close" (click)="close('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<form [cgBusy]="isBusy" name="form" (ngSubmit)="f.form.valid && save(f)" [class.form-submitted]="f.submitted" #f="ngForm" novalidate>
+  <div class="modal-body">
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+    <spudStringMax [propertyAttributes]="dtoPropertyAttributes.name_Attributes" [dto]="dto" [predicate]="'name'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </spudStringMax>
+    <inputDate [propertyAttributes]="dtoPropertyAttributes.eventDate_Attributes" [dto]="dto" [predicate]="'eventDate'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </inputDate>
+    <inputDate [propertyAttributes]="dtoPropertyAttributes.eventAlternateDate_Attributes" [dto]="dto" [predicate]="'eventAlternateDate'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </inputDate>
+    <div class="form-group form-row">
+      <label for="name" class="col-form-label col-sm-3">
+        <defaultLabel [propertyAttributes]="dtoPropertyAttributes.eventLocations_Attributes"></defaultLabel>
+        &nbsp;<button type="button" class="btn btn-sm btn-success" (click)="addLocation()"><i class="fas fa-plus"></i></button>
+      </label>
+      <div class="col-sm-9">
+        <div class="form-row" *ngFor="let row of dto.eventLocations;index as blah;" [class.toBeDeleted]="row.isDeleted">
+          <div class="col mb-2">
+            <select [(ngModel)]="row.locationId" name="location{{blah}}" class="form-control" #locationId="ngModel" [required]="true">
+              <option [ngValue]="undefined">Select...</option>
+              <option *ngFor="let o of locations" [ngValue]="o.value">{{o.text}}</option>
+            </select>
+          </div>
+          <div class="col-auto mb-2">
+            <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeLocation(blah)" *ngIf="!row.isDeleted"><i class="fas fa-trash-alt" [class.fa-times]="row.locationId" [class.fa-trash-alt]="!row.locationId"></i></button>
+            <button type="button" class="btn btn-sm btn-warning" (click)="row.isDeleted = false" *ngIf="row.isDeleted"><i class="fas fa-undo"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.isActive_Attributes" [dto]="dto" [predicate]="'isActive'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+    <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
+    <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
+  </div>
+  <div class="modal-footer">
+    <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+    <modalDefaultFooterButtons [form]="f" (close)="close($event)"></modalDefaultFooterButtons>
+  </div>
+</form>
