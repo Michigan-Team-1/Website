@@ -125,6 +125,9 @@ namespace Team1.Infrastructure.Services.Pictures
                 {
                     await dto.FileUpload.OpenReadStream().CopyToAsync(stream);
                 }
+
+                // clear out file upload
+                dto.FileUpload = null;
             }
 
             if (UserPermissionService.UserPolicies.CanApprovePicture)

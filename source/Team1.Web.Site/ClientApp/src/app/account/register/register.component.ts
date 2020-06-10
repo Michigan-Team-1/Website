@@ -46,6 +46,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   logo = require("assets/logo.png");
   addressIsRequired = true;
   maxBirthDate = new Date();
+  recaptchaSiteKey: string = "6LfoE6MZAAAAAF50jKHFmtwZnpQGzyD56VQGVxx5";
 
   ngOnInit() {
     this.maxBirthDate.setFullYear(this.maxBirthDate.getFullYear() - 16);
@@ -63,7 +64,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     const s = this.document.createElement('script');
     s.type = 'text/javascript';
-    s.src = 'https://www.google.com/recaptcha/api.js?render=6LfUFlkUAAAAACLaSifE3SuvGOh5vnLYWjmiayUX';
+    s.src = 'https://www.google.com/recaptcha/api.js?render=' + this.recaptchaSiteKey;
     const self = this;
     s.onload = function () { self.ExecuteReCaptcha(); };
     this.elementRef.nativeElement.appendChild(s);
@@ -82,7 +83,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     if (this.submitMessage == null) this.submitMessage = "Can't submit yet.  Google ReCaptcha is loading...";
     this.changeDetectorRef.detectChanges();
     grecaptcha.ready(() => {
-      grecaptcha.execute('6LfUFlkUAAAAACLaSifE3SuvGOh5vnLYWjmiayUX', { action: 'register' }).then((token: any) => {
+      grecaptcha.execute(this.recaptchaSiteKey, { action: 'register' }).then((token: any) => {
         this.dto.recaptchaToken = token;
         this.disableSubmit = false;
         this.submitMessage = undefined;
