@@ -36,11 +36,11 @@ export class UsersComponent implements OnInit {
   isBusy:boolean = false;
   dtoPropertyAttributes = IUser_PropertyAttributes;
   showAdminOptions: boolean = this.authService.isAuthenticated && this.authService.userAddEditDelete;
-  columnCount: number = 4;
+  columnCount: number = 5;
 
   ngOnInit() {
     if (this.showAdminOptions) {
-      this.columnCount = 7;
+      this.columnCount = 8;
     }
   }
 

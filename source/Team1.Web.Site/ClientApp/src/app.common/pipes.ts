@@ -11,6 +11,7 @@ import { globalPhoneMask, usPhoneMask, defaultAngularDateFormat, defaultAngularD
 import { IGoverningDistrict } from 'app.common/dtos/GoverningDistrictDto';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { MemberTypeEnum_class } from './enums/MemberTypeEnum';
 
 @Pipe({
     name: "spudYesNo"
@@ -189,10 +190,33 @@ export class SecureImagePipe implements PipeTransform {
   }
 }
 
+@Pipe({
+  name: "userMemberTypes"
+})
+export class UserMemberTypes implements PipeTransform {
+  constructor() { }
+
+  /**
+   * Value is an array of UserMemberTypeDtos
+   */
+  transform(value: Array<any>): string {
+    if (value == null || value.length == 0) return "";
+    let msg: string = "";
+    for (var i = 0; i < value.length; i++) {
+      if (msg == "")
+        msg = MemberTypeEnum_class.enumByNumber[value[i].memberTypeId];
+      else
+        msg = `${msg}/${MemberTypeEnum_class.enumByNumber[value[i].memberTypeId]}`;
+    }
+
+    return msg;
+  }
+}
+
 // must come last
 @NgModule({
-  declarations: [YesNoPipe, PhonePipe, GlobalPhonePipe, GoverningDistrictsByCountryPipe, DefaultDate, DefaultDateTime, StringLengthErrorMessage, RequiredErrorMessage, TruncateTextPipe, SecureImagePipe],
-  exports: [YesNoPipe, PhonePipe, GlobalPhonePipe, GoverningDistrictsByCountryPipe, DefaultDate, DefaultDateTime, StringLengthErrorMessage, RequiredErrorMessage, TruncateTextPipe, SecureImagePipe],
+  declarations: [YesNoPipe, PhonePipe, GlobalPhonePipe, GoverningDistrictsByCountryPipe, DefaultDate, DefaultDateTime, StringLengthErrorMessage, RequiredErrorMessage, TruncateTextPipe, SecureImagePipe, UserMemberTypes],
+  exports: [YesNoPipe, PhonePipe, GlobalPhonePipe, GoverningDistrictsByCountryPipe, DefaultDate, DefaultDateTime, StringLengthErrorMessage, RequiredErrorMessage, TruncateTextPipe, SecureImagePipe, UserMemberTypes],
   providers: [DatePipe],
 })
 export class PipesModule { }

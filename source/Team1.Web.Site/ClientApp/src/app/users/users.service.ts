@@ -52,6 +52,33 @@ export class UsersService {
 
     return observable;
   }
+  
+  getBoardOfDirectors(): Observable<Array<IUser>> {
+    var apiUrl = UsersControllerAPI.GetBoardOfDirectors();
+    var cacheData = this.apiCache.getCachedItemIfNotExpired(apiUrl);
+    if (cacheData != null) return of(cacheData);
+
+    let observable = this.httpClient.get<Array<IUser>>(this.baseUrl + apiUrl, { withCredentials: true })
+      .pipe(share(), map((data, index) => {
+        for (var i = 0; i < data.length; i++) {
+          data[i] = IUser_PrepareDto(data[i]);
+        }
+        return data;
+      }));
+
+    observable
+      .subscribe((data: Array<IUser>) => {
+        this.apiCache.setCachedItem(apiUrl, data);
+      },
+        (error: any) => {
+          console.log(error);
+          //createToastFromServiceResponse(error, this.pushNotifications, this.toaster, this.defaultToastTitle, "Error occurred while loading users.")
+        },
+        () => {
+        });
+
+    return observable;
+  }
 
   saveUser(dto: IUser): Observable<IUser> {
     if (!dto.isUpdated) {

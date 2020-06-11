@@ -32,6 +32,18 @@ namespace Team1.Web.Site.Controllers
         }
 
         /// <summary>
+        /// Get board of directors
+        /// </summary>
+        /// <returns>list of users</returns>
+        [HttpGet("BoD")]
+        [ProducesResponseType(typeof(List<UserDto>), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetBoardOfDirectors()
+        {
+            var service = GetService<UsersGet>();
+            return Ok(await service.GetBoardOfDirectors());
+        }
+
+        /// <summary>
         /// Create a user
         /// </summary>
         /// <param name="dto">user object</param>

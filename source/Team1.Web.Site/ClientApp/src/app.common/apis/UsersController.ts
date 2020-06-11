@@ -10,6 +10,12 @@ export class UsersControllerAPI  {
       return `api/Users`;
     };
     
+    /** get: api/Users/BoD */
+    public static GetBoardOfDirectors = () => {
+      
+      return `api/Users/BoD`;
+    };
+    
     /** post: api/Users */
     public static CreateUser = () => {
       

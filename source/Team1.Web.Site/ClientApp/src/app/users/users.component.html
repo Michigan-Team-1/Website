@@ -15,6 +15,7 @@
           <th stSort="firstName" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.firstName_Attributes.name}}</th>
           <th stSort="lastName" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.lastName_Attributes.name}}</th>
           <th stSort="certificationLevel" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.certificationLevel_Attributes.name}}</th>
+          <th class="d-none d-lg-table-cell">{{dtoPropertyAttributes.userMemberTypes_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" stSort="roleNames" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.roles_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" stSort="isActive" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.isActive_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" class="d-none d-lg-table-cell"></th>
@@ -43,6 +44,7 @@
               <option value="3">3</option>
             </select>
           </th>
+          <th class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters"></th>
           <th *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters"><input stSearch="roleNames" placeholder="Role..." class="form-control-sm form-control" type="search" /></th>
           <th *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters">
             <select stFilter="isActive" stFilterOperator="equals" class="form-control-sm form-control">
@@ -79,15 +81,22 @@
           </td>
           <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
             <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.lastName_Attributes.name}}</label>
-          {{row.value.lastName}}</td>
+            {{row.value.lastName}}
+          </td>
           <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
-            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.certificationLevel_Attributes.name}}</label>{{row.value.certificationLevel}}</td>
+            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.certificationLevel_Attributes.name}}</label>{{row.value.certificationLevel}}
+          </td>
+          <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
+            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.userMemberTypes_Attributes.name}}</label>{{row.value.userMemberTypes | userMemberTypes}}
+          </td>
           <td *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
-            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.roles_Attributes.name}}</label>{{row.value.roleNames}}</td>
+            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.roles_Attributes.name}}</label>{{row.value.roleNames}}
+          </td>
           <td *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
             <label class="col-form-label col-sm-3 d-lg-none">
               {{dtoPropertyAttributes.isActive_Attributes.name}}
-            </label><span [outerHTML]="row.value.isActive | spudYesNo:true"></span></td>
+            </label><span [outerHTML]="row.value.isActive | spudYesNo:true"></span>
+          </td>
           <td *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
             <div class="btn-group" dropdown>
               <button type="button" class="btn btn-sm btn-secondary" (click)="sendPasswordResetEmail(row.value.userId, false);">

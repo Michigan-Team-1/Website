@@ -5,6 +5,7 @@ using Team1.Infrastructure.UserIdentity;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Team1.Model.Enums;
 
 namespace Team1.Infrastructure.Services.Users
 {
@@ -44,6 +45,29 @@ namespace Team1.Infrastructure.Services.Users
                           }).ToListAsync();
         }
 
+        /// <summary>
+        /// Gets Board of Directors
+        /// </summary>
+        public async Task<IEnumerable<UserDto>> GetBoardOfDirectors()
+        {
+            var userMemberTypes = new List<MemberTypeEnum>() { MemberTypeEnum.Prefect, MemberTypeEnum.Secretary, MemberTypeEnum.Treasurer, MemberTypeEnum.VicePrefect };
+            return await (from u in db.UsersByFilter(UserPermissionService, true)
+                          where u.UserMemberTypes.Any(s => userMemberTypes.Contains(s.MemberTypeId))
+                          orderby u.UserMemberTypes.Select(s => s.MemberTypeId).FirstOrDefault()
+                          select new UserDto()
+                          {
+                              UserId = u.UserId,
+                              FirstName = u.FirstName,
+                              LastName = u.LastName,
+                              Email = u.Email,
+                              PhoneNumber = u.PhoneNumber,
+                              CertificationLevel = u.CertificationLevel,
+                              TripoliNumber = u.TripoliNumber,
+                              NarNumber = u.NarNumber,
+                              UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
+                          }).ToListAsync();
+        }
+        
         /// <summary>
         /// Gets all General roles the logged in user has access to
         /// </summary>

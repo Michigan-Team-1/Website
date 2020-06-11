@@ -2,8 +2,10 @@
   <div class="container-fluid ">
     <div class="row justify-content-end">
       <!--<selectLanguage></selectLanguage>-->
-      <div class="col-auto">
-        <span>powered by<a class="btn btn-sm btn-link" href="https://www.spudsoftware.com/" target="_blank">Spud Software</a></span>
+      <div class="col-auto" *ngFor="let user of boardOfDirectors">
+        <a class="btn btn-link" href="mailto:{{user.email}}">
+          <span class="fas fa-email"></span> {{user.userMemberTypes | userMemberTypes}}: {{user.firstName}} {{user.lastName}}
+        </a>
       </div>
     </div>
   </div>
