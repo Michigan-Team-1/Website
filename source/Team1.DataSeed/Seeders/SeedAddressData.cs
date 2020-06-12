@@ -31,28 +31,7 @@ namespace Team1.DataSeed.Seeders
                 line = reader.ReadLine();
                 while (line != null)
                 {
-                    var lineArray = new List<string>();
-                    var index = 0;
-                    var nextIndex = line.IndexOf(',');
-                    while (index != -1)
-                    {
-                        if (nextIndex > -1 && line.Substring(index, nextIndex - index).Count(w => w == '"') == 1)
-                            nextIndex = line.IndexOf(',', nextIndex + 1);
-                        else
-                        {
-                            if (nextIndex == -1)
-                            {
-                                lineArray.Add(line.Substring(index));
-                                index = nextIndex;
-                            }
-                            else
-                            {
-                                lineArray.Add(line.Substring(index, nextIndex - index));
-                                index = nextIndex + 1;
-                                nextIndex = line.IndexOf(',', index);
-                            }
-                        }
-                    }
+                    var lineArray = line.ParseCSVLine();
 
                     var dbo = new Country();
                     dbo.Name = lineArray[0].Trim('"').Trim();
@@ -98,7 +77,7 @@ namespace Team1.DataSeed.Seeders
                 while (line != null)
                 {
                     var dbo = new GoverningDistrict();
-                    var lineArray = line.Split(',');
+                    var lineArray = line.ParseCSVLine();
                     dbo.GoverningDistrictId = int.Parse(lineArray[0]);
                     dbo.CountryId = int.Parse(lineArray[1]);
                     dbo.Name = lineArray[2].Trim('"').Trim();
