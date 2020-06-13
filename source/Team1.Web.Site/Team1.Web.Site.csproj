@@ -243,6 +243,9 @@
     <None Update="ClientApp\src\app.common\apis\CompaniesController.ts">
       <CustomToolNamespace>Controllers\CompaniesController.cs</CustomToolNamespace>
     </None>
+    <None Update="ClientApp\src\app.common\apis\CountriesController - Copy.ts">
+      <CustomToolNamespace>Controllers\CountriesController - Copy.cs</CustomToolNamespace>
+    </None>
     <None Update="ClientApp\src\app.common\apis\CountriesController.ts">
       <CustomToolNamespace>Controllers\CountriesController.cs</CustomToolNamespace>
     </None>
@@ -260,6 +263,9 @@
     </None>
     <None Update="ClientApp\src\app.common\apis\ManageController.ts">
       <CustomToolNamespace>Controllers\ManageController.cs</CustomToolNamespace>
+    </None>
+    <None Update="ClientApp\src\app.common\apis\MobileCarriersController.ts">
+      <CustomToolNamespace>Controllers\MobileCarriersController.cs</CustomToolNamespace>
     </None>
     <None Update="ClientApp\src\app.common\apis\PicturesController.ts">
       <CustomToolNamespace>Controllers\PicturesController.cs</CustomToolNamespace>

@@ -17,6 +17,8 @@ import { ICountry } from 'app.common/dtos/CountryDto';
 import { IGoverningDistrict } from 'app.common/dtos/GoverningDistrictDto';
 
 import { ApiCache } from 'app.common/cache/api.cache';
+import { ISelectOption } from '../dtos/SelectOptionDto';
+import { MobileCarriersControllerAPI } from '../apis/MobileCarriersController';
 
 @Injectable()
 export class CommonService {
@@ -36,8 +38,8 @@ export class CommonService {
       .pipe(share(), map((data: any, index: any) => { return data; }));
 
     observable.subscribe((data: Array<IAddress>) => {
-        this.apiCache.setCachedItem(apiUrl, data);
-      },
+      this.apiCache.setCachedItem(apiUrl, data);
+    },
       (error: any) => {
         console.log(error);
         createToastFromServiceResponse(error, this.pushNotifications, this.toaster, "Addresses", "Error occurred while loading addresses.")
@@ -53,12 +55,12 @@ export class CommonService {
     var cacheData = this.apiCache.getCachedItemIfNotExpired(apiUrl, 60);
     if (cacheData != null) return of(cacheData);
 
-    let observable = this.httpClient.get<Array<ICountry>>(this.baseUrl + apiUrl, { withCredentials: true })
+    let observable = this.httpClient.get<Array<ICountry>>(this.baseUrl + apiUrl, { withCredentials: false })
       .pipe(share(), map((data: any, index: any) => { return data; }));
 
     observable.subscribe((data: Array<ICountry>) => {
-        this.apiCache.setCachedItem(apiUrl, data);
-      },
+      this.apiCache.setCachedItem(apiUrl, data);
+    },
       (error: any) => {
         console.log(error);
         createToastFromServiceResponse(error, this.pushNotifications, this.toaster, "Countries", "Error occurred while loading countries.")
@@ -74,15 +76,36 @@ export class CommonService {
     var cacheData = this.apiCache.getCachedItemIfNotExpired(apiUrl, 60);
     if (cacheData != null) return of(cacheData);
 
-    let observable = this.httpClient.get<Array<IGoverningDistrict>>(this.baseUrl + apiUrl, { withCredentials: true })
+    let observable = this.httpClient.get<Array<IGoverningDistrict>>(this.baseUrl + apiUrl, { withCredentials: false })
       .pipe(share(), map((data: any, index: any) => { return data; }));
-    
+
     observable.subscribe((data: Array<IGoverningDistrict>) => {
-        this.apiCache.setCachedItem(apiUrl, data);
-      },
+      this.apiCache.setCachedItem(apiUrl, data);
+    },
       (error: any) => {
         console.log(error);
         createToastFromServiceResponse(error, this.pushNotifications, this.toaster, "Governing Districts", "Error occurred while loading governing districts.")
+      },
+      () => {
+      });
+
+    return observable;
+  }
+
+  getMobileCarriers(): Observable<Array<ISelectOption<number>>> {
+    var apiUrl = MobileCarriersControllerAPI.GetMobileCarriers();
+    var cacheData = this.apiCache.getCachedItemIfNotExpired(apiUrl, 60);
+    if (cacheData != null) return of(cacheData);
+
+    let observable = this.httpClient.get<Array<ISelectOption<number>>>(this.baseUrl + apiUrl, { withCredentials: false })
+      .pipe(share(), map((data: any, index: any) => { return data; }));
+
+    observable.subscribe((data: Array<ISelectOption<number>>) => {
+      this.apiCache.setCachedItem(apiUrl, data);
+    },
+      (error: any) => {
+        console.log(error);
+        createToastFromServiceResponse(error, this.pushNotifications, this.toaster, "Countries", "Error occurred while loading mobile carriers.")
       },
       () => {
       });

@@ -18,11 +18,13 @@
   <ItemGroup>
     <None Remove="SeedData\Countries.csv" />
     <None Remove="SeedData\GoverningDistricts.csv" />
+    <None Remove="SeedData\mobileCarriers.csv" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="SeedData\Countries.csv" />
     <EmbeddedResource Include="SeedData\GoverningDistricts.csv" />
+    <EmbeddedResource Include="SeedData\mobileCarriers.csv" />
   </ItemGroup>
 
   <ItemGroup>

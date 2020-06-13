@@ -97,6 +97,7 @@ export class UsersService {
     observable.subscribe((data: IUser) => {
       // clear cache
       this.apiCache.clearCacheByUrl(UsersControllerAPI.GetUsers());
+      this.apiCache.clearCacheByUrl(UsersControllerAPI.GetBoardOfDirectors());
       this.apiCache.clearCacheByUrl(AddressesControllerAPI.GetUserAddresses(<number>dto.userId));
     },
       (error: any) => {

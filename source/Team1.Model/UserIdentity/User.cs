@@ -73,6 +73,9 @@ namespace Team1.Model.UserIdentity
 
         [Display(Name = "Opt Out of General Emails")]
         public bool OptOutOfGeneralEmails { get; set; }
+
+        [Display(Name = "Mobile Carrier")]
+        public int? MobileCarrierId { get; set; }
     }
 
     public class UserBase : UserRoot
@@ -193,6 +196,8 @@ namespace Team1.Model.UserIdentity
         public virtual ICollection<UserMemberType> UserMemberTypes { get; set; }
 
         public virtual ICollection<Picture> Pictures { get; set; }
+
+        public virtual MobileCarrier MobileCarrier { get; set; }
 
         #endregion
     }

@@ -1,10 +1,9 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Team1.Entities.Migrations
 {
-    public partial class v10 : Migration
+    public partial class v1 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -13,16 +12,16 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     AnnouncementId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(maxLength: 200, nullable: false),
                     Body = table.Column<string>(nullable: false),
                     StartShowingOnDate = table.Column<DateTime>(type: "Date", nullable: false),
                     InactivatedById = table.Column<int>(nullable: true),
                     InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false)
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -34,7 +33,7 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     APILogId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RequestContentBlock = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ResponseContentBlock = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TargetURL = table.Column<string>(maxLength: 200, nullable: false),
@@ -68,16 +67,16 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     EventId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(maxLength: 200, nullable: false),
                     EventDate = table.Column<DateTime>(type: "Date", nullable: false),
                     EventAlternateDate = table.Column<DateTime>(type: "Date", nullable: true),
                     InactivatedById = table.Column<int>(nullable: true),
                     InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false)
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -106,6 +105,19 @@ namespace Team1.Entities.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_MemberTypes", x => x.MemberTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "MobileCarriers",
+                columns: table => new
+                {
+                    MobileCarrierId = table.Column<int>(nullable: false),
+                    MobileCarrierName = table.Column<string>(maxLength: 200, nullable: false),
+                    TextingEmailSuffix = table.Column<string>(maxLength: 200, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MobileCarriers", x => x.MobileCarrierId);
                 });
 
             migrationBuilder.CreateTable(
@@ -138,50 +150,6 @@ namespace Team1.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Users",
-                columns: table => new
-                {
-                    UserId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    FirstName = table.Column<string>(maxLength: 200, nullable: false),
-                    LastName = table.Column<string>(maxLength: 200, nullable: false),
-                    Email = table.Column<string>(maxLength: 500, nullable: false),
-                    PhoneNumber = table.Column<string>(maxLength: 25, nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "Date", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    IsLoginEnabled = table.Column<bool>(nullable: false),
-                    CertificationLevel = table.Column<byte>(nullable: false),
-                    TripoliNumber = table.Column<string>(maxLength: 100, nullable: true),
-                    NarNumber = table.Column<string>(maxLength: 100, nullable: true),
-                    PaidThroughYear = table.Column<int>(nullable: false),
-                    OptOutOfMemberEmails = table.Column<bool>(nullable: false),
-                    OptOutOfGeneralEmails = table.Column<bool>(nullable: false),
-                    NormalizedEmail = table.Column<string>(maxLength: 500, nullable: false),
-                    EmailConfirmed = table.Column<bool>(nullable: false),
-                    PasswordHash = table.Column<string>(maxLength: 200, nullable: true),
-                    SecurityStamp = table.Column<string>(maxLength: 256, nullable: false),
-                    ConcurrencyStamp = table.Column<string>(maxLength: 50, nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false),
-                    LastSignInDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    LastPasswordChangeDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    IpAddress = table.Column<string>(maxLength: 50, nullable: true),
-                    AuthyUserId = table.Column<int>(nullable: true),
-                    InactivatedById = table.Column<int>(nullable: true),
-                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Users", x => x.UserId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "GoverningDistricts",
                 columns: table => new
                 {
@@ -202,11 +170,62 @@ namespace Team1.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(maxLength: 200, nullable: false),
+                    LastName = table.Column<string>(maxLength: 200, nullable: false),
+                    Email = table.Column<string>(maxLength: 500, nullable: false),
+                    PhoneNumber = table.Column<string>(maxLength: 25, nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "Date", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(nullable: false),
+                    IsLoginEnabled = table.Column<bool>(nullable: false),
+                    CertificationLevel = table.Column<byte>(nullable: false),
+                    TripoliNumber = table.Column<string>(maxLength: 100, nullable: true),
+                    NarNumber = table.Column<string>(maxLength: 100, nullable: true),
+                    PaidThroughYear = table.Column<int>(nullable: false),
+                    OptOutOfMemberEmails = table.Column<bool>(nullable: false),
+                    OptOutOfGeneralEmails = table.Column<bool>(nullable: false),
+                    MobileCarrierId = table.Column<int>(nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 500, nullable: false),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
+                    PasswordHash = table.Column<string>(maxLength: 200, nullable: true),
+                    SecurityStamp = table.Column<string>(maxLength: 256, nullable: false),
+                    ConcurrencyStamp = table.Column<string>(maxLength: 50, nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
+                    LockoutEnabled = table.Column<bool>(nullable: false),
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    LastSignInDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    LastPasswordChangeDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    IpAddress = table.Column<string>(maxLength: 50, nullable: true),
+                    AuthyUserId = table.Column<int>(nullable: true),
+                    InactivatedById = table.Column<int>(nullable: true),
+                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                    table.ForeignKey(
+                        name: "FK_Users_MobileCarriers_MobileCarrierId",
+                        column: x => x.MobileCarrierId,
+                        principalTable: "MobileCarriers",
+                        principalColumn: "MobileCarrierId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "RoleClaims",
                 columns: table => new
                 {
                     RoleClaimId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     RoleId = table.Column<byte>(nullable: false),
                     ClaimType = table.Column<string>(maxLength: 500, nullable: false),
                     ClaimValue = table.Column<string>(maxLength: 500, nullable: false)
@@ -227,17 +246,17 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     TaskId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     TaskCategoryId = table.Column<byte>(nullable: false),
                     Description = table.Column<string>(maxLength: 2000, nullable: false),
                     DueMonth = table.Column<byte>(nullable: false),
                     DueDay = table.Column<byte>(nullable: false),
                     InactivatedById = table.Column<int>(nullable: true),
                     InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false)
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -251,24 +270,108 @@ namespace Team1.Entities.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Locations",
+                columns: table => new
+                {
+                    LocationId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    LocationName = table.Column<string>(maxLength: 200, nullable: false),
+                    LocationDescription = table.Column<string>(maxLength: 2000, nullable: false),
+                    FAAWaiver = table.Column<string>(maxLength: 200, nullable: true),
+                    InactivatedById = table.Column<int>(nullable: true),
+                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    Address1 = table.Column<string>(maxLength: 200, nullable: true),
+                    Address2 = table.Column<string>(maxLength: 200, nullable: true),
+                    Address3 = table.Column<string>(maxLength: 200, nullable: true),
+                    City = table.Column<string>(maxLength: 200, nullable: true),
+                    GoverningDistrictId = table.Column<int>(nullable: true),
+                    CountryId = table.Column<int>(nullable: true),
+                    PostalCode = table.Column<string>(maxLength: 12, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Locations", x => x.LocationId);
+                    table.ForeignKey(
+                        name: "FK_Locations_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Locations_GoverningDistricts_GoverningDistrictId",
+                        column: x => x.GoverningDistrictId,
+                        principalTable: "GoverningDistricts",
+                        principalColumn: "GoverningDistrictId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Addresses",
+                columns: table => new
+                {
+                    AddressId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(nullable: false),
+                    Address1 = table.Column<string>(maxLength: 200, nullable: true),
+                    Address2 = table.Column<string>(maxLength: 200, nullable: true),
+                    Address3 = table.Column<string>(maxLength: 200, nullable: true),
+                    City = table.Column<string>(maxLength: 200, nullable: true),
+                    GoverningDistrictId = table.Column<int>(nullable: true),
+                    CountryId = table.Column<int>(nullable: true),
+                    PostalCode = table.Column<string>(maxLength: 12, nullable: true),
+                    InactivatedById = table.Column<int>(nullable: true),
+                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Addresses_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Addresses_GoverningDistricts_GoverningDistrictId",
+                        column: x => x.GoverningDistrictId,
+                        principalTable: "GoverningDistricts",
+                        principalColumn: "GoverningDistrictId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Pictures",
                 columns: table => new
                 {
                     PictureId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerUserId = table.Column<int>(nullable: false),
                     ApprovedByUserId = table.Column<int>(nullable: true),
                     ApprovedDateTime = table.Column<DateTime>(nullable: true),
                     Description = table.Column<string>(maxLength: 2000, nullable: true),
                     InactivatedById = table.Column<int>(nullable: true),
                     InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    DocumentFilename = table.Column<string>(maxLength: 1000, nullable: false),
-                    DocumentDisplayName = table.Column<string>(maxLength: 500, nullable: false),
-                    MimeType = table.Column<string>(maxLength: 200, nullable: false),
+                    CreatedById = table.Column<int>(nullable: true),
+                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    UpdatedById = table.Column<int>(nullable: true),
+                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: true),
+                    DocumentFilename = table.Column<string>(maxLength: 1000, nullable: true),
+                    DocumentDisplayName = table.Column<string>(maxLength: 500, nullable: true),
+                    MimeType = table.Column<string>(maxLength: 200, nullable: true),
                     UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
@@ -287,7 +390,7 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     LogId = table.Column<long>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: true),
                     LogGroupKey = table.Column<Guid>(nullable: true),
                     LogTypeId = table.Column<byte>(nullable: false),
@@ -317,7 +420,7 @@ namespace Team1.Entities.Migrations
                 columns: table => new
                 {
                     UserClaimId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     UserId = table.Column<int>(nullable: false),
                     ClaimType = table.Column<string>(maxLength: 500, nullable: false),
                     ClaimValue = table.Column<string>(maxLength: 500, nullable: false)
@@ -444,90 +547,6 @@ namespace Team1.Entities.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Addresses",
-                columns: table => new
-                {
-                    AddressId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    UserId = table.Column<int>(nullable: false),
-                    Address1 = table.Column<string>(maxLength: 200, nullable: false),
-                    Address2 = table.Column<string>(maxLength: 200, nullable: true),
-                    Address3 = table.Column<string>(maxLength: 200, nullable: true),
-                    City = table.Column<string>(maxLength: 200, nullable: true),
-                    GoverningDistrictId = table.Column<int>(nullable: true),
-                    CountryId = table.Column<int>(nullable: false),
-                    PostalCode = table.Column<string>(maxLength: 12, nullable: true),
-                    InactivatedById = table.Column<int>(nullable: true),
-                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Addresses", x => x.AddressId);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "UserId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Addresses_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "CountryId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Addresses_GoverningDistricts_GoverningDistrictId",
-                        column: x => x.GoverningDistrictId,
-                        principalTable: "GoverningDistricts",
-                        principalColumn: "GoverningDistrictId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Locations",
-                columns: table => new
-                {
-                    LocationId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    LocationName = table.Column<string>(maxLength: 200, nullable: false),
-                    LocationDescription = table.Column<string>(maxLength: 2000, nullable: false),
-                    FAAWaiver = table.Column<string>(maxLength: 200, nullable: true),
-                    InactivatedById = table.Column<int>(nullable: true),
-                    InactiveDateTime = table.Column<DateTimeOffset>(nullable: true),
-                    CreatedById = table.Column<int>(nullable: false),
-                    CreatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    UpdatedById = table.Column<int>(nullable: false),
-                    UpdatedDateTime = table.Column<DateTimeOffset>(nullable: false),
-                    Address1 = table.Column<string>(maxLength: 200, nullable: false),
-                    Address2 = table.Column<string>(maxLength: 200, nullable: true),
-                    Address3 = table.Column<string>(maxLength: 200, nullable: true),
-                    City = table.Column<string>(maxLength: 200, nullable: true),
-                    GoverningDistrictId = table.Column<int>(nullable: true),
-                    CountryId = table.Column<int>(nullable: false),
-                    PostalCode = table.Column<string>(maxLength: 12, nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Locations", x => x.LocationId);
-                    table.ForeignKey(
-                        name: "FK_Locations_Countries_CountryId",
-                        column: x => x.CountryId,
-                        principalTable: "Countries",
-                        principalColumn: "CountryId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Locations_GoverningDistricts_GoverningDistrictId",
-                        column: x => x.GoverningDistrictId,
-                        principalTable: "GoverningDistricts",
-                        principalColumn: "GoverningDistrictId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -668,6 +687,11 @@ namespace Team1.Entities.Migrations
                 name: "IX_UserRoles_RoleId",
                 table: "UserRoles",
                 column: "RoleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_MobileCarrierId",
+                table: "Users",
+                column: "MobileCarrierId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -740,6 +764,9 @@ namespace Team1.Entities.Migrations
 
             migrationBuilder.DropTable(
                 name: "TaskCategories");
+
+            migrationBuilder.DropTable(
+                name: "MobileCarriers");
 
             migrationBuilder.DropTable(
                 name: "Countries");

@@ -39,6 +39,7 @@ export class UserAddEditComponent implements OnInit {
   addressIsRequired: boolean = true;
   dtoUpdated: boolean = false;
   dataUpdated: boolean = false;
+  mobileCarriers: Array<ISelectOption<number>> = [];
 
   ngOnInit() {
     this.addressIsRequired = this.dtoPropertyAttributes.addresses_Attributes.required.value;
@@ -51,6 +52,14 @@ export class UserAddEditComponent implements OnInit {
       this.roles = data;
       this.isBusy--;
     }, (error) => { this.isBusy--; }, () => { });
+
+    this.isBusy++;
+    this.commonService.getMobileCarriers().subscribe((data) => {
+      this.isBusy--;
+      this.mobileCarriers = data;
+    }, (error: any) => {
+      this.isBusy--;
+    });
 
     if (this.dto.userId != null && this.dto.userId > 0 && this.dto.addresses == null) {
       this.dto.addresses = [];

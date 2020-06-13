@@ -11,6 +11,8 @@ import { getErrorMessageFromServerResponse } from 'app.common/helpers/general';
 import { ChangePasswordComponent } from './changePassword.component';
 import { ISelectOption } from 'app.common/dtos/SelectOptionDto';
 import { certificationLevels } from 'app.common/constants';
+import { CommonService } from 'app.common/services/common.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'users',
@@ -18,7 +20,7 @@ import { certificationLevels } from 'app.common/constants';
 })
 export class ManageComponent implements OnInit {
   constructor(private manageService: ManageService, private modalService: BsModalService,
-    private authService: AuthService
+    private authService: AuthService, private commonService:CommonService
   ) { }
 
   isBusy:boolean = false;
@@ -32,17 +34,21 @@ export class ManageComponent implements OnInit {
   addressIsRequired: boolean = true;
   dtoUpdated: boolean = false;
   dataUpdated: boolean = false;
+  mobileCarriers: Array<ISelectOption<number>> = [];
 
   ngOnInit() {
     this.addressIsRequired = this.dtoPropertyAttributes.addresses_Attributes.required.value;
 
     this.isBusy = true;
-    this.manageService.getUserProfile()
+    forkJoin(this.commonService.getMobileCarriers(), this.manageService.getUserProfile())
       .subscribe((data) => {
         this.isBusy = false;
-        this.dtoOriginal = data;
+        this.mobileCarriers = data[0];
+        this.dtoOriginal = data[1];
         this.dto = deepClone(this.dtoOriginal);
-      }, (error: any) => { this.isBusy = false; }, () => { });
+      }, (error: any) => {
+          this.isBusy = false;
+    });
   }
 
   addAddress() {

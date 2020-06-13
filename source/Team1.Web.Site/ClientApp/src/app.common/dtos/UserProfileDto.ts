@@ -21,7 +21,8 @@ export interface IUserProfile  {
     narNumber?: string;
     paidThroughYear?: number;
     optOutOfMemberEmails?: boolean;
-    optOutOfGeneralEmails?: boolean; 
+    optOutOfGeneralEmails?: boolean;
+    mobileCarrierId?: number; 
 } 
 
 export class IUserProfile_PropertyAttributes {
@@ -72,6 +73,9 @@ export class IUserProfile_PropertyAttributes {
       };
        static readonly optOutOfGeneralEmails_Attributes = {
       name: "Opt Out of General Emails", required: { value: true }, 
+      };
+       static readonly mobileCarrierId_Attributes = {
+      name: "Mobile Carrier", required: { value: false }, 
       };
       
 }

@@ -9,13 +9,14 @@ using System.Threading.Tasks;
 
 namespace Team1.DataSeed.Seeders
 {
-    public class SeedAddressData : SeedBase
+    public class SeedCsvs : SeedBase
     {
-        public SeedAddressData(DataContext context) : base(context) { }
+        public SeedCsvs(DataContext context) : base(context) { }
 
         public override async System.Threading.Tasks.Task Seed()
         {
             await CountriesAndGoverningDistricts();
+            await MobileCarriers();
         }
 
         private async System.Threading.Tasks.Task CountriesAndGoverningDistricts()
@@ -102,6 +103,50 @@ namespace Team1.DataSeed.Seeders
                     dbObj.Code = item.Code;
                     dbObj.CountryId = item.CountryId;
                     dbObj.Name = item.Name;
+                }
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        private async System.Threading.Tasks.Task MobileCarriers()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = "Team1.DataSeed.SeedData.mobileCarriers.csv";
+
+            var list = new List<MobileCarrier>();
+            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
+            using (StreamReader reader = new StreamReader(stream))
+            {
+                var line = reader.ReadLine(); // skip header row
+                line = reader.ReadLine();
+                while (line != null)
+                {
+                    var lineArray = line.ParseCSVLine();
+
+                    var dbo = new MobileCarrier();
+                    dbo.MobileCarrierId = int.Parse(lineArray[0]);
+                    dbo.MobileCarrierName = lineArray[1].Trim('"').Trim();
+                    dbo.TextingEmailSuffix = lineArray[2].Trim('"').Trim();
+
+                    list.Add(dbo);
+                    line = reader.ReadLine();
+                }
+
+                foreach (var item in list)
+                {
+                    var dbObj = await _context.MobileCarriers.FirstOrDefaultAsync(w => w.MobileCarrierId == item.MobileCarrierId);
+                    if (dbObj == null)
+                    {
+                        dbObj = new MobileCarrier()
+                        {
+                            MobileCarrierId = item.MobileCarrierId,
+                        };
+                        _context.MobileCarriers.Add(dbObj);
+                    }
+
+                    dbObj.MobileCarrierName = item.MobileCarrierName;
+                    dbObj.TextingEmailSuffix = item.TextingEmailSuffix;
                 }
             }
 

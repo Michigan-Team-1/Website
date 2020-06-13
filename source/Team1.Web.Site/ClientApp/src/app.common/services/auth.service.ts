@@ -54,6 +54,7 @@ export class AuthService {
       .pipe(share(), map((data: any, index: any) => { return data; }));
 
     observable.subscribe((data: IToken) => {
+      this.apiCache.clearCacheByUrl(UsersControllerAPI.GetUsers());
       if (data.token == "2fa") {
         self.rememberMe = dto.rememberMe;
         self.router.navigate(["twofactor"]);

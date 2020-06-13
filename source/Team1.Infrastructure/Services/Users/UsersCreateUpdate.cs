@@ -88,6 +88,7 @@ namespace Team1.Infrastructure.Services.Users
             dbObj.NarNumber = dto.NarNumber;
             dbObj.OptOutOfGeneralEmails = dto.OptOutOfGeneralEmails;
             dbObj.OptOutOfMemberEmails = dto.OptOutOfMemberEmails;
+            dbObj.MobileCarrierId = dto.MobileCarrierId;
 
             if (UserPermissionService.UserClaimModel.IsAdmin)
             {
@@ -213,6 +214,7 @@ namespace Team1.Infrastructure.Services.Users
             dbObj.NarNumber = dto.NarNumber;
             dbObj.OptOutOfGeneralEmails = dto.OptOutOfGeneralEmails;
             dbObj.OptOutOfMemberEmails = dto.OptOutOfMemberEmails;
+            dbObj.MobileCarrierId = dto.MobileCarrierId;
 
             dbObj.AuditFields.SetUpdated(UserPermissionService.UserClaimModel.UserId, timestamp);
 
@@ -305,6 +307,7 @@ namespace Team1.Infrastructure.Services.Users
             dbObj.CertificationLevel = dto.CertificationLevel;
             dbObj.TripoliNumber = dto.TripoliNumber;
             dbObj.NarNumber = dto.NarNumber;
+            dbObj.MobileCarrierId = dto.MobileCarrierId;
 
             dbObj.AuditFields.SetActiveInactive(true, UserPermissionService.UserClaimModel.UserId, timestamp);
 

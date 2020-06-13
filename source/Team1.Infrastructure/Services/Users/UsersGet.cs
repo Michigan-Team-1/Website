@@ -17,32 +17,47 @@ namespace Team1.Infrastructure.Services.Users
         /// <param name="activeOnly">active only items</param>
         public async Task<IEnumerable<UserDto>> GetUsers(bool activeOnly)
         {
-            return await (from u in db.UsersByFilter(UserPermissionService, activeOnly)
-                          select new UserDto()
-                          {
-                              UserId = u.UserId,
-                              FirstName = u.FirstName,
-                              LastName = u.LastName,
-                              Email = u.Email,
-                              PhoneNumber = u.PhoneNumber,
-                              BirthDate = u.BirthDate,
-                              IsActive = !u.AuditFields.InactiveDateTime.HasValue,
-                              IsLoginEnabled = u.IsLoginEnabled,
-                              CertificationLevel = u.CertificationLevel,
-                              TripoliNumber = u.TripoliNumber,
-                              NarNumber = u.NarNumber,
-                              OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
-                              OptOutOfMemberEmails = u.OptOutOfMemberEmails,
-                              PaidThroughYear = u.PaidThroughYear,
-                              UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
-                              Roles = u.UserRoles.Select(r => new RoleDto()
-                              {
-                                  RoleId = r.RoleId,
-                                  Level = r.Role.Level,
-                                  Name = r.Role.Name,
-                                  Type = r.Role.Type,
-                              }).ToList(),
-                          }).ToListAsync();
+            var query = db.UsersByFilter(UserPermissionService, activeOnly);
+            if (UserPermissionService.UserPolicies.UserAddEditDelete)
+            {
+                return await query.Select(u => new UserDto()
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    PhoneNumber = u.PhoneNumber,
+                    BirthDate = u.BirthDate,
+                    IsActive = !u.AuditFields.InactiveDateTime.HasValue,
+                    IsLoginEnabled = u.IsLoginEnabled,
+                    CertificationLevel = u.CertificationLevel,
+                    TripoliNumber = u.TripoliNumber,
+                    NarNumber = u.NarNumber,
+                    OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
+                    OptOutOfMemberEmails = u.OptOutOfMemberEmails,
+                    PaidThroughYear = u.PaidThroughYear,
+                    MobileCarrierId = u.MobileCarrierId,
+                    UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
+                    Roles = u.UserRoles.Select(r => new RoleDto()
+                    {
+                        RoleId = r.RoleId,
+                        Level = r.Role.Level,
+                        Name = r.Role.Name,
+                        Type = r.Role.Type,
+                    }).ToList(),
+                }).ToListAsync();
+            }
+
+            return await query.Select(u => new UserDto()
+            {
+                UserId = u.UserId,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                Email = u.Email,
+                IsActive = !u.AuditFields.InactiveDateTime.HasValue,
+                CertificationLevel = u.CertificationLevel,
+                UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
+            }).ToListAsync();
         }
 
         /// <summary>
@@ -52,7 +67,7 @@ namespace Team1.Infrastructure.Services.Users
         {
             var userMemberTypes = new List<MemberTypeEnum>() { MemberTypeEnum.Prefect, MemberTypeEnum.Secretary, MemberTypeEnum.Treasurer, MemberTypeEnum.VicePrefect };
             return await (from u in db.UsersByFilter(UserPermissionService, true)
-                          where u.UserMemberTypes.Any(s => userMemberTypes.Contains(s.MemberTypeId))
+                          where !u.AuditFields.InactiveDateTime.HasValue && u.UserMemberTypes.Any(s => userMemberTypes.Contains(s.MemberTypeId))
                           orderby u.UserMemberTypes.Select(s => s.MemberTypeId).FirstOrDefault()
                           select new UserDto()
                           {
@@ -109,6 +124,7 @@ namespace Team1.Infrastructure.Services.Users
                               OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
                               OptOutOfMemberEmails = u.OptOutOfMemberEmails,
                               PaidThroughYear = u.PaidThroughYear,
+                              MobileCarrierId = u.MobileCarrierId,
                               UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
                               Roles = u.UserRoles.Select(r => new RoleDto()
                               {
@@ -143,6 +159,7 @@ namespace Team1.Infrastructure.Services.Users
                               NarNumber = u.NarNumber,
                               OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
                               OptOutOfMemberEmails = u.OptOutOfMemberEmails,
+                              MobileCarrierId = u.MobileCarrierId,
                               Addresses = u.Addresses.Where(w => !w.AuditFields.InactiveDateTime.HasValue).Select(x => new AddressDto()
                               {
                                   AddressId = x.AddressId,

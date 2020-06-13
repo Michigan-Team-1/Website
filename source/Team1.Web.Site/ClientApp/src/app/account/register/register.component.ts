@@ -14,6 +14,7 @@ import { certificationLevels } from 'app.common/constants';
 import { ISelectOption } from 'app.common/dtos/SelectOptionDto';
 import { setIsUpdatedIfChanged } from 'app.common/helpers/object';
 import { moment } from 'ngx-bootstrap/chronos/test/chain';
+import { CommonService } from 'app.common/services/common.service';
 
 declare var grecaptcha: any;
 
@@ -22,6 +23,7 @@ declare var grecaptcha: any;
   templateUrl: './register.component.html',
 })
 export class RegisterComponent implements OnInit, AfterViewInit {
+  
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private route: ActivatedRoute,
@@ -29,6 +31,7 @@ export class RegisterComponent implements OnInit, AfterViewInit {
     private authService: AuthService,
     private elementRef: ElementRef,
     private changeDetectorRef: ChangeDetectorRef,
+    private commonService: CommonService
   ) { }
 
   isBusy: boolean = false;
@@ -41,18 +44,30 @@ export class RegisterComponent implements OnInit, AfterViewInit {
   dto: IRegister = {
     certificationLevel: 0
   };
+  dtoOriginal: IRegister = {
+    certificationLevel: 0
+  };
   dtoPropertyAttributes = IRegister_PropertyAttributes;
   certLevels:Array<ISelectOption<number>> = certificationLevels;
   logo = require("assets/logo.png");
   addressIsRequired = true;
   maxBirthDate = new Date();
   recaptchaSiteKey: string = "6LfoE6MZAAAAAF50jKHFmtwZnpQGzyD56VQGVxx5";
+  mobileCarriers: Array<ISelectOption<number>> = [];
 
   ngOnInit() {
     this.maxBirthDate.setFullYear(this.maxBirthDate.getFullYear() - 16);
     if (!this.dto.addresses || this.dto.addresses.length == 0) {
       this.addAddress();
     }
+
+    this.isBusy = true;
+    this.commonService.getMobileCarriers().subscribe((data) => {
+      this.isBusy = false;
+      this.mobileCarriers = data;
+    }, (error: any) => {
+      this.isBusy = false;
+    });
 
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 

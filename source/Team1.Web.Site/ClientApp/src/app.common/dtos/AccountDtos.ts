@@ -163,7 +163,8 @@ export interface IRegister  {
     narNumber?: string;
     paidThroughYear?: number;
     optOutOfMemberEmails?: boolean;
-    optOutOfGeneralEmails?: boolean; 
+    optOutOfGeneralEmails?: boolean;
+    mobileCarrierId?: number; 
 } 
 
 export class IRegister_PropertyAttributes {
@@ -232,6 +233,9 @@ export class IRegister_PropertyAttributes {
       };
        static readonly optOutOfGeneralEmails_Attributes = {
       name: "Opt Out of General Emails", required: { value: true }, 
+      };
+       static readonly mobileCarrierId_Attributes = {
+      name: "Mobile Carrier", required: { value: false }, 
       };
       
 }

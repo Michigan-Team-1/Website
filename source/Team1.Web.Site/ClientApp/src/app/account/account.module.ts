@@ -25,6 +25,6 @@ import { BsDatepickerModule, PopoverModule } from 'ngx-bootstrap';
   imports: [FormsModule, CgBusyModule, CommonModule, RouterModule, ComponentsModule, DirectivesModule, PipesModule, BsDatepickerModule, PopoverModule],
   declarations: [LoginComponent, RegisterComponent, ForgotPasswordComponent, ResetPasswordComponent, TwoFactorComponent, TwoFactorAppsComponent, TwoFactorSetupComponent, ConfirmEmailComponent],
   exports: [LoginComponent, RegisterComponent, ForgotPasswordComponent, ResetPasswordComponent, TwoFactorComponent, TwoFactorAppsComponent, TwoFactorSetupComponent, ConfirmEmailComponent],
-    providers: [AuthService, IsLoggedInAuthGuard, AnyPolicyAuthGuard]
+  providers: [AuthService, IsLoggedInAuthGuard, AnyPolicyAuthGuard]
 })
 export class AccountModule { }

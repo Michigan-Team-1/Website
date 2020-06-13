@@ -345,6 +345,7 @@ namespace Team1.Web.Site
             services.AddTransient<Team1.Infrastructure.Services.Templates.Emails.EmailsCreate>();
             services.AddTransient<Team1.Infrastructure.Services.Addresses.AddressesGet>();
             services.AddTransient<Team1.Infrastructure.Services.Addresses.AddressCreateUpdate>();
+            services.AddTransient<Team1.Infrastructure.Services.MobileCarriers.MobileCarriersGet>();
             services.AddTransient<Team1.Infrastructure.Services.Countries.CountriesGet>();
             services.AddTransient<Team1.Infrastructure.Services.GoverningDistricts.GoverningDistrictsGet>();
             services.AddTransient<Team1.Infrastructure.Services.ReCAPTCHA.ReCAPTCHAVerfiy>();

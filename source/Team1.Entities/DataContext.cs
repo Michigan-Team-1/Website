@@ -87,6 +87,7 @@ namespace Team1.Entities
         public DbSet<Location> Locations { get; set; }
         public DbSet<LogType> LogTypes { get; set; }
         public DbSet<MemberType> MemberTypes { get; set; }
+        public DbSet<MobileCarrier> MobileCarriers { get; set; }
         public DbSet<Picture> Pictures { get; set; }
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Role> Roles { get; set; }

@@ -71,7 +71,7 @@
               </div>
               <div class="col col-lg-12">
                 <button type="button" class="btn btn-sm btn-link" (click)="edit(row.index)" *ngIf="showAdminOptions"><span class="fas fa-edit">&nbsp;</span>{{row.value.email}}</button>
-                <span *ngIf="!showAdminOptions">{{row.value.email}}</span>
+                <a *ngIf="!showAdminOptions" class="btn btn-sm btn-link" href="mailto:{{row.value.email}}">{{row.value.email}}</a>
               </div>
             </div>
           </td>

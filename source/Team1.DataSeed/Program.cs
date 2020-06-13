@@ -15,7 +15,7 @@ namespace Team1.DataSeed
             System.Console.WriteLine("Seeder Started...");
             System.Console.WriteLine("Type: ");
             System.Console.WriteLine(" 1 - \"enum\" to seed enum values.");
-            System.Console.WriteLine(" 2 - \"addr\" to seed address data.");
+            System.Console.WriteLine(" 2 - \"csv\" to seed csvs.");
             System.Console.WriteLine(" 3 - \"rcu\" to seed roles, companies and users data.");
             System.Console.WriteLine(" 4 - to seed admin data.");
 
@@ -25,6 +25,7 @@ namespace Team1.DataSeed
             IConfigurationRoot configBuilder = new ConfigurationBuilder()
                 .SetBasePath(projectPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddUserSecrets(typeof(Program).Assembly)
                 .Build();
 
             builder.UseSqlServer(configBuilder.GetConnectionString("DefaultConnection"));
@@ -47,14 +48,14 @@ namespace Team1.DataSeed
                         System.Console.WriteLine("Seed complete");
                         break;
                     case "2":
-                    case "addr":
-                        seeder = new SeedAddressData(context);
+                    case "csv":
+                        seeder = new SeedCsvs(context);
                         Task.Run(async () => await seeder.Seed()).Wait();
                         System.Console.WriteLine("Seed complete");
                         break;
                     case "3":
                     case "rcu":
-                        seeder = new SeedRolesCompaniesUsers(context);
+                        seeder = new SeedRolesUsers(context);
                         Task.Run(async () => await seeder.Seed()).Wait();
                         System.Console.WriteLine("Seed complete");
                         break;

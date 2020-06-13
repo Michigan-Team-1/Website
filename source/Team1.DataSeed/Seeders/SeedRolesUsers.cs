@@ -10,11 +10,11 @@ using Team1.Model.UserIdentity;
 
 namespace Team1.DataSeed.Seeders
 {
-    public class SeedRolesCompaniesUsers : SeedBase
+    public class SeedRolesUsers : SeedBase
     {
         private List<Role> _roles = new List<Role>();
 
-        public SeedRolesCompaniesUsers(DataContext context) : base(context) { }
+        public SeedRolesUsers(DataContext context) : base(context) { }
 
         public override async System.Threading.Tasks.Task Seed()
         {
@@ -76,6 +76,7 @@ namespace Team1.DataSeed.Seeders
                 TripoliNumber = "12939",
                 CertificationLevel = 2,
                 BirthDate = new System.DateTime(1981, 7, 27),
+                MobileCarrierId = 41,
                 Addresses = new List<Address>()
                 {
                     new Address()
@@ -112,6 +113,7 @@ namespace Team1.DataSeed.Seeders
                 TripoliNumber = null,
                 CertificationLevel = 2,
                 BirthDate = new System.DateTime(1970, 1, 1),
+                MobileCarrierId = 50,
                 Addresses = new List<Address>()
                 {
                     new Address()
@@ -148,6 +150,7 @@ namespace Team1.DataSeed.Seeders
                 TripoliNumber = null,
                 CertificationLevel = 2,
                 BirthDate = new System.DateTime(1970, 1, 1),
+                MobileCarrierId = 37,
                 Addresses = new List<Address>()
                 {
                     new Address()
