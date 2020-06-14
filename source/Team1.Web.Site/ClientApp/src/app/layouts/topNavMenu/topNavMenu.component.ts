@@ -23,6 +23,10 @@ export class TopNavMenuComponent {
     return this.authService.userInfo || {};
   }
 
+  closeBurgerMenu() {
+    this.isBurgerMenuExpanded = false;
+  }
+
   get isImpersonating(): boolean {
     return this.userInfo.isImpersonatingCompany || this.userInfo.isImpersonatingUser || false;
   }

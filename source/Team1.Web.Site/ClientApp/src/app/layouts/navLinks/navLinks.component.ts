@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { AuthService } from 'app.common/services/auth.service';
 
 @Component({
@@ -7,5 +7,11 @@ import { AuthService } from 'app.common/services/auth.service';
 })
 export class NavLinksComponent {
   constructor(public authService: AuthService) {
+  }
+
+  @Output() closeBurgerMenu: EventEmitter<any> = new EventEmitter();
+
+  triggerMenuClose() {
+    this.closeBurgerMenu.emit();
   }
 }

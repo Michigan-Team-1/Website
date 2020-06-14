@@ -92,6 +92,7 @@ export class AnnouncementsService {
     observable.subscribe((data: IAnnouncement) => {
       // clear cache
       this.apiCache.clearCacheByUrl(AnnouncementsControllerAPI.GetAnnouncements());
+      this.apiCache.clearCacheByUrl(AnnouncementsControllerAPI.GetAnnouncementsForDashboard());
     },
       (error: any) => {
         console.log(error);

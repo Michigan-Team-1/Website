@@ -15,7 +15,7 @@
       <div class="d-flex">
         <div class="collapse navbar-collapse navbarCollapse" [collapse]="!isBurgerMenuExpanded">
           <!--when using side-nav menu, following <ul> must have the CSS class "topNav-hide-md" added, remove the CSS class for top-nav-->
-          <ul class="navbar-nav mr-auto" navLinks></ul>
+          <ul class="navbar-nav mr-auto" navLinks (closeBurgerMenu)="closeBurgerMenu()"></ul>
           <ul class="navbar-nav" *ngIf="isImpersonating">
             <li>
               <span class="badge badge-danger">Impersonating:  {{ impersonatingWhom }}</span>
@@ -35,7 +35,7 @@
               </div>
             </li>
             <li *ngIf="!isAuthenticated" class="nav-item" [routerLinkActive]="['active']">
-              <a class="nav-link" [routerLink]="['/register']"><i class="fas fa-user-plus fa-fw"></i> Register</a>
+              <a class="nav-link" [routerLink]="['/register']" (click)="isBurgerMenuExpanded = false"><i class="fas fa-user-plus fa-fw"></i> Register</a>
             </li>
             <li *ngIf="!isAuthenticated" class="nav-item" [routerLinkActive]="['active']">
               <a class="nav-link" [routerLink]="['/login']"><i class="fas fa-sign-in-alt fa-fw"></i> Login</a>

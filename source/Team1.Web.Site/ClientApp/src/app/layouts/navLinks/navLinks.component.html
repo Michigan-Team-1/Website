@@ -1,14 +1,14 @@
 <li class="nav-item" [routerLinkActive]="['active']">
-  <a class="nav-link" [routerLink]="['/dashboard']"><i class="fas fa-home fa-fw"></i> Home</a>
+  <a class="nav-link" [routerLink]="['/dashboard']" (click)="triggerMenuClose()"><i class="fas fa-home fa-fw"></i> Home</a>
 </li>
 <li class="nav-item" [routerLinkActive]="['active']">
-  <a class="nav-link" [routerLink]="['/joinus']"><i class="fas fa-user-astronaut fa-fw"></i> Join Us</a>
+  <a class="nav-link" [routerLink]="['/joinus']" (click)="triggerMenuClose()"><i class="fas fa-user-astronaut fa-fw"></i> Join Us</a>
 </li>
 <li class="nav-item" [routerLinkActive]="['active']">
-  <a class="nav-link" [routerLink]="['/gallery']"><i class="fas fa-images fa-fw"></i> Gallery</a>
+  <a class="nav-link" [routerLink]="['/gallery']" (click)="triggerMenuClose()"><i class="fas fa-images fa-fw"></i> Gallery</a>
 </li>
 <li class="nav-item" [routerLinkActive]="['active']">
-  <a class="nav-link" [routerLink]="['/users']"><i class="fas fa-users fa-fw"></i> Members</a>
+  <a class="nav-link" [routerLink]="['/users']" (click)="triggerMenuClose()"><i class="fas fa-users fa-fw"></i> Members</a>
 </li>
 <li *ngIf="authService.isAuthenticated && (authService.announcementAddEditDelete || authService.eventAddEditDelete || authService.locationAddEditDelete || authService.userAddEditDelete || authService.taskAddEditDelete)" class="nav-item dropdown" dropdown>
   <a class="nav-link dropdown-toggle canSelect" id="adminMenuLink" dropdownToggle 
@@ -16,9 +16,9 @@
     <i class="fas fa-unlock fa-fw"></i> Admin
   </a>
   <div class="dropdown-menu" aria-labelledby="adminMenuLink" *dropdownMenu>
-    <a *ngIf="authService.isAuthenticated && authService.announcementAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/announcements']"><i class="fas fa-bullhorn fa-fw"></i> Announcements</a>
-    <a *ngIf="authService.isAuthenticated && authService.eventAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/events']"><i class="fas fa-calendar-alt fa-fw"></i> Events</a>
-    <a *ngIf="authService.isAuthenticated && authService.locationAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/locations']"><i class="fas fa-map-marked-alt fa-fw"></i> Locations</a>
-    <a *ngIf="authService.isAuthenticated && authService.taskAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/tasks']"><i class="fas fa-tasks fa-fw"></i> Tasks</a>
+    <a *ngIf="authService.isAuthenticated && authService.announcementAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/announcements']" (click)="triggerMenuClose()"><i class="fas fa-bullhorn fa-fw"></i> Announcements</a>
+    <a *ngIf="authService.isAuthenticated && authService.eventAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/events']" (click)="triggerMenuClose()"><i class="fas fa-calendar-alt fa-fw"></i> Events</a>
+    <a *ngIf="authService.isAuthenticated && authService.locationAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/locations']" (click)="triggerMenuClose()"><i class="fas fa-map-marked-alt fa-fw"></i> Locations</a>
+    <a *ngIf="authService.isAuthenticated && authService.taskAddEditDelete" class="dropdown-item" [routerLinkActive]="['active']" [routerLink]="['/tasks']" (click)="triggerMenuClose()"><i class="fas fa-tasks fa-fw"></i> Tasks</a>
   </div>
 </li>

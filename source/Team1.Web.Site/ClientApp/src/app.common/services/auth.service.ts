@@ -10,7 +10,8 @@ import { notifyUser, createToastFromServiceResponse } from "app.common/helpers/T
 import {
   localStorageUserIdentityToken, localStorageUserInformation, localStorageUserIdentityTokenValidTo,
   localStorageUserIdentityRefreshToken, refreshTokenIntervalMinutes, localStorageUserPolicies,
-  sessionStoreageRememberMe,
+  sessionStoreageRememberMe,
+
   localStorageUserRoles,
   sessionStorageRefreshTokenCallStartedDateTime,
   sessionStorageRefreshTokenCallRunning,

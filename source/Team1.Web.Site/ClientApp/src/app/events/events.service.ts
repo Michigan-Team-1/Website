@@ -92,6 +92,7 @@ export class EventsService {
     observable.subscribe((data: IEvent) => {
       // clear cache
       this.apiCache.clearCacheByPath(EventsControllerAPI.GetEvents());
+      this.apiCache.clearCacheByPath(EventsControllerAPI.GetEventsForDashboard());
     },
       (error: any) => {
         console.log(error);
