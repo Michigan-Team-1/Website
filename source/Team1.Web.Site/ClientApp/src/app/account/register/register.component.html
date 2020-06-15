@@ -85,7 +85,7 @@
               </label>
               <div class="col-md-9">
                 <div class="form-check form-check-inline" *ngFor="let row of certLevels">
-                  <label class="form-check-label">
+                  <label class="form-check-label mr-2">
                     <input class="form-check-input" type="radio" [(ngModel)]="dto.certificationLevel" name="certificationLevel" id="certificationLevel{{row.value}}" [value]="row.value">
                     {{row.text}}
                   </label>

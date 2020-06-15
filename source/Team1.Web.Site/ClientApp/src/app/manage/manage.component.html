@@ -46,11 +46,20 @@
       </label>
       <div class="col-sm-9">
         <div class="form-check form-check-inline" *ngFor="let row of certLevels">
-          <label class="form-check-label">
+          <label class="form-check-label mr-2">
             <input class="form-check-input" type="radio" [(ngModel)]="dto.certificationLevel" name="certificationLevel" id="certificationLevel{{row.value}}" [value]="row.value">
             {{row.text}}
           </label>
         </div>
+      </div>
+    </div>
+    <div class="form-group form-row">
+      <label for="paidThroughYear" class="col-form-label col-md-3">
+        <defaultLabel [propertyAttributes]="dtoPropertyAttributes.paidThroughYear_Attributes"></defaultLabel>
+        <inputUnsavedChangesNotification [dataUpdated]="(dto.paidThroughYear != null && dtoOriginal == null) || dto.paidThroughYear != dtoOriginal.paidThroughYear"></inputUnsavedChangesNotification>
+      </label>
+      <div class="col-md-9 form-control-plaintext">
+        {{dto.paidThroughYear}}
       </div>
     </div>
     <!--<div class="form-group form-row">
@@ -85,8 +94,8 @@
         </div>
       </div>
     </div>
-    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfMemberEmails_Attributes" [dto]="dto" [predicate]="'optOutOfMemberEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
-    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfGeneralEmails_Attributes" [dto]="dto" [predicate]="'optOutOfGeneralEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+    <!--<spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfMemberEmails_Attributes" [dto]="dto" [predicate]="'optOutOfMemberEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
+  <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfGeneralEmails_Attributes" [dto]="dto" [predicate]="'optOutOfGeneralEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>-->
     <div *ngIf="f.submitted && !f.form.valid" class="alert alert-danger"><h4>Check for invalid fields</h4></div>
     <div *ngIf="message != null" class="alert alert-danger"><h4 [innerHTML]="message"></h4></div>
   </div>

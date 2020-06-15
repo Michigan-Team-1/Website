@@ -171,24 +171,24 @@ namespace Team1.DataSeed.Seeders
                 UserMemberTypes = new List<UserMemberType>() { new UserMemberType() { MemberTypeId = Model.Enums.MemberTypeEnum.Prefect } }
             });
 
-            users.Add(new User()
-            {
-                Email = "test@test.com",
-                FirstName = "test",
-                LastName = "test",
-                PasswordHash = "ACMVM5I16Hmp1MN1VVvPoi3qDFSgQnx2ptICSzBMVkeElBJ6DB09lV4DFDKhu/nZQQ==",
-                SecurityStamp = "09e6a71b-5a4f-4c54-b9b3-2fc54f114bb8",
-                PhoneNumber = "1235554321",
-                PhoneNumberConfirmed = true,
-                TwoFactorEnabled = false,
-                LockoutEnabled = true,
-                EmailConfirmed = true,
-                IsLoginEnabled = true,
-                OptOutOfGeneralEmails = true,
-                OptOutOfMemberEmails = true,
-                AuditFields = new AuditFields(0, _timestamp),
-                UserRoles = new List<UserRole>() { registrarRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
-            });
+            //users.Add(new User()
+            //{
+            //    Email = "test@test.com",
+            //    FirstName = "test",
+            //    LastName = "test",
+            //    PasswordHash = "ACMVM5I16Hmp1MN1VVvPoi3qDFSgQnx2ptICSzBMVkeElBJ6DB09lV4DFDKhu/nZQQ==",
+            //    SecurityStamp = "09e6a71b-5a4f-4c54-b9b3-2fc54f114bb8",
+            //    PhoneNumber = "1235554321",
+            //    PhoneNumberConfirmed = true,
+            //    TwoFactorEnabled = false,
+            //    LockoutEnabled = true,
+            //    EmailConfirmed = true,
+            //    IsLoginEnabled = true,
+            //    OptOutOfGeneralEmails = true,
+            //    OptOutOfMemberEmails = true,
+            //    AuditFields = new AuditFields(0, _timestamp),
+            //    UserRoles = new List<UserRole>() { registrarRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
+            //});
 
             for (int i = 0; i < users.Count; i++)
             {

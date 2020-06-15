@@ -160,6 +160,7 @@ namespace Team1.Infrastructure.Services.Users
                               OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
                               OptOutOfMemberEmails = u.OptOutOfMemberEmails,
                               MobileCarrierId = u.MobileCarrierId,
+                              PaidThroughYear = u.PaidThroughYear,
                               Addresses = u.Addresses.Where(w => !w.AuditFields.InactiveDateTime.HasValue).Select(x => new AddressDto()
                               {
                                   AddressId = x.AddressId,

@@ -52,7 +52,7 @@
           </div>
           <ng-template #pictureCard>
             <span *ngIf="row.value.description">{{row.value.description | truncatetext:30}}</span>
-            <span *ngIf="!row.value.description">Edit</span>
+            <span *ngIf="!row.value.description && galleryType != 1" >Edit</span>
           </ng-template>
           <ng-template #editCard>
             <button type="button" class="btn btn-link p-0" (click)="edit(row.index)">

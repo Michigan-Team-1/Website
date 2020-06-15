@@ -142,7 +142,7 @@ export class InputInteger {
 })
 export class InputNaturalInteger {
   constructor(private el: ElementRef) {
-    this.options = { showTooltip: true, autoUnmask: true, groupSeparator: ',', autoGroup: true, allowMinus: false, onUnMask: this.onUnMask };
+    this.options = { showTooltip: true, autoUnmask: true, groupSeparator: ',', autoGroup: true, allowMinus: false, onUnMask: this.onUnMask, rightAlign: false };
     var inputmask = Inputmask(this.mask, this.options);
     inputmask.mask(this.el.nativeElement);
   }
@@ -151,9 +151,9 @@ export class InputNaturalInteger {
   options: any;
 
   onUnMask = (maskedValue: string, unmaskedValue: string) => {
-    if (maskedValue != null)
-      return parseInt(maskedValue);
-    return maskedValue;
+    if (unmaskedValue != null)
+      return parseInt(unmaskedValue);
+    return 0;
   };
 }
 
