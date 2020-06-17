@@ -280,13 +280,6 @@ namespace Team1.Web.Site
 
                 config.TokenValidationParameters = TokenValidationParameters;
             });
-            //.AddMicrosoftAccount(options=> {
-            //    options.ClientId = Configuration["Authentication:Microsoft:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"]; ;
-            //}).AddGoogle(options => {
-            //    options.ClientId = Configuration["Authentication:Google:ClientId"];
-            //    options.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
-            //});
 
             services.AddAuthorization(config =>
             {
@@ -350,6 +343,7 @@ namespace Team1.Web.Site
             services.AddTransient<Team1.Infrastructure.Services.GoverningDistricts.GoverningDistrictsGet>();
             services.AddTransient<Team1.Infrastructure.Services.ReCAPTCHA.ReCAPTCHAVerfiy>();
             services.AddTransient<Team1.Infrastructure.Services.Logs.SystemLogsCreate>();
+            services.AddTransient<Team1.Infrastructure.Services.Logs.APILogsCreateUpdate>();
         }
     }
 }
