@@ -5,7 +5,7 @@ import { CgBusyModule } from 'angular-busy2';
 
 import { CommonService } from './services/common.service';
 import { AddressEditComponent } from './addressEdit/addressEdit.component';
-import { DirectivesModule } from './directives';
+import { DirectivesModule, InputYear } from './directives';
 import { PipesModule } from './pipes';
 import { SmartTablePagerComponent } from './smartTablePager/smartTablePager.component';
 import { ImageViewerComponent } from './imageViewer/imageVIewer.component';
@@ -21,6 +21,7 @@ import { InputDateComponent } from './formComponents/dates/date.component';
 import { BsDatepickerModule } from 'ngx-bootstrap';
 import { InputNaturalIntegerComponent } from './formComponents/numbers/naturalInteger.component';
 import { TextAreaMaxComponent } from './formComponents/text/testAreaMax.component';
+import { DateYearComponent } from './formComponents/dates/dateYear.component';
 
 @Component({
     selector: 'requiredField',
@@ -44,9 +45,9 @@ export class DefaultLabelComponent {
 @NgModule({
   imports: [FormsModule, CommonModule, PipesModule, DirectivesModule, CgBusyModule, BsDatepickerModule],
   declarations: [RequiredFieldComponent, DefaultLabelComponent, AddressEditComponent, SmartTablePagerComponent, ImageViewerComponent, ModalDefaultFooterButtons, UnsavedChangesNotification, InputUnsavedChangesNotification, FileUploadModalComponent,
-    SpudStringMaxComponent, SpudEmailComponent, SpudPhoneComponent, SpudCheckboxComponent, InputDateComponent, InputNaturalIntegerComponent, TextAreaMaxComponent],
+    SpudStringMaxComponent, SpudEmailComponent, SpudPhoneComponent, SpudCheckboxComponent, InputDateComponent, InputNaturalIntegerComponent, TextAreaMaxComponent, DateYearComponent],
   exports: [RequiredFieldComponent, DefaultLabelComponent, AddressEditComponent, SmartTablePagerComponent, ImageViewerComponent, ModalDefaultFooterButtons, UnsavedChangesNotification, InputUnsavedChangesNotification, FileUploadModalComponent,
-    SpudStringMaxComponent, SpudEmailComponent, SpudPhoneComponent, SpudCheckboxComponent, InputDateComponent, InputNaturalIntegerComponent, TextAreaMaxComponent],
+    SpudStringMaxComponent, SpudEmailComponent, SpudPhoneComponent, SpudCheckboxComponent, InputDateComponent, InputNaturalIntegerComponent, TextAreaMaxComponent, DateYearComponent],
   entryComponents: [FileUploadModalComponent],
   providers: [CommonService]
 })

@@ -15,8 +15,12 @@ export class InputMaskPhone {
     inputmask.mask(this.el.nativeElement);
   }
 
+  onUnMask = (maskedValue: string, unmaskedValue: string) => {
+    return unmaskedValue;
+  };
+
   mask: string = usPhoneMask;
-  options: any = { showTooltip: true, autoUnmask: true };
+  options: any = { showTooltip: true, autoUnmask: true, onUnMask: this.onUnMask };
 }
 
 // for global phone inputmask to work, requires extra phone extensions.
@@ -111,6 +115,25 @@ export class InputMaskDate {
 }
 
 @Directive({
+  selector: '[inputYear]'
+})
+export class InputYear {
+  constructor(private el: ElementRef) {
+    var inputmask = Inputmask(this.mask, this.options);
+    inputmask.mask(this.el.nativeElement);
+  }
+
+  onUnMask = (maskedValue: string, unmaskedValue: string) => {
+    if (unmaskedValue)
+      return parseInt(unmaskedValue);
+    return 0;
+  };
+
+  mask: string = 'datetime'
+  options: any = { showTooltip: true, autoUnmask: true, inputFormat: 'yyyy', onUnMask: this.onUnMask };
+}
+
+@Directive({
   selector: '[inputDecimal]'
 })
 export class InputDecimal {
@@ -178,7 +201,7 @@ export class AutofocusDirective implements AfterViewInit {
 // must come last
 @NgModule({
   //imports: [], //Inputmask
-  declarations: [InputMaskPhone, InputMaskPhoneGlobal, InputMaskGeneral, InputMaskDate, InputDecimal, AutofocusDirective, InputInteger, InputNaturalInteger],
-  exports: [InputMaskPhone, InputMaskPhoneGlobal, InputMaskGeneral, InputMaskDate, InputDecimal, AutofocusDirective, InputInteger, InputNaturalInteger]
+  declarations: [InputMaskPhone, InputMaskPhoneGlobal, InputMaskGeneral, InputMaskDate, InputDecimal, AutofocusDirective, InputInteger, InputNaturalInteger, InputYear],
+  exports: [InputMaskPhone, InputMaskPhoneGlobal, InputMaskGeneral, InputMaskDate, InputDecimal, AutofocusDirective, InputInteger, InputNaturalInteger, InputYear]
 })
 export class DirectivesModule { }

@@ -21,7 +21,8 @@ export class LocationAddEditComponent implements OnInit {
 
   isBusy: number = 0;
   @Input() dtoOriginal: ILocation | undefined;
-  defaultDto: ILocation = { isActive: true, isUpdated: true };
+  defaultDto: ILocation = {
+    isActive: true, isUpdated: true, addressObj: {} };
   dto: ILocation = deepClone(this.defaultDto);
   dtoPropertyAttributes = ILocation_PropertyAttributes;
   message: string | undefined;

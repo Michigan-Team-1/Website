@@ -48,12 +48,23 @@ namespace Team1.Infrastructure.Services.Users
                 }).ToListAsync();
             }
 
+            if (UserPermissionService.UserClaimModel.IsAuthenticated)
+                return await query.Select(u => new UserDto()
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Email = u.Email,
+                    IsActive = !u.AuditFields.InactiveDateTime.HasValue,
+                    CertificationLevel = u.CertificationLevel,
+                    UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
+                }).ToListAsync();
+
             return await query.Select(u => new UserDto()
             {
                 UserId = u.UserId,
                 FirstName = u.FirstName,
                 LastName = u.LastName,
-                Email = u.Email,
                 IsActive = !u.AuditFields.InactiveDateTime.HasValue,
                 CertificationLevel = u.CertificationLevel,
                 UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),

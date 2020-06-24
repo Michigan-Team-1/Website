@@ -115,7 +115,7 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Michigan Team 1 Confirm Email.
+        ///   Looks up a localized string similar to Michigan Team-1 Confirm Email.
         /// </summary>
         public static string ConfirmEmailSubject {
             get {
@@ -232,7 +232,7 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Michigan Team 1 Password Change Request.
+        ///   Looks up a localized string similar to Michigan Team-1 Password Change Request.
         /// </summary>
         public static string PasswordSetupEmailSubject {
             get {
@@ -250,7 +250,7 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Michigan Team 1 Account Setup.
+        ///   Looks up a localized string similar to Michigan Team-1 Account Setup.
         /// </summary>
         public static string PasswordSetupNewAccountEmailSubject {
             get {
@@ -286,7 +286,7 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Michigan Team 1 Reset Password.
+        ///   Looks up a localized string similar to Michigan Team-1 Reset Password.
         /// </summary>
         public static string ResetPasswordEmailSubject {
             get {
@@ -322,7 +322,7 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This email was sent to {0} by the Michigan Team 1 website.&lt;br/&gt;This email contains information from the Michigan Team 1 Rocket Club..
+        ///   Looks up a localized string similar to This email was sent to {0} by the Michigan Team-1 website.&lt;br/&gt;This email contains information from the Michigan Team-1 Rocket Club..
         /// </summary>
         public static string TemplateEmailFooter {
             get {

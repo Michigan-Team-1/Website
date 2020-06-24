@@ -18,7 +18,7 @@ import * as crud from 'smart-table-crud';
     provide: SmartTable,
     useFactory: (usersService: UsersService) => from(usersService.getUsers(), {
       search: {},
-      sort: { pointer: "email", direction: "asc" },
+      sort: { pointer: "lastName", direction: "asc" },
       filter: {
         isActive: [{ operator: "equals", type: "string", value: "true" }]
       },
@@ -29,7 +29,7 @@ import * as crud from 'smart-table-crud';
 })
 export class UsersComponent implements OnInit {
   constructor(private usersService: UsersService, private modalService: BsModalService,
-    private authService: AuthService, private table: SmartTable<IUser>
+    public authService: AuthService, private table: SmartTable<IUser>
   ) { }
 
   isCollapsedFilters: boolean = true;

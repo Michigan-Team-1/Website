@@ -11,9 +11,9 @@
     <table class="table table-striped">
       <thead>
         <tr>
-          <th stSort="email" class="canSort">{{dtoPropertyAttributes.email_Attributes.name}}</th>
+          <th stSort="lastName" class="canSort">{{dtoPropertyAttributes.lastName_Attributes.name}}</th>
           <th stSort="firstName" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.firstName_Attributes.name}}</th>
-          <th stSort="lastName" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.lastName_Attributes.name}}</th>
+          <th stSort="email" class="d-none d-lg-table-cell canSort" *ngIf="authService.isAuthenticated">{{dtoPropertyAttributes.email_Attributes.name}}</th>
           <th stSort="certificationLevel" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.certificationLevel_Attributes.name}}</th>
           <th class="d-none d-lg-table-cell">{{dtoPropertyAttributes.userMemberTypes_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" stSort="roleNames" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.roles_Attributes.name}}</th>
@@ -29,12 +29,12 @@
                 </button>
               </div>
               <div class="col col-lg-12">
-                <input stSearch="email" placeholder="Search..." class="form-control-sm form-control" type="search" />
+                <input stSearch="lastName" placeholder="Last name..." class="form-control-sm form-control" type="search" />
               </div>
             </div>
           </th>
           <th class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters"><input stSearch="firstName" placeholder="First name..." class="form-control-sm form-control" type="search" /></th>
-          <th class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters"><input stSearch="lastName" placeholder="Last name..." class="form-control-sm form-control" type="search" /></th>
+          <th class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters" *ngIf="authService.isAuthenticated"><input stSearch="email" placeholder="Email..." class="form-control-sm form-control" type="search" /></th>
           <th class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters">
             <select stFilter="certificationLevel" stFilterType="number" stFilterOperator="equals" class="form-control-sm form-control">
               <option value="" selected>All</option>
@@ -70,8 +70,8 @@
                 </button>
               </div>
               <div class="col col-lg-12">
-                <button type="button" class="btn btn-sm btn-link" (click)="edit(row.index)" *ngIf="showAdminOptions"><span class="fas fa-edit">&nbsp;</span>{{row.value.email}}</button>
-                <a *ngIf="!showAdminOptions" class="btn btn-sm btn-link" href="mailto:{{row.value.email}}">{{row.value.email}}</a>
+                <button type="button" class="btn btn-sm btn-link" (click)="edit(row.index)" *ngIf="showAdminOptions"><span class="fas fa-edit">&nbsp;</span>{{row.value.lastName}}</button>
+                <span *ngIf="!showAdminOptions">{{row.value.lastName}}</span>
               </div>
             </div>
           </td>
@@ -79,9 +79,9 @@
             <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.firstName_Attributes.name}}</label>
             {{row.value.firstName}}
           </td>
-          <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
-            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.lastName_Attributes.name}}</label>
-            {{row.value.lastName}}
+          <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed" *ngIf="authService.isAuthenticated">
+            <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.email_Attributes.name}}</label>
+            <a class="btn btn-sm btn-link" href="mailto:{{row.value.email}}"><span class="fas fa-envelope">&nbsp;</span>{{row.value.email}}</a>
           </td>
           <td class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
             <label class="col-form-label col-sm-3 d-lg-none">{{dtoPropertyAttributes.certificationLevel_Attributes.name}}</label>{{row.value.certificationLevel}}

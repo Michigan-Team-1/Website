@@ -16,7 +16,7 @@ export const localStorageRefreshTokenCallStarted = "RefreshTokenCallStarted";
 export const sessionStorageRefreshTokenCallRunning = "RefreshTokenCallRunning";
 export const sessionStorageRefreshTokenCallStartedDateTime = "RefreshTokenCallStartedDateTime";
 
-export const usPhoneMask = '+1(999)999-9999';
+export const usPhoneMask = '(999) 999-9999';
 export const globalPhoneMask = 'phone';
 
 export const dateMaskFormat = "mm/dd/yyyy";

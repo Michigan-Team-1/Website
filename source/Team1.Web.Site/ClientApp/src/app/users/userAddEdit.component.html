@@ -29,7 +29,7 @@
           <option [ngValue]="undefined">Select...</option>
           <option *ngFor="let o of mobileCarriers" [ngValue]="o.value">{{o.text}}</option>
         </select>
-      </div>
+      </div> 
     </div>
     <inputDate [propertyAttributes]="dtoPropertyAttributes.birthDate_Attributes" [dto]="dto" [predicate]="'birthDate'" [dtoOriginal]="dtoOriginal" [form]="f">
     </inputDate>
@@ -49,10 +49,10 @@
             {{row.text}}
           </label>
         </div>
-      </div>
+      </div>  
     </div>
-    <inputNaturalInteger [propertyAttributes]="dtoPropertyAttributes.paidThroughYear_Attributes" [dto]="dto" [predicate]="'paidThroughYear'" [dtoOriginal]="dtoOriginal" [form]="f">
-    </inputNaturalInteger>
+    <dateYear [propertyAttributes]="dtoPropertyAttributes.paidThroughYear_Attributes" [dto]="dto" [predicate]="'paidThroughYear'" [dtoOriginal]="dtoOriginal" [form]="f">
+    </dateYear>
     <div class="form-group form-row">
       <label for="role" class="col-form-label col-sm-3">
         <defaultLabel [propertyAttributes]="dtoPropertyAttributes.roles_Attributes"></defaultLabel>
