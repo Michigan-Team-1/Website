@@ -17,8 +17,8 @@
   </a>
 
   <div class="dropdown-menu" aria-labelledby="downloadMenuLink" *dropdownMenu>
-    <a class="dropdown-item" [routerLinkActive]="['active']" href="https://downloads.team1.org/Team-1_HPR_flight_card.pdf" target="_blank" (click)="triggerMenuClose()"><i class="fas fa-rocket"></i> HPR Flight Card</a>
-    <a class="dropdown-item" [routerLinkActive]="['active']" href="https://downloads.team1.org/Team-1_launch_registration_form.pdf" target="_blank" (click)="triggerMenuClose()"><i class="fas fa-clipboard"></i> Registration Form</a>
+    <a class="dropdown-item" href="https://downloads.team1.org/Team-1_flight_card.pdf" target="_blank" (click)="triggerMenuClose()"><i class="fas fa-rocket"></i> Flight Card</a>
+    <a class="dropdown-item" href="https://downloads.team1.org/Team-1_launch_registration_form.pdf" target="_blank" (click)="triggerMenuClose()"><i class="fas fa-clipboard"></i> Registration Form</a>
   </div>
 </li>
 <li *ngIf="authService.isAuthenticated && (authService.announcementAddEditDelete || authService.eventAddEditDelete || authService.locationAddEditDelete || authService.userAddEditDelete || authService.taskAddEditDelete)" class="nav-item dropdown" dropdown>
