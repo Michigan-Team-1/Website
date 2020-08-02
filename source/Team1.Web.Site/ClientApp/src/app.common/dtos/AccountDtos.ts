@@ -164,7 +164,8 @@ export interface IRegister  {
     paidThroughYear?: number;
     optOutOfMemberEmails?: boolean;
     optOutOfGeneralEmails?: boolean;
-    mobileCarrierId?: number; 
+    mobileCarrierId?: number;
+    emailConfirmed?: boolean; 
 } 
 
 export class IRegister_PropertyAttributes {
@@ -236,6 +237,9 @@ export class IRegister_PropertyAttributes {
       };
        static readonly mobileCarrierId_Attributes = {
       name: "Mobile Carrier", required: { value: false }, 
+      };
+       static readonly emailConfirmed_Attributes = {
+      name: "Email Confirmed?", required: { value: true }, 
       };
       
 }

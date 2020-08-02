@@ -242,17 +242,13 @@ namespace Team1.Web.Site.Controllers
 
             var emailer = (Services.Email.IEmailer)HttpContext.RequestServices.GetService(typeof(Services.Email.IEmailer));
             await emailer.SendEmailAsync(dto.Email, _localizer["ConfirmEmailSubject"], emailTemplateResponse.Data);
-            
-            //if (_twilioSettings.AuthyEnabled)
-            //{
-            //    var authyService = GetService<AuthyService>();
-            //    var authyResponse = await authyService.CreateAuthyUser(dto);
-            //    if (!authyResponse.Succeeded)
-            //    {
-            //        // we don't care if it fails here.
-            //        // we'll catch it when they try to login.
-            //    }
-            //}
+
+            // email BoD about new registration
+            emailTemplateResponse = await emailTemplateService.GenerateEmail(BaseUrl,
+                string.Format(_localizer["NewRegistrationMainContent"], dto.FirstName, dto.LastName, dto.Email),
+                string.Format(_localizer["SimpleTemplateEmailFooter"]));
+
+            await emailer.SendEmailAsync(new[] { "prefect@team1.org", "viceprefect@team1.org", "secretary@team1.org" }, _localizer["NewRegistrationSubject"], emailTemplateResponse.Data);
 
             return Ok();
         }

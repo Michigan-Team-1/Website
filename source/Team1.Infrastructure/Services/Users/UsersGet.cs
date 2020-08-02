@@ -37,6 +37,7 @@ namespace Team1.Infrastructure.Services.Users
                     OptOutOfMemberEmails = u.OptOutOfMemberEmails,
                     PaidThroughYear = u.PaidThroughYear,
                     MobileCarrierId = u.MobileCarrierId,
+                    EmailConfirmed = u.EmailConfirmed,
                     UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
                     Roles = u.UserRoles.Select(r => new RoleDto()
                     {

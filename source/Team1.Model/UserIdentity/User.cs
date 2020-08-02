@@ -76,6 +76,13 @@ namespace Team1.Model.UserIdentity
 
         [Display(Name = "Mobile Carrier")]
         public int? MobileCarrierId { get; set; }
+
+        /// <summary>
+        /// Gets or sets a flag indicating if a user has confirmed their email address.
+        /// </summary>
+        /// <value>True if the email address has been confirmed, otherwise false.</value>
+        [Display(Name ="Email Confirmed?")]
+        public bool EmailConfirmed { get; set; }
     }
 
     public class UserBase : UserRoot
@@ -98,12 +105,6 @@ namespace Team1.Model.UserIdentity
         [Required]
         [StringLength(Constants.FieldSizes.EmailLength), EmailAddress]
         public string NormalizedEmail { get; set; }
-
-        /// <summary>
-        /// Gets or sets a flag indicating if a user has confirmed their email address.
-        /// </summary>
-        /// <value>True if the email address has been confirmed, otherwise false.</value>
-        public bool EmailConfirmed { get; set; }
 
         /// <summary>
         /// Gets or sets a salted and hashed representation of the password for this user.

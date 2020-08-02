@@ -22,7 +22,8 @@ export interface IUserProfile  {
     paidThroughYear?: number;
     optOutOfMemberEmails?: boolean;
     optOutOfGeneralEmails?: boolean;
-    mobileCarrierId?: number; 
+    mobileCarrierId?: number;
+    emailConfirmed?: boolean; 
 } 
 
 export class IUserProfile_PropertyAttributes {
@@ -76,6 +77,9 @@ export class IUserProfile_PropertyAttributes {
       };
        static readonly mobileCarrierId_Attributes = {
       name: "Mobile Carrier", required: { value: false }, 
+      };
+       static readonly emailConfirmed_Attributes = {
+      name: "Email Confirmed?", required: { value: true }, 
       };
       
 }

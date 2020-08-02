@@ -168,6 +168,12 @@
   <data name="Logo" xml:space="preserve">
     <value>Logo</value>
   </data>
+  <data name="NewRegistrationMainContent" xml:space="preserve">
+    <value>{0} {1} with email {2} registered on Team1.org.</value>
+  </data>
+  <data name="NewRegistrationSubject" xml:space="preserve">
+    <value>New User Registered On Team1.org</value>
+  </data>
   <data name="Password" xml:space="preserve">
     <value>Password</value>
   </data>
@@ -200,6 +206,9 @@
   </data>
   <data name="Save" xml:space="preserve">
     <value>Save</value>
+  </data>
+  <data name="SimpleTemplateEmailFooter" xml:space="preserve">
+    <value>This email contains information from the Michigan Team-1 Rocket Club.</value>
   </data>
   <data name="Submit" xml:space="preserve">
     <value>Submit</value>

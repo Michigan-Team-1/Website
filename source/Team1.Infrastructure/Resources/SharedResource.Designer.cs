@@ -214,6 +214,24 @@ namespace Team1.Infrastructure.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} {1} with email {2} registered on Team1.org..
+        /// </summary>
+        public static string NewRegistrationMainContent {
+            get {
+                return ResourceManager.GetString("NewRegistrationMainContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New User Registered On Team1.org.
+        /// </summary>
+        public static string NewRegistrationSubject {
+            get {
+                return ResourceManager.GetString("NewRegistrationSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Password.
         /// </summary>
         public static string Password {
@@ -309,6 +327,15 @@ namespace Team1.Infrastructure.Resources {
         public static string Save {
             get {
                 return ResourceManager.GetString("Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This email contains information from the Michigan Team-1 Rocket Club..
+        /// </summary>
+        public static string SimpleTemplateEmailFooter {
+            get {
+                return ResourceManager.GetString("SimpleTemplateEmailFooter", resourceCulture);
             }
         }
         

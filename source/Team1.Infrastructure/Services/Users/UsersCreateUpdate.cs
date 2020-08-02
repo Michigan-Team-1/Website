@@ -93,6 +93,7 @@ namespace Team1.Infrastructure.Services.Users
             if (UserPermissionService.UserClaimModel.IsAdmin)
             {
                 dbObj.PaidThroughYear = dto.PaidThroughYear;
+                dbObj.EmailConfirmed = dto.EmailConfirmed;
             }
 
             if (dbObj.UserMemberTypes == null)

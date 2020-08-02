@@ -29,7 +29,7 @@
           <option [ngValue]="undefined">Select...</option>
           <option *ngFor="let o of mobileCarriers" [ngValue]="o.value">{{o.text}}</option>
         </select>
-      </div> 
+      </div>
     </div>
     <inputDate [propertyAttributes]="dtoPropertyAttributes.birthDate_Attributes" [dto]="dto" [predicate]="'birthDate'" [dtoOriginal]="dtoOriginal" [form]="f">
     </inputDate>
@@ -49,7 +49,7 @@
             {{row.text}}
           </label>
         </div>
-      </div>  
+      </div>
     </div>
     <dateYear [propertyAttributes]="dtoPropertyAttributes.paidThroughYear_Attributes" [dto]="dto" [predicate]="'paidThroughYear'" [dtoOriginal]="dtoOriginal" [form]="f">
     </dateYear>
@@ -122,6 +122,7 @@
         </div>
       </div>
     </div>
+    <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.emailConfirmed_Attributes" [dto]="dto" [predicate]="'emailConfirmed'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
     <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.isActive_Attributes" [dto]="dto" [predicate]="'isActive'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
     <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfMemberEmails_Attributes" [dto]="dto" [predicate]="'optOutOfMemberEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
     <spudCheckbox [propertyAttributes]="dtoPropertyAttributes.optOutOfGeneralEmails_Attributes" [dto]="dto" [predicate]="'optOutOfGeneralEmails'" [dtoOriginal]="dtoOriginal" [form]="f"></spudCheckbox>
