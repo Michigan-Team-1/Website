@@ -5,7 +5,8 @@
         <h3>Members</h3>
       </div>
       <div class="col-sm-6 text-right" *ngIf="showAdminOptions">
-        <button type="button" class="btn btn-primary" (click)="edit(undefined)" accesskey="A"><i class="fas fa-plus"></i> Add New</button>
+        <button type="button" class="btn btn-primary mr-2" (click)="edit(undefined)" accesskey="A"><i class="fas fa-plus"></i> Add New</button>
+        <button type="button" class="btn btn-info" (click)="download()" accesskey="D"><i class="fas fa-download"></i> Export CSV</button>
       </div>
     </div>
     <table class="table table-striped">
@@ -18,6 +19,7 @@
           <th class="d-none d-lg-table-cell">{{dtoPropertyAttributes.userMemberTypes_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" stSort="roleNames" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.roles_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" stSort="isActive" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.isActive_Attributes.name}}</th>
+          <th *ngIf="showAdminOptions" stSort="isActive" class="d-none d-lg-table-cell canSort">{{dtoPropertyAttributes.paidUp_Attributes.name}}</th>
           <th *ngIf="showAdminOptions" class="d-none d-lg-table-cell"></th>
         </tr>
         <tr>
@@ -50,6 +52,13 @@
             <select stFilter="isActive" stFilterOperator="equals" class="form-control-sm form-control">
               <option value="">All</option>
               <option value="true" selected>Yes</option>
+              <option value="false">No</option>
+            </select>
+          </th>
+          <th *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="isCollapsedFilters">
+            <select stFilter="paidUp" stFilterOperator="equals" class="form-control-sm form-control">
+              <option value="" selected>All</option>
+              <option value="true">Yes</option>
               <option value="false">No</option>
             </select>
           </th>
@@ -96,6 +105,11 @@
             <label class="col-form-label col-sm-3 d-lg-none">
               {{dtoPropertyAttributes.isActive_Attributes.name}}
             </label><span [outerHTML]="row.value.isActive | spudYesNo:true"></span>
+          </td>
+          <td *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
+            <label class="col-form-label col-sm-3 d-lg-none">
+              {{dtoPropertyAttributes.paidUp_Attributes.name}}
+            </label><span [outerHTML]="row.value.paidUp | spudYesNo:true"></span>
           </td>
           <td *ngIf="showAdminOptions" class="displayBlock d-lg-table-cell" [collapse]="!row.isNotCollapsed">
             <div class="btn-group" dropdown>

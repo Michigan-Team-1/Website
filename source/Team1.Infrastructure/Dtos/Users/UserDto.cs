@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -20,6 +21,9 @@ namespace Team1.Infrastructure.Dtos.Users
                 return string.Join(", ", Roles.OrderBy(o => o.NormalizedName).Select(s => s.Name));
             }
         }
+
+        [Display(Name = "Paid Up")]
+        public bool PaidUp { get { return DateTime.Today.Year <= PaidThroughYear; } }
 
         [Display(Name = "Member Types")]
         public List<UserMemberTypeDto> UserMemberTypes { get; set; }

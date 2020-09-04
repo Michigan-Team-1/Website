@@ -10,6 +10,9 @@ import { AuthService } from 'app.common/services/auth.service';
 import { defaultPageSize } from 'app.common/constants';
 import { SmartTable, from } from 'smart-table-ng';
 import * as crud from 'smart-table-crud';
+import { exportToCsvBlob } from '../../app.common/helpers/array';
+import { blobToFile } from '../../app.common/helpers/blob';
+import * as moment from 'moment';
 
 @Component({
   selector: 'users',
@@ -48,6 +51,15 @@ export class UsersComponent implements OnInit {
     this.isBusy = true;
     this.usersService.sendPasswordResetEmail(userId, isnew).subscribe(() => { this.isBusy = false; }, () => { this.isBusy = false; }, () => { });
   };
+
+  download() {
+    var headerRows = [
+      "firstName", "lastName", "email", "isActive", "phoneNumber", "birthDate", "certificationLevel", "paidUp", "paidThroughYear"
+    ]
+    var blob = exportToCsvBlob(this.table.getMatchingItems(), headerRows, true);
+    var date = moment().format("YYYYMMDD");
+    blobToFile(blob, `members_${date}.csv`);
+  }
 
   edit(index: number | undefined) {
     const initialState = {

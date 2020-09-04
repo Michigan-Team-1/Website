@@ -10,6 +10,7 @@ export interface IUser  {
     
     roles?: IRole[];
     roleNames?: string;
+    paidUp?: boolean;
     userMemberTypes?: IUserMemberType[];
     addresses?: IAddress[];
     isActive?: boolean;
@@ -38,6 +39,9 @@ export class IUser_PropertyAttributes {
       };
        static readonly roleNames_Attributes = {
       required: { value: false }, name: "RoleNames", 
+      };
+       static readonly paidUp_Attributes = {
+      name: "Paid Up", required: { value: true }, 
       };
        static readonly userMemberTypes_Attributes = {
       name: "Member Types", required: { value: false }, 

@@ -6,7 +6,7 @@ import * as moment from 'moment';
      * @param headerColumns header columns, optional.  Default get properties from the data rows
      * @param showHeaderRow first row would be the header row
      */
-export function exportToCsvBlob(rows: Array<any>, headerColumns: Array<string>, showHeaderRow: boolean): Blob {
+export function exportToCsvBlob(rows: Array<any>, headerColumns: Array<string> | undefined, showHeaderRow: boolean): Blob {
   var processRow = function (headerColumns: Array<string>, row: any) {
     var finalVal = '';
     for (var j = 0; j < headerColumns.length; j++) {
@@ -43,12 +43,13 @@ export function exportToCsvBlob(rows: Array<any>, headerColumns: Array<string>, 
       headerColumns.push(p);
     }
   }
-  if (showHeaderRow) {
-    csvFile.push(headerColumns.join(","));
+  if (headerColumns != null) {
+    if (showHeaderRow) {
+      csvFile.push(headerColumns.join(","));
+    }
+    for (var i = 0; i < rows.length; i++) {
+      csvFile.push(processRow(headerColumns, rows[i]));
+    }
   }
-  for (var i = 0; i < rows.length; i++) {
-    csvFile.push(processRow(headerColumns, rows[i]));
-  }
-
   return new Blob([csvFile.join("\n")], { type: 'text/csv;charset=utf-8;' });
 }
