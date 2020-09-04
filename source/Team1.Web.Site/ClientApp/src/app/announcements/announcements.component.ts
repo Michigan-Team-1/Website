@@ -59,6 +59,6 @@ export class AnnouncementsComponent implements OnInit {
       subcription.unsubscribe();
     });
 
-    let modal: BsModalRef = this.modalService.show(AnnouncementAddEditComponent, { initialState, class: 'modal-lg' });
+    let modal: BsModalRef = this.modalService.show(AnnouncementAddEditComponent, { initialState, class: 'modal-full-screen' });
   }
 }

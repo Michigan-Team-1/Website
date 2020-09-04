@@ -30,6 +30,7 @@ export class AnnouncementAddEditComponent implements OnInit {
   dtoUpdated: boolean = false;
   dataUpdated: boolean = false;
   dateMaskFormat: string = dateMaskFormat;
+  keepModalOpen: boolean = false;
 
   ngOnInit() {
     if (this.dtoOriginal == null) this.dtoOriginal = deepClone(this.defaultDto);
@@ -59,7 +60,13 @@ export class AnnouncementAddEditComponent implements OnInit {
       this.isBusy--;
       this.dto = data;
       this.success = true;
-      this.activeModal.hide();
+      if (!this.keepModalOpen) {
+        this.activeModal.hide();
+      }
+      else {
+        this.dtoOriginal = deepClone(this.dto);
+      }
+      this.keepModalOpen = false;
     }, (error) => {
       this.isBusy--;
       this.message = getErrorMessageFromServerResponse(error);

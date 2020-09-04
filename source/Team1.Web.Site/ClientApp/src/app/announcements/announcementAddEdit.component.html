@@ -16,7 +16,11 @@
     <div class="form-group form-row">
       <label for="body" class="col-form-label col-sm-3"><defaultLabel [propertyAttributes]="dtoPropertyAttributes.body_Attributes"></defaultLabel></label>
       <div class="col-sm-9">
-        <editor id="body" name="body" apiKey="qt9cl0arv9npsi7b9070ahey4jwcymvh44c9jtzkc3gltsiy" [(ngModel)]="dto.body" [init]="{plugins: 'link'}" #body="ngModel"></editor>
+        <editor id="body" name="body" apiKey="qt9cl0arv9npsi7b9070ahey4jwcymvh44c9jtzkc3gltsiy" [(ngModel)]="dto.body"
+                [init]="{height: 700, plugins: ['advlist autolink lists link charmap anchor', 'searchreplace visualblocks code fullscreen',
+       'insertdatetime table paste code help wordcount'], toolbar: 'undo redo | formatselect | bold italic backcolor | \
+       alignleft aligncenter alignright alignjustify | \
+       bullist numlist outdent indent | removeformat | help' }" #body="ngModel"></editor>
         <div *ngIf="f.submitted && body.invalid && (body.dirty || body.touched || f.submitted)" class="invalid-feedback d-block">
           <div *ngIf="body.errors.required">
             {{dtoPropertyAttributes.body_Attributes | requiredErrorMessage}}
@@ -32,6 +36,7 @@
   </div>
   <div class="modal-footer">
     <unsavedChangesNotification [dataUpdated]="dataUpdated"></unsavedChangesNotification>
+    <button type="submit" class="btn btn-primary mr-2" [disabled]="(f != null && f.form.invalid && f.submitted)" (click)="keepModalOpen = true" accesskey="S"><i class="far fa-save"></i> Save &amp; Stay</button>
     <modalDefaultFooterButtons [form]="f" (close)="close($event)"></modalDefaultFooterButtons>
   </div>
 </form>

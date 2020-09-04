@@ -198,3 +198,13 @@ imageviewer img {
 .displayBlock {
   display: block;
 }
+
+/* used because tinymce formatting sucks.*/
+.announcement table {
+  margin-right: 1rem;
+}
+
+/* used because tinymce formatting sucks.*/
+.announcement table td {
+  text-align: center;
+}

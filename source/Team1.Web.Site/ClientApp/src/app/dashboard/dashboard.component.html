@@ -18,7 +18,7 @@
       <div class="col-sm col-lg-8">
         <h4>Announcements</h4>
         <div *ngFor="let row of announcements">
-          <div class="card bg-light mb-2">
+          <div class="card bg-light mb-2 announcement">
             <h5 class="card-header">{{row.title}}</h5>
             <div class="card-body" [innerHtml]="row.body"></div>
             <div class="card-footer text-muted">Posted on {{row.startShowingOnDate | defaultDate}}</div>
