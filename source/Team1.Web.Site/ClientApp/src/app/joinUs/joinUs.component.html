@@ -6,14 +6,34 @@
     </p>
     <p>
       <a *ngIf="!authService.isAuthenticated" class="btn btn-info" [routerLink]="['/register']">Register now to get started!</a>
-    </p> 
+    </p>
     <div><h5>Board of Directors</h5></div>
-    <div class="row">
+    <div class="row mb-3">
       <div class="col-auto" *ngFor="let user of boardOfDirectors">
         <a class="btn btn-link" href="mailto:{{user.email}}">
           <span class="fas fa-email"></span> {{user.userMemberTypes | userMemberTypes}}: {{user.firstName}} {{user.lastName}}
         </a>
       </div>
     </div>
+    <h5>Join our discussion forum!</h5>
+    <p>
+      We are using Google Groups as our discussion forum.  Can I join the group without a gmail account.  Yes, you can.  Both methods below will guide you on how to join with or without a gmail account.
+    </p>
+    <p>
+      Method 1:
+    </p>
+    <ul>
+      <li>Send an email to <a href="mailto:michiganteam-1+subscribe@googlegroups.com">michiganteam-1+subscribe@googlegroups.com</a></li>
+      <li>You'll get an email back asking you to confirm your join request.  Reply to the email.</li>
+      <li>That's it, you're done!</li>
+    </ul>
+    <p>Method 2:</p>
+    <ul><li>Send the board of directors an email and we’ll manually add you to the group.  We are going to assume you want to join the group with the email you send from.</li></ul>
+    <p>If you have an account that can login to gmail, then you’ll be able to view the conversations on the page itself.  If you can’t login to gmail, that’s OK.  You’ll still receive emails and be able to send emails to the group.</p>
+    <p>
+      The group email address is:  <a href="mailto:michiganteam-1@googlegroups.com">
+        michiganteam-1@googlegroups.com
+      </a>.&nbsp; Only members can send emails to the group.
+    </p>
   </div>
 </div>
