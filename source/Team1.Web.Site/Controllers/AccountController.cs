@@ -13,7 +13,6 @@ using Team1.Infrastructure.Dtos.Token;
 using Team1.Infrastructure.Dtos.Users;
 using Team1.Infrastructure.Resources;
 using Team1.Infrastructure.Services;
-using Team1.Infrastructure.Services.ReCAPTCHA;
 using Team1.Infrastructure.Services.Users;
 using Team1.Model.UserIdentity;
 using Team1.Web.Site.Infrastructure.UserIdentity;
@@ -194,19 +193,6 @@ namespace Team1.Web.Site.Controllers
         {
             if (!ModelState.IsValid)
                 return CreateResponse(new BaseServiceResponse<RegisterDto>(dto, System.Net.HttpStatusCode.BadRequest));
-
-            var reCAPTCHAVerfiy = GetService<ReCAPTCHAVerfiy>();
-
-            var recaptchaResponse = await reCAPTCHAVerfiy.Verify(nameof(Register), dto.RecaptchaToken);
-
-            if (!recaptchaResponse.Succeeded)
-                return CreateResponse(recaptchaResponse);
-
-            if (recaptchaResponse.Data < 0.3m)
-            {
-                ModelState.AddModelError("Error", "Are you a bot?  Please try again.");
-                return CreateResponse(new BaseServiceResponse<RegisterDto>(dto, System.Net.HttpStatusCode.BadRequest));
-            }
 
             using (var transaction = await SpudContext.BeginTransactionAsync())
             {

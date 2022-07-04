@@ -165,28 +165,28 @@ namespace Services.Email
             }
 
             var m = new MimeMessage();
-            m.From.Add(new MailboxAddress(From));
+            m.From.Add(new MailboxAddress(From, From));
 
             if (!string.IsNullOrWhiteSpace(ReplyTo))
             {
-                m.ReplyTo.Add(new MailboxAddress(ReplyTo));
+                m.ReplyTo.Add(new MailboxAddress(ReplyTo, ReplyTo));
             }
 
             foreach (string item in To)
             {
-                if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress(item)); }
+                if (!string.IsNullOrEmpty(item)) { m.To.Add(new MailboxAddress(item, item)); }
             }
 
             if (CC != null && CC.Length > 0)
             {
                 foreach (string item in CC)
-                    if (!string.IsNullOrEmpty(item)) { m.Cc.Add(new MailboxAddress(item)); }
+                    if (!string.IsNullOrEmpty(item)) { m.Cc.Add(new MailboxAddress(item, item)); }
             }
 
             if (Bcc != null && Bcc.Length > 0)
             {
                 foreach (string item in Bcc)
-                    if (!string.IsNullOrEmpty(item)) { m.Bcc.Add(new MailboxAddress(item)); }
+                    if (!string.IsNullOrEmpty(item)) { m.Bcc.Add(new MailboxAddress(item, item)); }
             }
 
             m.Subject = Subject;

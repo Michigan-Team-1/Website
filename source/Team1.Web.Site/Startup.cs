@@ -13,7 +13,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Team1.Entities;
 using Team1.Infrastructure;
-using Team1.Infrastructure.Services.ReCAPTCHA;
 using Team1.Infrastructure.Services.Users;
 using Team1.Infrastructure.UserIdentity;
 using Team1.Model.UserIdentity;
@@ -136,9 +135,6 @@ namespace Team1.Web.Site
             services.AddTransient<Infrastructure.ActionFilters.DenyIfIpAddressChangedFilter>();
             services.AddTransient<Infrastructure.ActionFilters.IpWhiteListFilter>();
             services.AddTransient<Infrastructure.ActionFilters.LogRequestResponseFilter>();
-
-            // httpclient factories *************************************
-            services.AddHttpClient<ReCAPTCHAClient>();
 
             // developer created class DI ***************************************
             DeveloperAddedServices(services);
@@ -332,7 +328,6 @@ namespace Team1.Web.Site
             services.AddTransient<UsersCreateUpdate>();
             services.AddTransient<UsersGet>();
 
-            services.Configure<ReCAPTCHASettings>(Configuration.GetSection(nameof(ReCAPTCHASettings)));
             services.Configure<JWTSettings>(Configuration.GetSection(nameof(JWTSettings)));
 
             services.AddTransient<Team1.Infrastructure.Services.Templates.Emails.EmailsCreate>();
@@ -341,7 +336,6 @@ namespace Team1.Web.Site
             services.AddTransient<Team1.Infrastructure.Services.MobileCarriers.MobileCarriersGet>();
             services.AddTransient<Team1.Infrastructure.Services.Countries.CountriesGet>();
             services.AddTransient<Team1.Infrastructure.Services.GoverningDistricts.GoverningDistrictsGet>();
-            services.AddTransient<Team1.Infrastructure.Services.ReCAPTCHA.ReCAPTCHAVerfiy>();
             services.AddTransient<Team1.Infrastructure.Services.Logs.SystemLogsCreate>();
             services.AddTransient<Team1.Infrastructure.Services.Logs.APILogsCreateUpdate>();
         }

@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 @Component({
     selector: 'layout',
   template: `<topNavMenu></topNavMenu>
-            <!--<sideNavMenu></sideNavMenu>-->
             <div class="container-fluid body-content">
                 <router-outlet></router-outlet>
             </div>

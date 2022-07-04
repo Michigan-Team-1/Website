@@ -63,5 +63,5 @@ export class TopNavMenuComponent {
         });
     }
 
-    public logo = require("assets/logo.png");
+    public logo = require("assets/logo-white.png");
 }
