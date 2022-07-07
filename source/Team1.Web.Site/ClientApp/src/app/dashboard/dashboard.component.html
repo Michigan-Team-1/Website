@@ -36,7 +36,7 @@
                 <div *ngIf="row.eventAlternateDate">Alternate Date {{row.eventAlternateDate | defaultDate}}</div>
               </div>
               <div *ngFor="let location of row.locations; index as blah;">
-                {{blah == 0 ? 'At' : 'Alternate'}} <a href="https://www.bing.com/maps?where1={{getAddress(location)}}" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-map-marked"></i> {{location.locationName}} <i class="fas fa-external-link-alt"></i></a>
+                {{blah == 0 ? 'At' : 'Alternate'}} <a href="https://www.google.com/maps/search/?api=1&query={{getAddress(location)}}" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-map-marked"></i> {{location.locationName}} <i class="fas fa-external-link-alt"></i></a>
                 <div class="card-text" *ngIf="location.faaWaiver">Altitude {{location.faaWaiver}}</div>
               </div>
             </div>
