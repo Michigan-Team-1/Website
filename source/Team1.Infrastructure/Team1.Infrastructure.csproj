@@ -1,7 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -21,12 +23,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Services.Filemanager\Services.FileManager.csproj" />
     <ProjectReference Include="..\Team1.Entities\Team1.Entities.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj" />
     <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
   </ItemGroup>
 
