@@ -1,20 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Team1.Model;
-using Team1.Model.UserIdentity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Team1.Model;
+using Team1.Model.UserIdentity;
 
 namespace Team1.Entities.UserIdentity
 {
-    public class UserStore :
+  public class UserStore :
         IUserStore<User>,
         IUserPasswordStore<User>,
         IUserSecurityStampStore<User>,

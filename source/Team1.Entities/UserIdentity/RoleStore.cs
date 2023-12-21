@@ -1,16 +1,11 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Team1.Model.UserIdentity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Team1.Model.UserIdentity;
 
 namespace Team1.Entities.UserIdentity
 {
-    public class RoleStore : IRoleStore<Role>
+  public class RoleStore : IRoleStore<Role>
     {
         private DataContext Context;
         private bool _disposed;

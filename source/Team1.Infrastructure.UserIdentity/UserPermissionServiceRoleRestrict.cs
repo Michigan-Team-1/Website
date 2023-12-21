@@ -1,7 +1,6 @@
 using Team1.Infrastructure.UserIdentity;
 using Team1.Model;
 using Team1.Model.UserIdentity;
-using System.Linq;
 
 public static class UserPermissionServiceRoleRestrict
 {
@@ -79,7 +78,7 @@ public static class UserPermissionServiceRoleRestrict
         return query.OrderBy(o => o.Level);
     }
 
-    public static IQueryable<Task> RoleRestrictTasks(this UserPermissionService ups, IQueryable<Task> query, bool viewOnly)
+    public static IQueryable<Team1.Model.Task> RoleRestrictTasks(this UserPermissionService ups, IQueryable<Team1.Model.Task> query, bool viewOnly)
     {
         if (ups.UserClaimModel.IsAdmin)
         { /* do nothing */ }

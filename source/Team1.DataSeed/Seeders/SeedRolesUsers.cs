@@ -28,9 +28,9 @@ namespace Team1.DataSeed.Seeders
             _roles.Add(new Role() { RoleId = 2, Name = Role.Registrar, NormalizedName = Role.Registrar.ToLower(), Type = Role.RoleTypeGeneral, Level = 10 });
             _roles.Add(new Role() { RoleId = 3, Name = Role.LCO, NormalizedName = Role.LCO.ToLower(), Type = Role.RoleTypeGeneral, Level = 20 });
 
-            _roles[0].Data = new RoleData() { GrantableRoleIds = _roles.Select(s => s.RoleId).ToList() }.SerializeJsonNet();
-            _roles[1].Data = new RoleData() { GrantableRoleIds = _roles.Where(w => false).Select(s => s.RoleId).ToList() }.SerializeJsonNet();
-            _roles[2].Data = new RoleData() { GrantableRoleIds = _roles.Where(w => false).Select(s => s.RoleId).ToList() }.SerializeJsonNet();
+            _roles[0].Data = new RoleData() { GrantableRoleIds = _roles.Select(s => s.RoleId).ToList() }.SerializeJson();
+            _roles[1].Data = new RoleData() { GrantableRoleIds = _roles.Where(w => false).Select(s => s.RoleId).ToList() }.SerializeJson();
+            _roles[2].Data = new RoleData() { GrantableRoleIds = _roles.Where(w => false).Select(s => s.RoleId).ToList() }.SerializeJson();
 
             foreach (var item in _roles)
             {
@@ -93,7 +93,7 @@ namespace Team1.DataSeed.Seeders
                     }
                 },
                 AuditFields = new AuditFields(0, _timestamp),
-                UserRoles = new List<UserRole>() { adminRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
+                UserRoles = new List<UserRole>() { adminRole.SerializeJson().DeserializeJson<UserRole>() },
                 UserMemberTypes = new List<UserMemberType>() { new UserMemberType() { MemberTypeId = Model.Enums.MemberTypeEnum.VicePrefect } }
             });
 
@@ -130,7 +130,7 @@ namespace Team1.DataSeed.Seeders
                     }
                 },
                 AuditFields = new AuditFields(0, _timestamp),
-                UserRoles = new List<UserRole>() { adminRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
+                UserRoles = new List<UserRole>() { adminRole.SerializeJson().DeserializeJson<UserRole>() },
                 UserMemberTypes = new List<UserMemberType>() { new UserMemberType() { MemberTypeId = Model.Enums.MemberTypeEnum.Secretary }, new UserMemberType() { MemberTypeId = Model.Enums.MemberTypeEnum.Treasurer } }
             });
 
@@ -167,7 +167,7 @@ namespace Team1.DataSeed.Seeders
                     }
                 },
                 AuditFields = new AuditFields(0, _timestamp),
-                UserRoles = new List<UserRole>() { adminRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
+                UserRoles = new List<UserRole>() { adminRole.SerializeJson().DeserializeJson<UserRole>() },
                 UserMemberTypes = new List<UserMemberType>() { new UserMemberType() { MemberTypeId = Model.Enums.MemberTypeEnum.Prefect } }
             });
 
@@ -187,7 +187,7 @@ namespace Team1.DataSeed.Seeders
             //    OptOutOfGeneralEmails = true,
             //    OptOutOfMemberEmails = true,
             //    AuditFields = new AuditFields(0, _timestamp),
-            //    UserRoles = new List<UserRole>() { registrarRole.SerializeJsonNet().DeserializeJsonNet<UserRole>() },
+            //    UserRoles = new List<UserRole>() { registrarRole.SerializeJson().DeserializeJson<UserRole>() },
             //});
 
             for (int i = 0; i < users.Count; i++)

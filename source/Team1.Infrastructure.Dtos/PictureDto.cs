@@ -1,15 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 using Team1.Infrastructure.Dtos.Interfaces;
 using Team1.Model;
 
 namespace Team1.Infrastructure.Dtos
 {
-    public class PictureDto : PictureBase, IFileUpload
+  public class PictureDto : PictureBase, IFileUpload
     {
         public bool IsUpdated { get; set; }
 
@@ -21,7 +16,7 @@ namespace Team1.Infrastructure.Dtos
         public string FileKey { get; set; }
         [Display(Name = "Picture Upload")]
         public DocumentObjDto Document { get; set; }
-        [JsonIgnore]
-        public IFormFile FileUpload { get; set; }
+        
+        public Stream FileUpload { get; set; }
     }
 }

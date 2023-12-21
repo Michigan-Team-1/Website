@@ -92,39 +92,39 @@ namespace Team1.Infrastructure.Services.Pictures
                     });
                 }
 
-                var fileName = dto.FileUpload.FileName;
-                var fileExtensions = AllowedFileExtensions.PictureDocuments.Split(',');
-                var extension = System.IO.Path.GetExtension(fileName).Replace(".", "");
-                if (!fileExtensions.Contains(extension.ToLower()))
-                {
-                    response.Status = System.Net.HttpStatusCode.BadRequest;
-                    response.Message = $"{System.IO.Path.GetFileName(fileName)} not an allowed file type.";
-                    return response;
-                }
+                //var fileName = dto.FileUpload.FileName;
+                //var fileExtensions = AllowedFileExtensions.PictureDocuments.Split(',');
+                //var extension = System.IO.Path.GetExtension(fileName).Replace(".", "");
+                //if (!fileExtensions.Contains(extension.ToLower()))
+                //{
+                //    response.Status = System.Net.HttpStatusCode.BadRequest;
+                //    response.Message = $"{System.IO.Path.GetFileName(fileName)} not an allowed file type.";
+                //    return response;
+                //}
 
-                var newFileName = PathManager.GetUserGalleryFilename(fileName, timestamp);
-                dto.Document.DocumentFilename = newFileName;
-                if (dbObj.DocumentObj == null)
-                    dbObj.DocumentObj = new DocumentObj();
-                dbObj.DocumentObj.DocumentFilename = dto.Document.DocumentFilename;
-                dbObj.DocumentObj.DocumentDisplayName = dto.Document.DocumentDisplayName;
-                dbObj.DocumentObj.MimeType = dto.Document.MimeType;
+                //var newFileName = PathManager.GetUserGalleryFilename(fileName, timestamp);
+                //dto.Document.DocumentFilename = newFileName;
+                //if (dbObj.DocumentObj == null)
+                //    dbObj.DocumentObj = new DocumentObj();
+                //dbObj.DocumentObj.DocumentFilename = dto.Document.DocumentFilename;
+                //dbObj.DocumentObj.DocumentDisplayName = dto.Document.DocumentDisplayName;
+                //dbObj.DocumentObj.MimeType = dto.Document.MimeType;
 
-                var filePathInfo = new FilePathInfo()
-                {
-                    Path = PathManager.GetUserGalleryPath(dbObj.OwnerUserId),
-                    FileName = newFileName,
-                    MimeType = dto.FileUpload.ContentType
-                };
+                //var filePathInfo = new FilePathInfo()
+                //{
+                //    Path = PathManager.GetUserGalleryPath(dbObj.OwnerUserId),
+                //    FileName = newFileName,
+                //    MimeType = dto.FileUpload.ContentType
+                //};
 
-                if (!_fileManager.DirectoryExists(filePathInfo))
-                    _fileManager.CreateDirectory(filePathInfo);
+                //if (!_fileManager.DirectoryExists(filePathInfo))
+                //    _fileManager.CreateDirectory(filePathInfo);
 
-                // encrypt / save the file
-                using (var stream = _fileManager.OpenFile(filePathInfo, true))
-                {
-                    await dto.FileUpload.OpenReadStream().CopyToAsync(stream);
-                }
+                //// encrypt / save the file
+                //using (var stream = _fileManager.OpenFile(filePathInfo, true))
+                //{
+                //    await dto.FileUpload.OpenReadStream().CopyToAsync(stream);
+                //}
 
                 // clear out file upload
                 dto.FileUpload = null;

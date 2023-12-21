@@ -1,10 +1,23 @@
+using Blazored.Modal;
+using Blazored.Toast;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Team1.Entities;
+using Team1.Infrastructure.Services.Announcements;
+using Team1.Infrastructure.Services.Events;
+using Team1.Infrastructure.Services.Locations;
+using Team1.Infrastructure.Services.Pictures;
+using Team1.Infrastructure.Services.Tasks;
+using Team1.Infrastructure.Services.Users;
+using Team1.Model.UserIdentity;
+using Team1.Web.Client.Helpers;
 using Team1.Web.Client.Pages;
+using Team1.Web.Client.Services;
+using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
-using Team1.Web.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +26,14 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents()
     .AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddControllers().AddJsonOptions((options) =>
+{
+  options.JsonSerializerOptions.DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+  options.JsonSerializerOptions.Converters.Add(new TextJsonSerializer.DBNullConverter());
+});
+
+builder.Services.AddLocalization();
+builder.Services.AddOptions();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
@@ -25,17 +46,91 @@ builder.Services.AddAuthentication(options =>
     })
     .AddIdentityCookies();
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddIdentityCore<User>(options =>
+{
+  options.Lockout.AllowedForNewUsers = true;
+  options.Lockout.DefaultLockoutTimeSpan = new TimeSpan(0, 10, 0);
+  options.Lockout.MaxFailedAccessAttempts = 3;
+
+  options.Password.RequireDigit = false;
+  options.Password.RequiredLength = Team1.Model.Constants.FieldSizes.PasswordMinimumLength;
+  options.Password.RequiredUniqueChars = 0;
+  options.Password.RequireLowercase = true;
+  options.Password.RequireNonAlphanumeric = false;
+  options.Password.RequireUppercase = true;
+
+  options.User.RequireUniqueEmail = true;
+
+  options.SignIn.RequireConfirmedEmail = true;
+}).AddRoles<Role>().AddUserStore<Team1.Entities.UserIdentity.UserStore>().AddRoleStore<Team1.Entities.UserIdentity.RoleStore>()
+.AddSignInManager<CustomSignInManager>().AddDefaultTokenProviders();
+
+builder.Services.AddAuthorization(config =>
+{
+  config.AddPolicy(PolicyNames.AnnouncementAddEditDelete, policy => policy.Requirements.Add(new AnnouncementAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.CanApprovePicture, policy => policy.Requirements.Add(new CanApprovePictureRequirement()));
+  config.AddPolicy(PolicyNames.CanImpersonate, policy => policy.Requirements.Add(new CanImpersonateRequirement()));
+  config.AddPolicy(PolicyNames.EventAddEditDelete, policy => policy.Requirements.Add(new EventAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.LocationAddEditDelete, policy => policy.Requirements.Add(new LocationAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.PictureAddEditDelete, policy => policy.Requirements.Add(new PictureAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.TaskAddEditDelete, policy => policy.Requirements.Add(new TaskAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.UserAddEditDelete, policy => policy.Requirements.Add(new UserAddEditDeleteRequirement()));
+  config.AddPolicy(PolicyNames.UserProfileEdit, policy => policy.Requirements.Add(new UserProfileEditRequirement()));
+});
+builder.Services.AddScoped<IAuthorizationHandler, AnnouncementAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, CanApprovePicture>();
+builder.Services.AddScoped<IAuthorizationHandler, CanImpersonate>();
+builder.Services.AddScoped<IAuthorizationHandler, EventAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, LocationAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, PictureAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, TaskAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, UserAddEditDelete>();
+builder.Services.AddScoped<IAuthorizationHandler, UserProfileEdit>();
+
+builder.Services.AddScoped<IEmailSender<User>, CustomEmailSender>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddSignInManager()
-    .AddDefaultTokenProviders();
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ILoggingContext, DataContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddTransient<AnnouncementsCreateUpdate>();
+builder.Services.AddTransient<AnnouncementsGet>();
+builder.Services.AddTransient<EventsCreateUpdate>();
+builder.Services.AddTransient<EventsGet>();
+builder.Services.AddTransient<LocationsCreateUpdate>();
+builder.Services.AddTransient<LocationsGet>();
+builder.Services.AddTransient<PicturesCreateUpdate>();
+builder.Services.AddTransient<PicturesGet>();
+builder.Services.AddTransient<TasksCreateUpdate>();
+builder.Services.AddTransient<TasksGet>();
+
+builder.Services.AddTransient<UserRefreshTokensGet>();
+builder.Services.AddTransient<UserRefreshTokensCreateUpdate>();
+builder.Services.AddTransient<UsersCreateUpdate>();
+builder.Services.AddTransient<UsersGet>();
+
+builder.Services.AddTransient<Team1.Infrastructure.Services.Templates.Emails.EmailsCreate>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.Addresses.AddressesGet>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.Addresses.AddressCreateUpdate>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.MobileCarriers.MobileCarriersGet>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.Countries.CountriesGet>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.GoverningDistricts.GoverningDistrictsGet>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.Logs.SystemLogsCreate>();
+builder.Services.AddTransient<Team1.Infrastructure.Services.Logs.APILogsCreateUpdate>();
+
+// Supply HttpClient instances that include access tokens when making requests to the server project
+var url = builder.Configuration.GetValue<string>("ApiUrl") ?? throw new InvalidOperationException("Missing API Url");
+builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(url) });
+
+builder.Services.AddTransient<AnonymousClient>();
+builder.Services.AddTransient<AuthorizedClient>();
+
+builder.Services.AddScoped<ServiceResponseHandler>();
+
+builder.Services.AddBlazoredToast();
+builder.Services.AddBlazoredModal();
 
 var app = builder.Build();
 
@@ -61,6 +156,8 @@ app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
     .AddAdditionalAssemblies(typeof(Counter).Assembly);
+
+app.MapControllers();
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
