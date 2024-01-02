@@ -12,7 +12,7 @@ namespace Team1.Model.UserIdentity
         public int UserId { get; set; }
 
         [StringLength(100)]
-        public string RefreshToken { get; set; }
+        public string? RefreshToken { get; set; }
 
         public DateTime ExpiresOnDateTime { get; set; }
 

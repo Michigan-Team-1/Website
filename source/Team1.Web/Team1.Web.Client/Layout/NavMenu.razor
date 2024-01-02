@@ -1,92 +1,167 @@
-﻿@implements IDisposable
+﻿@using Team1.Web.Client.Helpers
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
 
-<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Team1.Web</a>
+<nav class="navbar navbar-expand-md navbar-light bg-light sticky-md-top shadow-sm py-0">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="">
+      <img src="/_content/Team1.Web.Client/logo.png" class="toolbar-logo" alt="logo" />
+    </a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse navbarCollapse @NavMenuCssClass">
+      <ul class="navbar-nav me-auto ">
+        <li class="nav-item">
+          <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+            <span class="fas fa-home fa-fw fa-sm" aria-hidden="true"></span> Home
+          </NavLink>
+        </li>
+        <li class="nav-item">
+          <NavLink class="hover" href="joinus" Match="NavLinkMatch.All">
+            <span class="fas fa-user-astronaut fa-fw fa-sm" aria-hidden="true"></span> Join Us
+          </NavLink>
+        </li>
+        <li class="nav-item">
+          <NavLink class="hover" href="gallery" Match="NavLinkMatch.All">
+            <span class="fas fa-images fa-fw fa-sm" aria-hidden="true"></span> Gallery
+          </NavLink>
+        </li>
+        <li class="nav-item">
+          <NavLink class="hover" href="members" Match="NavLinkMatch.All">
+            <span class="fas fa-users fa-fw fa-sm" aria-hidden="true"></span> Members
+          </NavLink>
+        </li>
+        <li class="nav-item" dropdown>
+          <a class="nav-link dropdown-toggle canSelect" id="downloadMenuLink" @onclick="ToggleDownloads" @onfocusout="OutFocusDownloads">
+            <i class="fas fa-file-download"></i> Downloads
+          </a>
+
+          <div class="dropdown-menu" aria-labelledby="downloadMenuLink" *dropdownMenu>
+            <a class="dropdown-item" href="https://downloads.team1.org/Team-1_launch_card.pdf" target="_blank"><i class="fas fa-rocket"></i> Launch Card</a>
+            <a class="dropdown-item" href="https://downloads.team1.org/Team-1_launch_registration_form.pdf" target="_blank"><i class="fas fa-clipboard"></i> Registration Form</a>
+            <a class="dropdown-item" href="https://downloads.team1.org/Team-1_BOD_hallofhonor.xlsx" target="_blank"><i class="fas fa-award"></i> BoD Hall Of Honor</a>
+            <a class="dropdown-item" href="https://downloads.team1.org/Team-1_Membership_Application.pdf" target="_blank"><i class="fab fa-wpforms"></i> Membership Application</a>
+            <a class="dropdown-item" href="https://downloads.team1.org/Birch_Run_Launch_Site_Map.pdf" target="_blank"><i class="fas fa-sitemap"></i> Birch Run Site Map</a>
+            <a class="dropdown-item" href="https://downloads.team1.org/TeamTalk_Page.zip" target="_blank"><i class="fas fa-file-archive"></i> Team Talks</a>
+          </div>
+        </li>
+        @if (userInfo.HasAdminPolicy)
+        {
+          <li class="nav-item">
+            <a class="nav-link dropdown-toggle @AdministrationMenuCss" href="javascript:void(0)" @onclick="ToggleAdmin" @onfocusout="OutFocusAdmin">
+              Reports
+            </a>
+            <ul class="dropdown-menu @(expandAdmin ? "show" : "")" aria-labelledby="navbarDropdownMenuLink">
+              <AuthorizeView Policy=@nameof(PolicyNames.AnnouncementAddEditDelete)>
+                <li>
+                  <NavLink class="dropdown-item hover" href="announcements" Match="NavLinkMatch.All">
+                    <span class="fas fa-bullhorn fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Announcements
+                  </NavLink>
+                </li>
+              </AuthorizeView>
+              <AuthorizeView Policy=@nameof(PolicyNames.EventAddEditDelete)>
+                <li>
+                  <NavLink class="dropdown-item hover" href="events" Match="NavLinkMatch.All">
+                    <span class="fas fa-calendar-alt fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Events
+                  </NavLink>
+                </li>
+              </AuthorizeView>
+              <AuthorizeView Policy=@nameof(PolicyNames.LocationAddEditDelete)>
+                <li>
+                  <NavLink class="dropdown-item hover" href="locations" Match="NavLinkMatch.All">
+                    <span class="fas fa-map-marked-alt fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Locations
+                  </NavLink>
+                </li>
+              </AuthorizeView>
+              <AuthorizeView Policy=@nameof(PolicyNames.TaskAddEditDelete)>
+                <li>
+                  <NavLink class="dropdown-item hover" href="tasks" Match="NavLinkMatch.All">
+                    <span class="fas fa-tasks fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Tasks
+                  </NavLink>
+                </li>
+              </AuthorizeView>
+            </ul>
+          </li>
+        }
+      </ul>
+      <LoginDisplay />
     </div>
-</div>
-
-<input type="checkbox" title="Navigation menu" class="navbar-toggler" />
-
-<div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="auth">
-                <span class="bi bi-lock-nav-menu" aria-hidden="true"></span> Auth Required
-            </NavLink>
-        </div>
-
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken />
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Register">
-                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Login">
-                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </nav>
-</div>
+  </div>
+</nav>
 
 @code {
-    private string? currentUrl;
+  [CascadingParameter]
+  private Task<AuthenticationState> authenticationStateTask { get; set; }
 
-    protected override void OnInitialized()
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
+  private Team1.Web.Common.UserIdentity.UserClaimBuilder userInfo;
+  private string? currentUrl;
 
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
-        StateHasChanged();
-    }
+  private string AdministrationMenuCss => "";// navigationManager.Uri.Contains("/company", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/companies", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/subsidiaries", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/divisions", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/users", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/changeorderstatuses", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/costcodes", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/worktype", StringComparison.InvariantCultureIgnoreCase)
+                                             //       || navigationManager.Uri.Contains("/systemusers", StringComparison.InvariantCultureIgnoreCase)
+                                             //   ? (ContactMenuCss == "active" ? "" : "active") : "";
+  private bool expandAdmin;
+  private bool expandDownloads;
 
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
-    }
+  protected override async Task OnInitializedAsync()
+  {
+    var authState = await authenticationStateTask;
+    userInfo = new Team1.Web.Common.UserIdentity.UserClaimBuilder(authState.User);
+
+    currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    NavigationManager.LocationChanged += OnLocationChanged;
+  }
+
+  private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+  {
+    currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    expandDownloads = false;
+    expandAdmin = false;
+    StateHasChanged();
+  }
+
+  public void Dispose()
+  {
+    NavigationManager.LocationChanged -= OnLocationChanged;
+  }
+
+  private bool collapseNavMenu = true;
+
+  private string? NavMenuCssClass => collapseNavMenu ? null : "show";
+
+  private void ToggleNavMenu()
+  {
+    collapseNavMenu = !collapseNavMenu;
+  }
+
+  private void ToggleAdmin()
+  {
+    expandAdmin = !expandAdmin;
+  }
+
+  private async Task OutFocusAdmin()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandAdmin = false;
+  }
+
+  private void ToggleDownloads()
+  {
+    expandDownloads = !expandDownloads;
+  }
+
+  private async Task OutFocusDownloads()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandDownloads = false;
+  }
 }
 

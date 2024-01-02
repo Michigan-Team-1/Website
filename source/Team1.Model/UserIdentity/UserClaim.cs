@@ -1,13 +1,10 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Claims;
-using System.Text;
 
 namespace Team1.Model.UserIdentity
 {
-    public class UserClaimBase
+  public class UserClaimBase
     {
         /// <summary>
         /// Gets or sets the identifier for this user claim.

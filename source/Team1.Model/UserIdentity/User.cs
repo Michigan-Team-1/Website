@@ -1,12 +1,10 @@
-using Team1.Model.Constants;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Team1.Model.Constants;
 
 namespace Team1.Model.UserIdentity
 {
-    public class UserRoot
+  public class UserRoot
     {
         [Key]
         public int UserId { get; set; }
@@ -59,11 +57,11 @@ namespace Team1.Model.UserIdentity
 
         [Display(Name = "Tripoli #")]
         [StringLength(100, ErrorMessage = ErrorMessages.StringLengthMax)]
-        public string TripoliNumber { get; set; }
+        public string? TripoliNumber { get; set; }
 
         [Display(Name = "NAR #")]
         [StringLength(100, ErrorMessage = ErrorMessages.StringLengthMax)]
-        public string NarNumber { get; set; }
+        public string? NarNumber { get; set; }
 
         [Display(Name ="Paid Through")]
         public int PaidThroughYear { get; set; }
@@ -110,7 +108,7 @@ namespace Team1.Model.UserIdentity
         /// Gets or sets a salted and hashed representation of the password for this user.
         /// </summary>
         [StringLength(200)]
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         /// <summary>
         /// A random value that must change whenever a users credentials change (password changed, login removed)
@@ -164,7 +162,7 @@ namespace Team1.Model.UserIdentity
         /// Ip Address of the user from last login
         /// </summary>
         [StringLength(FieldSizes.IpAddressLength)]
-        public string IpAddress { get; set; }
+        public string? IpAddress { get; set; }
 
         /// <summary>
         /// Twilio Authy User Id

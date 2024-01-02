@@ -11,10 +11,13 @@ using Team1.Infrastructure.Services.Locations;
 using Team1.Infrastructure.Services.Pictures;
 using Team1.Infrastructure.Services.Tasks;
 using Team1.Infrastructure.Services.Users;
+using Team1.Infrastructure.UserIdentity;
 using Team1.Model.UserIdentity;
 using Team1.Web.Client.Helpers;
+using Team1.Web.Client.Layout;
 using Team1.Web.Client.Pages;
 using Team1.Web.Client.Services;
+using Team1.Web.Common.UserIdentity;
 using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
@@ -87,9 +90,29 @@ builder.Services.AddScoped<IAuthorizationHandler, TaskAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserProfileEdit>();
 
+builder.Services.Configure<Services.Email.MailSettings>(builder.Configuration.GetSection(nameof(Services.Email.MailSettings)));
 builder.Services.AddScoped<IEmailSender<User>, CustomEmailSender>();
+builder.Services.AddScoped<Services.Email.IEmailer, Services.Email.Emailer>();
+
+builder.Services.AddTransient<Services.FileManager.IFileManager, Services.FileManager.LocalFileManager>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<UserPermissionService>((s) =>
+{
+  var httpContext = s.GetService<IHttpContextAccessor>();
+  string? ipAddress = null;
+  if (httpContext?.HttpContext?.Connection?.RemoteIpAddress != null)
+  {
+    if (httpContext.HttpContext.Connection.RemoteIpAddress.IsIPv4MappedToIPv6)
+      ipAddress = httpContext.HttpContext.Connection.RemoteIpAddress.MapToIPv4().ToString();
+    else
+      ipAddress = httpContext.HttpContext.Connection.RemoteIpAddress.MapToIPv6().ToString();
+  }
+  var ups = new UserPermissionService(ipAddress);
+  ups.Setup(new UserClaimBuilder(httpContext!.HttpContext?.User));
+  return ups;
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<DataContext>(options => options.UseSqlServer(connectionString));
@@ -106,8 +129,6 @@ builder.Services.AddTransient<PicturesGet>();
 builder.Services.AddTransient<TasksCreateUpdate>();
 builder.Services.AddTransient<TasksGet>();
 
-builder.Services.AddTransient<UserRefreshTokensGet>();
-builder.Services.AddTransient<UserRefreshTokensCreateUpdate>();
 builder.Services.AddTransient<UsersCreateUpdate>();
 builder.Services.AddTransient<UsersGet>();
 
@@ -155,7 +176,7 @@ app.UseAntiforgery();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
     .AddInteractiveWebAssemblyRenderMode()
-    .AddAdditionalAssemblies(typeof(Counter).Assembly);
+    .AddAdditionalAssemblies(typeof(LoginDisplay).Assembly);
 
 app.MapControllers();
 

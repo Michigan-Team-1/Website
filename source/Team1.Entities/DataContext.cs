@@ -1,21 +1,16 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
+using System.ComponentModel.DataAnnotations;
 using Team1.Entities.TableConfigs;
 using Team1.Entities.TableConfigs.UserIdentity;
 using Team1.Infrastructure.UserIdentity;
 using Team1.Model;
 using Team1.Model.UserIdentity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Team1.Entities
 {
-    public class DataContext : DbContext, ILoggingContext
+  public class DataContext : DbContext, ILoggingContext
     {
         public DataContext(UserPermissionService ups, DbContextOptions<DataContext> options, ILogger<DataContext> logger) : base(options)
         {

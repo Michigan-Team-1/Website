@@ -256,7 +256,7 @@ namespace Team1.Entities.UserIdentity
                 UserId = null,
                 EventDateTime = DateTime.UtcNow,
                 LogTypeId = Model.Enums.LogTypeEnum.LoginFindUserName,
-                EventDescription = String.Format("A request to find a user with the user id ({0}) was made.", userId)
+                EventDescription = $"{nameof(FindByIdAsync)}: {userId}",
             });
             Context.SaveChanges();
 
@@ -281,7 +281,7 @@ namespace Team1.Entities.UserIdentity
                 UserId = null,
                 EventDateTime = DateTime.UtcNow,
                 LogTypeId = Model.Enums.LogTypeEnum.LoginFindUserName,
-                EventDescription = String.Format("A request to find a user with the user name ({0}) was made.", userName)
+                EventDescription = $"{nameof(FindByNameAsync)}: {userName}",
             });
             Context.SaveChanges();
 

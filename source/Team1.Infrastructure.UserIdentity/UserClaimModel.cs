@@ -30,6 +30,17 @@ public class UserClaimModel
   public RoleData? RoleData { get; set; }
 
   // policies
+  public bool HasAdminPolicy 
+  {
+    get
+    {
+      if (UserPolicies == null)
+        return false;
+
+      return UserPolicies.AnnouncementAddEditDelete || UserPolicies.EventAddEditDelete || UserPolicies.LocationAddEditDelete
+        || UserPolicies.TaskAddEditDelete;
+    }
+  }
   public UserPolicies? UserPolicies { get; set; }
 
   protected void SetupPolicies()

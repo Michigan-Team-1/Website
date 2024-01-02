@@ -1,11 +1,8 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Team1.Model.UserIdentity
 {
-    public class UserRoleBase
+  public class UserRoleBase
     {
         public int UserId { get; set; }
         public byte RoleId { get; set; }
