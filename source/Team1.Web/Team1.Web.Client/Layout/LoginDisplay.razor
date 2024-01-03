@@ -60,7 +60,7 @@
 
 @code {
   private string? currentUrl;
-    
+
   protected override void OnInitialized()
   {
     currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
@@ -85,6 +85,7 @@
   private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
   {
     currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    collapseProfileMenu = true;
     StateHasChanged();
   }
 
