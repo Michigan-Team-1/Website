@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Team1.Web.Client.Helpers
 
 @inject NavigationManager NavigationManager
 
@@ -7,7 +8,7 @@
   <AuthorizeView>
     <Authorized>
       <li class="nav-item dropdown">
-        <button class="btn btn-link nav-link dropdown-toggle" @onclick="ToggleProfileMenu">@context.User.Identity.Name</button>
+        <button class="btn btn-link nav-link dropdown-toggle" @onclick="ToggleProfileMenu" @onfocusout="OutFocusProfileMenu">@context.User.Identity.Name</button>
         <div class="dropdown-menu dropdown-menu-right @profileCss" aria-labelledby="profileLink">
           <a class="dropdown-item" href="/Account/Manage"><i class="fas fa-user fa-fw"></i> Profile</a>
           <div class="dropdown-divider"></div>
@@ -73,6 +74,12 @@
   private void ToggleProfileMenu()
   {
     collapseProfileMenu = !collapseProfileMenu;
+  }
+
+  private async Task OutFocusProfileMenu()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    collapseProfileMenu = true;
   }
 
   private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
