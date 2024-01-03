@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Team1.Infrastructure.Dtos;
+using Team1.Infrastructure.Dtos.Users;
 using Team1.Web.Client.Helpers;
 
 namespace Team1.Web.Client.Services;
@@ -15,33 +16,33 @@ public class AnonymousClient
         _serviceResponseHandler = serviceResponseHandler;
     }
 
-    //public async Task<List<RocketDto>> GetRockets()
-    //{
-    //    try
-    //    {
-    //        var response = await _httpClient.GetAsync("api/Rockets");
-    //        return await _serviceResponseHandler.HandleJsonResponse<List<RocketDto>>(response);
-    //    }
-    //    catch (AccessTokenNotAvailableException exception)
-    //    {
-    //        exception.Redirect();
-    //    }
+  public async Task<List<UserDto>?> GetBoardOfDirectors()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Users/Bod");
+      return await _serviceResponseHandler.HandleJsonResponse<List<UserDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
 
-    //    return new List<RocketDto>();
-    //}
+    return new List<UserDto>();
+  }
 
-    //public async Task<List<LaunchDto>> GetLaunches(int rocketId)
-    //{
-    //    try
-    //    {
-    //        var response = await _httpClient.GetAsync($"api/Launches/{rocketId}");
-    //        return await _serviceResponseHandler.HandleJsonResponse<List<LaunchDto>>(response);
-    //    }
-    //    catch (AccessTokenNotAvailableException exception)
-    //    {
-    //        exception.Redirect();
-    //    }
+  //public async Task<List<LaunchDto>> GetLaunches(int rocketId)
+  //{
+  //    try
+  //    {
+  //        var response = await _httpClient.GetAsync($"api/Launches/{rocketId}");
+  //        return await _serviceResponseHandler.HandleJsonResponse<List<LaunchDto>>(response);
+  //    }
+  //    catch (AccessTokenNotAvailableException exception)
+  //    {
+  //        exception.Redirect();
+  //    }
 
-    //    return new List<LaunchDto>();
-    //}
+  //    return new List<LaunchDto>();
+  //}
 }

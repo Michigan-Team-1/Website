@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using Team1.Model.SerializedObjects;
+using Team1.Model.UserIdentity;
 
 namespace Team1.Infrastructure.UserIdentity;
 
@@ -56,6 +58,26 @@ public class UserClaimModel
     UserPolicies.LocationAddEditDelete = IsAdmin;
     UserPolicies.PictureAddEditDelete = IsAuthenticated; // everyone can
     UserPolicies.TaskAddEditDelete = IsAdmin;
+  }
+
+  /// <summary>
+  /// Simplified claims for the client side.  
+  /// </summary>
+  /// <returns></returns>
+  public List<Claim> GenerateClaimsFromUserClaimModel()
+  {
+    var claims = new List<Claim>()
+    {
+        new Claim(ClaimTypes.NameIdentifier, UserId.ToString(), ClaimValueTypes.String),
+        new Claim(nameof(User.UserId) + OriginalSuffix, UserIdOriginal.ToString(), ClaimValueTypes.Integer),
+        new Claim(ClaimTypes.GivenName, FirstName, ClaimValueTypes.String),
+        new Claim(ClaimTypes.Surname, LastName, ClaimValueTypes.String),
+        new Claim(ClaimTypes.Email, Email, ClaimValueTypes.String),
+        new Claim(ClaimTypes.Name, Email, ClaimValueTypes.String),
+        new Claim(ClaimTypes.Role, IsAdmin ? "Admin" : "", ClaimValueTypes.String)
+    };
+
+    return claims;
   }
 }
 

@@ -1,0 +1,47 @@
+﻿<div class="mb-1 @GetRowCss hover">
+  <label class="@GetLabelCss"> @PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.CreatedDateTime))</label>
+  <div class="@GetValueDivCss">
+    <div class="form-control-plaintext">
+      @if (Dto?.CreatedDateTime.Year > 2000)
+      {
+        @Dto?.CreatedDateTime.ToLocalTime().DateTime.ToString()
+      }
+    </div>
+  </div>
+</div>
+<div class="mb-1 @GetRowCss hover">
+  <label class="@GetLabelCss">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.CreatedByName))</label>
+  <div class="@GetValueDivCss">
+    <div class="form-control-plaintext">@Dto?.CreatedByName</div>
+  </div>
+</div>
+<div class="mb-1 @GetRowCss hover">
+  <label class="@GetLabelCss">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.UpdatedDateTime))</label>
+  <div class="@GetValueDivCss">
+    <div class="form-control-plaintext">
+      @if (Dto?.CreatedDateTime.Year > 2000)
+      {
+        @Dto?.UpdatedDateTime.ToLocalTime().DateTime.ToString()
+      }
+    </div>
+  </div>
+</div>
+<div class="mb-1 @GetRowCss hover">
+  <label class="@GetLabelCss">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.UpdatedByName))</label>
+  <div class="@GetValueDivCss">
+    <div class="form-control-plaintext">@Dto?.UpdatedByName</div>
+  </div>
+</div>
+
+@code {
+  [Parameter]
+  [EditorRequired]
+  public AuditFieldsDto Dto { get; set; } = default!;
+
+  [Parameter]
+  public bool LayoutHorizontal { get; set; } = false;
+
+  private string GetRowCss => LayoutHorizontal ? "row" : "";
+  private string GetLabelCss => LayoutHorizontal ? "col-6 col-form-label" : "";
+  private string GetValueDivCss => LayoutHorizontal ? "col-6 text-end" : "";
+}

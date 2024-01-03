@@ -1,0 +1,18 @@
+﻿<h4 class="@Css">
+    @if (!string.IsNullOrWhiteSpace(Icon))
+   {
+     <span class="@Icon">&nbsp;</span>
+   }
+    @((MarkupString)Name)
+</h4>
+
+@code {
+    [Parameter]
+    public string Name { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Css { get; set; } = "";
+
+    [Parameter]
+    public string? Icon { get; set; }
+}

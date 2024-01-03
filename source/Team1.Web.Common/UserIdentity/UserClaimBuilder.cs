@@ -26,7 +26,8 @@ namespace Team1.Web.Common.UserIdentity
       _claims = _userPrincipal.Claims;
       Email = UserClaimString(ClaimTypes.Email);
 
-      UserId = UserClaimInt(ClaimTypes.NameIdentifier);
+      if (int.TryParse(UserClaimString(ClaimTypes.NameIdentifier), out int userId))
+        UserId = userId;
       UserIdOriginal = UserClaimInt(nameof(User.UserId) + OriginalSuffix);
       FirstName = UserClaimString(ClaimTypes.GivenName);
       LastName = UserClaimString(ClaimTypes.Surname);

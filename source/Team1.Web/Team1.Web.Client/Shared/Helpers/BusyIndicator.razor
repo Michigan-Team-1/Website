@@ -1,0 +1,16 @@
+﻿@if (IsBusy)
+{
+  <div class="busy-indicator-wrapper">
+    <div class="busy-indicator">
+      <img src="/_content/DCI.Web.Client.Common/loading_logo.png" alt="loading" />
+      <strong>@Message</strong>
+    </div>
+  </div>
+}
+@code {
+  [Parameter]
+  public bool IsBusy { get; set; } = true;
+
+  [Parameter]
+  public string Message { get; set; } = "Loading...";
+}
