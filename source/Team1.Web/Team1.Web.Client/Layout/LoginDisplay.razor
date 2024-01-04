@@ -27,47 +27,65 @@
       <li class="nav-item"><a href="Account/Login" class="nav-link"><i class="fas fa-sign-in-alt fa-fw"></i> Log in</a></li>
     </NotAuthorized>
   </AuthorizeView>
-@*   <li>
-    <button class="btn btn-link nav-link py-2 px-0 px-lg-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)">
-      <svg class="bi my-1 theme-icon-active"><use href="#moon-stars-fill"></use></svg>
+  <li class="nav-item dropdown">
+    <button class="nav-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)"
+            @onclick="ToggleTheme" @onfocusout="OutFocusTheme">
+      <i class="fa-solid fa-circle-half-stroke fa-fw"></i>
       <span class="d-lg-none ms-2" id="bd-theme-text">Toggle theme</span>
     </button>
-    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="bd-theme-text">
+    <ul class="dropdown-menu dropdown-menu-end @(expandTheme ? "show" : "")" aria-labelledby="bd-theme-text" data-bs-popper="static">
       <li>
-        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="light" aria-pressed="false">
-          <svg class="bi me-2 opacity-50 theme-icon"><use href="#sun-fill"></use></svg>
-          Light
-          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
+        <button type="button" class="dropdown-item hover @(theme == "light" ? "active" : "")" data-bs-theme-value="light" @onclick=@(() => SetTheme("light"))>
+          <i class="fa-regular fa-sun fa-fw"></i>
+            Light
         </button>
       </li>
       <li>
-        <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="dark" aria-pressed="true">
-          <svg class="bi me-2 opacity-50 theme-icon"><use href="#moon-stars-fill"></use></svg>
+        <button type="button" class="dropdown-item hover  @(theme == "dark" ? "active" : "")" data-bs-theme-value="dark" @onclick=@(() => SetTheme("dark"))>
+          <i class="fa-solid fa-moon fa-fw"></i>
           Dark
-          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
         </button>
       </li>
       <li>
-        <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto" aria-pressed="false">
-          <svg class="bi me-2 opacity-50 theme-icon"><use href="#circle-half"></use></svg>
+        <button type="button" class="dropdown-item hover @(theme == "auto" ? "active" : "")" data-bs-theme-value="auto" @onclick=@(() => SetTheme("auto"))>
+          <i class="fa-solid fa-circle-half-stroke  fa-fw"></i>
           Auto
-          <svg class="bi ms-auto d-none"><use href="#check2"></use></svg>
         </button>
       </li> 
     </ul>
-  </li>*@
+  </li>
 </ul>
 
+@inject IJSRuntime jsRuntime
 @code {
   private string? currentUrl;
+  private string? theme;
 
-  protected override void OnInitialized()
+  protected override async Task OnInitializedAsync()
   {
     currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
     NavigationManager.LocationChanged += OnLocationChanged;
   }
 
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      theme = await jsRuntime.InvokeAsync<string>("getStoredTheme");
+      if (string.IsNullOrWhiteSpace(theme))
+        theme = "auto";
+    }
+  }
+
+  private async Task SetTheme(string theme)
+  {
+    this.theme = theme;
+    await jsRuntime.InvokeVoidAsync("setAndSaveTheme", theme);
+    StateHasChanged();
+  }
+
   private bool collapseProfileMenu = true;
+  private bool expandTheme = false;
 
   private string? profileCss => collapseProfileMenu ? null : "show";
 
@@ -82,10 +100,22 @@
     collapseProfileMenu = true;
   }
 
+  private void ToggleTheme()
+  {
+    expandTheme = !expandTheme;
+  }
+
+  private async Task OutFocusTheme()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandTheme = false;
+  }
+
   private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
   {
     currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
     collapseProfileMenu = true;
+    expandTheme = false;
     StateHasChanged();
   }
 
