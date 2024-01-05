@@ -55,7 +55,6 @@ namespace Team1.Entities
             modelBuilder.ApplyConfiguration(new AddressConfig());
             modelBuilder.ApplyConfiguration(new EventLocationConfig());
             modelBuilder.ApplyConfiguration(new LocationConfig());
-            modelBuilder.ApplyConfiguration(new TaskMemberTypeConfig());
             modelBuilder.ApplyConfiguration(new UserLoginConfig());
             modelBuilder.ApplyConfiguration(new UserMemberTypeConfig());
             modelBuilder.ApplyConfiguration(new UserRoleConfig());
@@ -87,9 +86,6 @@ namespace Team1.Entities
         public DbSet<RoleClaim> RoleClaims { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
-        public DbSet<Team1.Model.Task> Tasks { get; set; }
-        public DbSet<TaskCategory> TaskCategories { get; set; }
-        public DbSet<TaskMemberType> TaskMemberTypes { get; set; }
         public DbSet<UserClaim> UserClaims { get; set; }
         public DbSet<UserLogin> UserLogins { get; set; }
         public DbSet<UserMemberType> UserMemberTypes { get; set; }
@@ -145,7 +141,7 @@ namespace Team1.Entities
                 {
                     Model.OwnedTypes.AuditFields auditFields = (Model.OwnedTypes.AuditFields)auditFieldsProperty.GetValue(item.Entity);
                     sysUserId = auditFields.UpdatedById;
-                    sysEventDate = auditFields.UpdatedDateTime;
+                    sysEventDate = auditFields.UpdatedDateTime!.Value;
                 }
                 else
                 {

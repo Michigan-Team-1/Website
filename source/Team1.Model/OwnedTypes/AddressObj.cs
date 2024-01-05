@@ -9,22 +9,22 @@ namespace Team1.Model.OwnedTypes
         [Display(Name = "Address Line 1")]
         [StringLength(FieldSizes.AddressFieldLengths, ErrorMessage = ErrorMessages.StringLengthMax), Required(ErrorMessage = ErrorMessages.RequiredField)]
         [Column(nameof(Address1))]
-        public string Address1 { get; set; }
+        public string? Address1 { get; set; }
 
         [Display(Name = "Address Line 2")]
         [StringLength(FieldSizes.AddressFieldLengths, ErrorMessage = ErrorMessages.StringLengthMax)]
         [Column(nameof(Address2))]
-        public string Address2 { get; set; }
+        public string? Address2 { get; set; }
 
         [Display(Name = "Address Line 3")]
         [StringLength(FieldSizes.AddressFieldLengths, ErrorMessage = ErrorMessages.StringLengthMax)]
         [Column(nameof(Address3))]
-        public string Address3 { get; set; }
+        public string? Address3 { get; set; }
 
         [Display(Name = "City")]
         [StringLength(FieldSizes.AddressFieldLengths, ErrorMessage = ErrorMessages.StringLengthMax)]
         [Column(nameof(City))]
-        public string City { get; set; }
+        public string? City { get; set; }
 
         [Display(Name = "Governing District")]
         [Column(nameof(GoverningDistrictId))]
@@ -32,13 +32,13 @@ namespace Team1.Model.OwnedTypes
 
         [Display(Name = "Country")]
         [Column(nameof(CountryId)), Required(ErrorMessage = ErrorMessages.RequiredField)]
-        public int CountryId { get; set; }
+        public int? CountryId { get; set; }
 
         // inputmask handles length
         [Display(Name = "Postal Code")]
         [StringLength(12)]
         [Column(nameof(PostalCode))]
-        public string PostalCode { get; set; }
+        public string? PostalCode { get; set; }
 
         public void Update(AddressObjBase item)
         {

@@ -78,16 +78,6 @@ public static class UserPermissionServiceRoleRestrict
         return query.OrderBy(o => o.Level);
     }
 
-    public static IQueryable<Team1.Model.Task> RoleRestrictTasks(this UserPermissionService ups, IQueryable<Team1.Model.Task> query, bool viewOnly)
-    {
-        if (ups.UserClaimModel.IsAdmin)
-        { /* do nothing */ }
-        else
-            query = query.Where(w => false); // They don't have access, filter them out.
-
-        return query;
-    }
-
     public static IQueryable<User> RoleRestrictUsers(this UserPermissionService ups, IQueryable<User> query, bool viewOnly)
     {
         if (ups.UserClaimModel.IsAdmin)

@@ -9,7 +9,6 @@ using Team1.Infrastructure.Services.Announcements;
 using Team1.Infrastructure.Services.Events;
 using Team1.Infrastructure.Services.Locations;
 using Team1.Infrastructure.Services.Pictures;
-using Team1.Infrastructure.Services.Tasks;
 using Team1.Infrastructure.Services.Users;
 using Team1.Infrastructure.UserIdentity;
 using Team1.Model.UserIdentity;
@@ -76,7 +75,6 @@ builder.Services.AddAuthorization(config =>
   config.AddPolicy(PolicyNames.EventAddEditDelete, policy => policy.Requirements.Add(new EventAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.LocationAddEditDelete, policy => policy.Requirements.Add(new LocationAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.PictureAddEditDelete, policy => policy.Requirements.Add(new PictureAddEditDeleteRequirement()));
-  config.AddPolicy(PolicyNames.TaskAddEditDelete, policy => policy.Requirements.Add(new TaskAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.UserAddEditDelete, policy => policy.Requirements.Add(new UserAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.UserProfileEdit, policy => policy.Requirements.Add(new UserProfileEditRequirement()));
 });
@@ -86,7 +84,6 @@ builder.Services.AddScoped<IAuthorizationHandler, CanImpersonate>();
 builder.Services.AddScoped<IAuthorizationHandler, EventAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, LocationAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, PictureAddEditDelete>();
-builder.Services.AddScoped<IAuthorizationHandler, TaskAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserProfileEdit>();
 
@@ -126,8 +123,6 @@ builder.Services.AddTransient<LocationsCreateUpdate>();
 builder.Services.AddTransient<LocationsGet>();
 builder.Services.AddTransient<PicturesCreateUpdate>();
 builder.Services.AddTransient<PicturesGet>();
-builder.Services.AddTransient<TasksCreateUpdate>();
-builder.Services.AddTransient<TasksGet>();
 
 builder.Services.AddTransient<UsersCreateUpdate>();
 builder.Services.AddTransient<UsersGet>();
@@ -145,8 +140,8 @@ builder.Services.AddTransient<Team1.Infrastructure.Services.Logs.APILogsCreateUp
 var url = builder.Configuration.GetValue<string>("ApiUrl") ?? throw new InvalidOperationException("Missing API Url");
 builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(url) });
 
-builder.Services.AddTransient<AnonymousClient>();
-builder.Services.AddTransient<AuthorizedClient>();
+builder.Services.AddScoped<AnonymousClient>();
+builder.Services.AddScoped<AuthorizedClient>();
 
 builder.Services.AddScoped<ServiceResponseHandler>();
 

@@ -14,8 +14,8 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 
 builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
 
-builder.Services.AddTransient<AnonymousClient>();
-builder.Services.AddTransient<AuthorizedClient>();
+builder.Services.AddScoped<AnonymousClient>();
+builder.Services.AddScoped<AuthorizedClient>();
 
 builder.Services.AddApiAuthorization();
 
@@ -27,7 +27,6 @@ builder.Services.AddAuthorizationCore(config =>
   config.AddPolicy(PolicyNames.EventAddEditDelete, policy => policy.Requirements.Add(new EventAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.LocationAddEditDelete, policy => policy.Requirements.Add(new LocationAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.PictureAddEditDelete, policy => policy.Requirements.Add(new PictureAddEditDeleteRequirement()));
-  config.AddPolicy(PolicyNames.TaskAddEditDelete, policy => policy.Requirements.Add(new TaskAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.UserAddEditDelete, policy => policy.Requirements.Add(new UserAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.UserProfileEdit, policy => policy.Requirements.Add(new UserProfileEditRequirement()));
 });
@@ -37,7 +36,6 @@ builder.Services.AddScoped<IAuthorizationHandler, CanImpersonate>();
 builder.Services.AddScoped<IAuthorizationHandler, EventAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, LocationAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, PictureAddEditDelete>();
-builder.Services.AddScoped<IAuthorizationHandler, TaskAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, UserProfileEdit>();
 

@@ -12,5 +12,7 @@ namespace Team1.Infrastructure.Dtos
         [Display(Name ="Address")]
         [Required(ErrorMessage = "Address is required.")]
         public AddressObjDto AddressObj { get; set; }
+
+        public AuditFieldsDto AuditFieldsDto { get; set; }
     }
 }

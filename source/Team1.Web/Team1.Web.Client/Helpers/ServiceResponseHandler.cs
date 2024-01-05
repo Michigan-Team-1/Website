@@ -22,6 +22,7 @@ public class ServiceResponseHandler
         string? content = null;
         if (responseMessage.Content != null)
             content = await responseMessage.Content.ReadAsStringAsync();
+    Console.WriteLine(content);
         if (responseMessage.IsSuccessStatusCode && content != null)
         {
             return content.DeserializeJson<T>(DefaulJsonSerializertOptions);

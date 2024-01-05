@@ -18,7 +18,7 @@ public class AuditFieldsDto : AuditFieldsBase
         get
         {
             if (!createdDate.HasValue)
-                createdDate = DateOnly.FromDateTime(CreatedDateTime.ToLocalTime().Date);
+                createdDate = DateOnly.FromDateTime(CreatedDateTime!.Value.ToLocalTime().Date);
 
             return createdDate.Value;
         }
@@ -32,7 +32,7 @@ public class AuditFieldsDto : AuditFieldsBase
     get
     {
       if (!updatedDate.HasValue)
-        updatedDate = DateOnly.FromDateTime(UpdatedDateTime.ToLocalTime().Date);
+        updatedDate = DateOnly.FromDateTime(UpdatedDateTime!.Value.ToLocalTime().Date);
 
       return updatedDate.Value;
     }

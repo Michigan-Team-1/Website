@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Team1.Model
 {
-    public class MemberTypeBase
+  public class MemberTypeBase
     {
         [Key]
         [DatabaseGenerated(System.ComponentModel.DataAnnotations.Schema.DatabaseGeneratedOption.None)]
@@ -18,7 +15,6 @@ namespace Team1.Model
 
     public class MemberType : MemberTypeBase
     {
-        public virtual ICollection<TaskMemberType> TaskMemberTypes { get; set; }
         public virtual ICollection<UserIdentity.UserMemberType> UserMemberTypes { get; set; }
     }
 }

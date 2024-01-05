@@ -39,8 +39,7 @@ public class UserClaimModel
       if (UserPolicies == null)
         return false;
 
-      return UserPolicies.AnnouncementAddEditDelete || UserPolicies.EventAddEditDelete || UserPolicies.LocationAddEditDelete
-        || UserPolicies.TaskAddEditDelete;
+      return UserPolicies.AnnouncementAddEditDelete || UserPolicies.EventAddEditDelete || UserPolicies.LocationAddEditDelete;
     }
   }
   public UserPolicies? UserPolicies { get; set; }
@@ -57,7 +56,6 @@ public class UserClaimModel
     UserPolicies.EventAddEditDelete = IsAdmin;
     UserPolicies.LocationAddEditDelete = IsAdmin;
     UserPolicies.PictureAddEditDelete = IsAuthenticated; // everyone can
-    UserPolicies.TaskAddEditDelete = IsAdmin;
   }
 
   /// <summary>
@@ -99,7 +97,6 @@ public class UserPolicies
   public bool EventAddEditDelete { get; set; }
   public bool LocationAddEditDelete { get; set; }
   public bool PictureAddEditDelete { get; set; }
-  public bool TaskAddEditDelete { get; set; }
   public bool UserAddEditDelete { get; set; }
   public bool UserProfileEdit { get; set; }
 }

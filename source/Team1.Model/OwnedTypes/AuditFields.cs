@@ -15,20 +15,20 @@ public class AuditFieldsBase
   [Display(Name = "Created Date")]
   [DataType(DataType.DateTime)]
   [Column(nameof(CreatedDateTime))]
-  public DateTimeOffset CreatedDateTime { get; set; }
+  public DateTimeOffset? CreatedDateTime { get; set; }
 
   [Display(Name = "Updated Date")]
   [DataType(DataType.DateTime)]
   [Column(nameof(UpdatedDateTime))]
-  public DateTimeOffset UpdatedDateTime { get; set; }
+  public DateTimeOffset? UpdatedDateTime { get; set; }
 
   [Display(Name = "Created By Id")]
   [Column(nameof(CreatedById))]
-  public int CreatedById { get; set; }
+  public int? CreatedById { get; set; }
 
   [Display(Name = "Updated By Id")]
   [Column(nameof(UpdatedById))]
-  public int UpdatedById { get; set; }
+  public int? UpdatedById { get; set; }
 }
 
 [Owned]

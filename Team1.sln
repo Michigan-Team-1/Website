@@ -28,9 +28,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Web", "source\Team1.W
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Web.Client", "source\Team1.Web\Team1.Web.Client\Team1.Web.Client.csproj", "{0DA779B6-59D0-4134-8147-E478B2F13FCC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Team1.Web.Common", "source\Team1.Web.Common\Team1.Web.Common.csproj", "{4A646881-C54F-4DB9-967A-647CCFE776AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Web.Common", "source\Team1.Web.Common\Team1.Web.Common.csproj", "{4A646881-C54F-4DB9-967A-647CCFE776AB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Team1.Infrastructure.Dtos", "source\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj", "{AF9FDA1C-5878-4142-9689-34F20052DC15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Infrastructure.Dtos", "source\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj", "{AF9FDA1C-5878-4142-9689-34F20052DC15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,7 +39,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1DC70E7-B810-44BA-89CF-23F9A180AFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

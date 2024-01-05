@@ -11,7 +11,6 @@ namespace Team1.Web.Common.UserIdentity.Policies
     public const string EventAddEditDelete = nameof(Policies.EventAddEditDelete);
     public const string LocationAddEditDelete = nameof(Policies.LocationAddEditDelete);
     public const string PictureAddEditDelete = nameof(Policies.PictureAddEditDelete);
-    public const string TaskAddEditDelete = nameof(Policies.TaskAddEditDelete);
     public const string UserAddEditDelete = nameof(Policies.UserAddEditDelete);
     public const string UserProfileEdit = nameof(Policies.UserProfileEdit);
   }

@@ -13,6 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="Shared\FormControls\EditCheckbox.razor" />
+    <None Include="Shared\FormControls\EditDate.razor" />
+    <None Include="Shared\FormControls\EditNumber.razor" />
+    <None Include="Shared\FormControls\EditSelect.razor" />
+    <None Include="Shared\FormControls\EditText.razor" />
+    <None Include="Shared\SmartishTableHelpers\EmptyDataRow.razor" />
+    <None Include="Shared\SmartishTableHelpers\SmartishTablePager.razor" />
+    <None Include="Shared\UnsavedChangesNotification\InputUnsavedChangesNotifcation.razor" />
+    <None Include="Shared\UnsavedChangesNotification\UnsavedChangesNotifcation.razor" />
     <None Include="wwwroot\logo-white.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

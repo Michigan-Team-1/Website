@@ -25,7 +25,8 @@ public class LocationsController : BaseController
   public async Task<IActionResult> GetLocations()
   {
     var service = GetService<LocationsGet>();
-    return Ok(await service.GetLocations(false));
+    var list = await service.GetLocations(false);
+    return Ok(list);
   }
 
 

@@ -2,9 +2,9 @@
   <label class="@GetLabelCss"> @PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.CreatedDateTime))</label>
   <div class="@GetValueDivCss">
     <div class="form-control-plaintext">
-      @if (Dto?.CreatedDateTime.Year > 2000)
+      @if (Dto?.CreatedDateTime!.Value.Year > 2000)
       {
-        @Dto?.CreatedDateTime.ToLocalTime().DateTime.ToString()
+        @Dto?.CreatedDateTime!.Value.ToLocalTime().DateTime.ToString()
       }
     </div>
   </div>
@@ -19,9 +19,9 @@
   <label class="@GetLabelCss">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.UpdatedDateTime))</label>
   <div class="@GetValueDivCss">
     <div class="form-control-plaintext">
-      @if (Dto?.CreatedDateTime.Year > 2000)
+      @if (Dto?.UpdatedDateTime!.Value.Year > 2000)
       {
-        @Dto?.UpdatedDateTime.ToLocalTime().DateTime.ToString()
+        @Dto?.UpdatedDateTime!.Value.ToLocalTime().DateTime.ToString()
       }
     </div>
   </div>

@@ -67,4 +67,42 @@ public class AuthorizedClient
         }
         return new List<RoleDto>();
     }
+
+  public async Task<List<LocationDto>> GetLocations()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Locations");
+      return await _serviceResponseHandler.HandleJsonResponse<List<LocationDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<LocationDto>();
+  }
+
+  public async Task<List<LocationDto>> SaveLocation(LocationDto dto)
+  {
+    try
+    {
+      Task<HttpResponseMessage>? saveTask;
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      if (dto.LocationId == 0)
+        saveTask = _httpClient.PostAsync("api/Locations", content);
+      else
+        saveTask = _httpClient.PutAsync("api/Locations", content);
+
+      var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<List<LocationDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<LocationDto>();
+  }
+
 }
