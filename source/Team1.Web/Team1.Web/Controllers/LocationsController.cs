@@ -12,7 +12,7 @@ namespace Team1.Web.Controllers;
 /// <summary>
 /// users controller
 /// </summary>
-[Authorize(Policy = PolicyNames.LocationAddEditDelete)]
+//[Authorize(Policy = PolicyNames.LocationAddEditDelete)]
 [Route("api/[controller]")]
 public class LocationsController : BaseController
 {

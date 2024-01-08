@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Team1.Infrastructure.Dtos;
-using Team1.Infrastructure.Dtos.Helpers;
 using Team1.Infrastructure.Dtos.Users;
 using Team1.Web.Client.Helpers;
 
@@ -8,14 +7,18 @@ namespace Team1.Web.Client.Services;
 
 public class AuthorizedClient
 {
-    private readonly HttpClient _httpClient;
-    private readonly ServiceResponseHandler _serviceResponseHandler;
+    protected readonly HttpClient _httpClient;
+  protected readonly ServiceResponseHandler _serviceResponseHandler;
 
     public AuthorizedClient(HttpClient httpClient, ServiceResponseHandler serviceResponseHandler)
     {
         _httpClient = httpClient;
         _serviceResponseHandler = serviceResponseHandler;
     }
+
+  protected virtual void SetupCookies()
+  {
+  }
 
     public async Task<List<UserDto>> GetUsers()
     {
@@ -83,7 +86,7 @@ public class AuthorizedClient
     return new List<LocationDto>();
   }
 
-  public async Task<List<LocationDto>> SaveLocation(LocationDto dto)
+  public async Task<LocationDto> SaveLocation(LocationDto dto)
   {
     try
     {
@@ -95,14 +98,14 @@ public class AuthorizedClient
         saveTask = _httpClient.PutAsync("api/Locations", content);
 
       var response = await saveTask;
-      return await _serviceResponseHandler.HandleJsonResponse<List<LocationDto>>(response);
+      return await _serviceResponseHandler.HandleJsonResponse<LocationDto>(response);
     }
     catch (AccessTokenNotAvailableException exception)
     {
       exception.Redirect();
     }
 
-    return new List<LocationDto>();
+    return new LocationDto();
   }
 
 }

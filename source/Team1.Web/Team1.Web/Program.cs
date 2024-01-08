@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using Team1.Entities;
 using Team1.Infrastructure.Services.Announcements;
 using Team1.Infrastructure.Services.Events;
@@ -20,6 +21,7 @@ using Team1.Web.Common.UserIdentity;
 using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
+using Team1.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -136,9 +138,27 @@ builder.Services.AddTransient<Team1.Infrastructure.Services.GoverningDistricts.G
 builder.Services.AddTransient<Team1.Infrastructure.Services.Logs.SystemLogsCreate>();
 builder.Services.AddTransient<Team1.Infrastructure.Services.Logs.APILogsCreateUpdate>();
 
+builder.Services.AddHeaderPropagation(options =>
+{
+  options.Headers.Add("Cookie", context =>
+  {
+    KeyValuePair<string,string>? accessToken = context.HttpContext.Request.Cookies.FirstOrDefault(w => w.Key == ".AspNetCore.Identity.Application");
+    return accessToken != null ? new StringValues($"{accessToken.Value.Key}={accessToken.Value.Value}") : new StringValues();
+  });
+});
+
 // Supply HttpClient instances that include access tokens when making requests to the server project
 var url = builder.Configuration.GetValue<string>("ApiUrl") ?? throw new InvalidOperationException("Missing API Url");
-builder.Services.AddSingleton(new HttpClient { BaseAddress = new Uri(url) });
+builder.Services.AddHttpClient("Auth", client =>
+{
+  client.BaseAddress = new Uri(url);
+}).AddHeaderPropagation(options =>
+{
+  options.Headers.Add("Cookie");
+});
+
+builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"));
+builder.Services.AddScoped<AuthorizedClient>((s) => new AuthorizedClient(s.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"), s.GetRequiredService<ServiceResponseHandler>()));
 
 builder.Services.AddScoped<AnonymousClient>();
 builder.Services.AddScoped<AuthorizedClient>();
@@ -167,6 +187,8 @@ app.UseHttpsRedirection();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
+
+app.UseHeaderPropagation();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()
