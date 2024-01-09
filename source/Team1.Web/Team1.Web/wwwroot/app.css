@@ -43,3 +43,33 @@ html, body {
     }
 }
 /***** end busy indicator **********************/
+
+/*Blazored Toast overrides*/
+.position-topright {
+    top: 5px !important;
+}
+
+.blazored-toast-container {
+    z-index: 10000 !important;
+}
+/***********************************/
+
+.valid.modified:not([type=checkbox]):not([type=radio]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+.hover:hover {
+    background-color: lightgray !important;
+}
+
+[data-bs-theme=dark] .hover:hover {
+    background-color: dimgray !important;
+}

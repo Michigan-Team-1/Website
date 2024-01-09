@@ -1,4 +1,6 @@
-﻿@inherits LayoutComponentBase
+﻿@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@inherits LayoutComponentBase
 
 <NavMenu />
 
@@ -6,7 +8,8 @@
   @Body
 </div>
 
-<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopRight" ShowProgressBar="true" IconType="IconType.FontAwesome" />
+<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopRight" ShowProgressBar="true" IconType="IconType.FontAwesome" 
+  SuccessIcon="fa fa-thumbs-up" InfoIcon="fa fa-info" ErrorIcon="fa fa-bug" WarningIcon="fa fa-triangle-exclamation" Timeout="7"/>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

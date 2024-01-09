@@ -13,28 +13,28 @@ public class AuditFieldsDto : AuditFieldsBase
 
     [Display(Name = "Created Date")]
     [JsonIgnore]
-    public DateOnly CreatedDate
+    public DateOnly? CreatedDate
     {
         get
         {
-            if (!createdDate.HasValue)
-                createdDate = DateOnly.FromDateTime(CreatedDateTime!.Value.ToLocalTime().Date);
+            if (!createdDate.HasValue && CreatedDateTime.HasValue)
+                createdDate = DateOnly.FromDateTime(CreatedDateTime.Value.ToLocalTime().Date);
 
-            return createdDate.Value;
+            return createdDate;
         }
     }
 
   private DateOnly? updatedDate;
   [Display(Name = "Updated Date")]
   [JsonIgnore]
-  public DateOnly UpdatedDate
+  public DateOnly? UpdatedDate
   {
     get
     {
-      if (!updatedDate.HasValue)
-        updatedDate = DateOnly.FromDateTime(UpdatedDateTime!.Value.ToLocalTime().Date);
+      if (!updatedDate.HasValue && UpdatedDateTime.HasValue)
+        updatedDate = DateOnly.FromDateTime(UpdatedDateTime.Value.ToLocalTime().Date);
 
-      return updatedDate.Value;
+      return updatedDate;
     }
   }
 

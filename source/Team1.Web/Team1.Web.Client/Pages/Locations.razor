@@ -1,6 +1,5 @@
 ﻿@page "/locations"
-@* @attribute [Authorize(Policy = nameof(PolicyNames.LocationAddEditDelete))] *@
-@* @rendermode @(new InteractiveWebAssemblyRenderMode(false)) *@
+@attribute [Authorize(Policy = nameof(PolicyNames.LocationAddEditDelete))]
 <PageTitle>Michigan Team-1 - Locations</PageTitle>
 
 <div class="row mb-2">
@@ -95,7 +94,7 @@ else
                 </button>
               </td>
               <td>@row.Item.FAAWaiver</td>
-              <td class="text-end">@row.Item.AuditFieldsDto.CreatedDate.ToShortDateString()</td>
+              <td class="text-end">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
               <td>@row.Item.AuditFieldsDto.CreatedByName</td>
               <td class="text-center">
                 <IsActive Value="@row.Item.IsActive" />
@@ -127,12 +126,16 @@ else
 @implements IDisposable
 @inject PersistentComponentState ApplicationState
 @inject IModalService modalService
-@inject AuthorizedClient client
+@inject AuthorizedClient authClient
+@inject AnonymousClient client
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
   private SmartishTable.Root<LocationDto>? smartishTable;
 
   private List<LocationDto>? Dtos;
+
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
 
   private Dictionary<string, SmartishTable.Filters.StringOperators> stringOperators = default!;
   private SmartishTable.Filters.DateTimeOperators createdDateTimeOperator = SmartishTable.Filters.DateTimeOperators.GreaterThan;
@@ -146,7 +149,7 @@ else
 
     if (!ApplicationState.TryTakeFromJson<List<LocationDto>>("Locations", out var restored))
     {
-      Dtos = await client.GetLocations();
+      Dtos = await authClient.GetLocations();
     }
     else
     {
@@ -170,8 +173,19 @@ else
   {
     var isNew = dto == null;
 
+    if (countries == null)
+    {
+      var countriesTask = client.GetCountries();
+      var governingDistrictsTask = client.GetGoverningDistricts();
+
+      await Task.WhenAll(countriesTask, governingDistrictsTask);
+      countries = countriesTask.Result;
+      governingDistricts = governingDistrictsTask.Result;
+    }
     var parameters = new Blazored.Modal.ModalParameters();
     parameters.Add(nameof(LocationAddEdit.DtoOriginal), dto);
+    parameters.Add(nameof(LocationAddEdit.Countries), countries);
+    parameters.Add(nameof(LocationAddEdit.GoverningDistricts), governingDistricts);
     var modalReference = modalService.Show<LocationAddEdit>("Location Add/Edit", parameters, new ModalOptions() { });
     var modalResult = await modalReference.Result;
     dto = modalResult.Data as LocationDto;

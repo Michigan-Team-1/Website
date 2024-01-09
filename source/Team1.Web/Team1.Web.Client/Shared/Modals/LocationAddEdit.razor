@@ -1,5 +1,5 @@
 ﻿<div class="modal-backdrop fade show"></div>
-<div class="modal fade show d-block" style="pointer-events: none;" tabindex="-1" role="dialog">
+<div class="modal fade show d-block modal-lg" style="pointer-events: none;" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -16,10 +16,11 @@
             <EditText @bind-Value="Dto.LocationName" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.LocationName))" ValidationFor="(() => Dto.LocationName)" />
             <EditText @bind-Value="Dto.LocationDescription" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.LocationDescription))" ValidationFor="(() => Dto.LocationDescription)" />
             <EditText @bind-Value="Dto.FAAWaiver" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.FAAWaiver))" ValidationFor="(() => Dto.FAAWaiver)" />
-
+            <EditAddress Dto="Dto.AddressObj" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.AddressObj))"
+                         ValidationFor="(() => Dto.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" />
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.IsActive))" />
 
-            <AuditFields Dto="Dto.AuditFieldsDto" />
+            <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
           </div>
         </div>
         <div class="modal-footer">
@@ -38,8 +39,14 @@
   [CascadingParameter]
   private BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-  [Parameter]
+  [Parameter, EditorRequired]
   public LocationDto DtoOriginal { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public List<CountryDto> Countries { get; set; }
+
+  [Parameter, EditorRequired]
+  public List<GoverningDistrictDto> GoverningDistricts { get; set; }
 
   private LocationDto Dto { get; set; } = default!;
 
@@ -61,6 +68,12 @@
         {
           IsActive = true,
           IsUpdated = true,
+          AddressObj = new AddressObjDto()
+          {
+            CountryId = 840,
+            GoverningDistrictId = 27
+          },
+          AuditFieldsDto = new AuditFieldsDto()
         };
     }
 

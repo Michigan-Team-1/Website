@@ -1,15 +1,16 @@
-﻿@inherits InputBase<string>
+﻿@using Microsoft.JSInterop
+@inherits InputBase<string>
 
 <div class="@DivContainerCss">
   @if (!HideLabel)
   {
-    <label for="@($"{_predicate}{nameSuffix}")" class="col-form-label @LabelCss">
+    <label for="@($"{_predicate}{nameSuffix}")" class="@LabelCss">
       <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
-      <InputUnsavedChangesNotifcation Value="@(OldValue != CurrentValue)" />
+      <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
     </label>
   }
   <div class="col-sm">
-    <input @bind="CurrentValue" id="@($"{_predicate}{nameSuffix}")" type="text" class="form-control @CssClass" placeholder="@(ShowPlaceHolder ? PropertyReflections.GetLabelName(PropertyInfo) : "")" />
+    <input @bind="CurrentValue" @bind:event="oninput" id="@($"{_predicate}{nameSuffix}")" class="form-control @CssClass" data-inputmask="'mask': '@Inputmask', 'autoUnmask': true" />
     @if (ValidationFor != null)
     {
       <ValidationMessage For="@ValidationFor" />
@@ -17,21 +18,18 @@
   </div>
 </div>
 
+@inject IJSRuntime jsRuntime
 @code {
-
-  [Parameter] public string LabelCss { get; set; } = "col-sm-3";
-
-    [Parameter]
-  public string DivContainerCss { get; set; } = "mb-3 row gx-2";
-
   [Parameter]
-  public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
+  public string DivContainerCss { get; set; } = "mb-3 row gx-2";
 
   [Parameter]
   public bool HideLabel { get; set; }
 
+  [Parameter] public string LabelCss { get; set; } = "";
+
   [Parameter]
-  public bool ShowPlaceHolder { get; set; }
+  public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
 
   [Parameter]
   public System.Linq.Expressions.Expression<Func<string>>? ValidationFor { get; set; }
@@ -39,6 +37,10 @@
   private string? _predicate;
 
   private string nameSuffix = Guid.NewGuid().ToString();
+
+  private string? oldInputmask;
+  [Parameter]
+  public string? Inputmask { get; set; }
 
   [Parameter]
   public string? OldValue { get; set; }
@@ -50,8 +52,13 @@
     _predicate = PropertyInfo.Name;
   }
 
-  protected override void OnParametersSet()
+  protected override async Task OnAfterRenderAsync(bool firstRender)
   {
+    if (Inputmask != oldInputmask && !string.IsNullOrEmpty(Inputmask))
+    {
+      await jsRuntime.InvokeVoidAsync("inputmaskInit", $"{_predicate}{nameSuffix}");
+      oldInputmask = Inputmask;
+    }
   }
 
   protected override bool TryParseValueFromString(string value, out string result, out string? validationErrorMessage)

@@ -2,7 +2,7 @@
   <label class="@GetLabelCss"> @PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.CreatedDateTime))</label>
   <div class="@GetValueDivCss">
     <div class="form-control-plaintext">
-      @if (Dto?.CreatedDateTime!.Value.Year > 2000)
+      @if (Dto?.CreatedDateTime != null)
       {
         @Dto?.CreatedDateTime!.Value.ToLocalTime().DateTime.ToString()
       }
@@ -19,7 +19,7 @@
   <label class="@GetLabelCss">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(AuditFieldsDto.UpdatedDateTime))</label>
   <div class="@GetValueDivCss">
     <div class="form-control-plaintext">
-      @if (Dto?.UpdatedDateTime!.Value.Year > 2000)
+      @if (Dto?.UpdatedDateTime != null)
       {
         @Dto?.UpdatedDateTime!.Value.ToLocalTime().DateTime.ToString()
       }
@@ -42,6 +42,6 @@
   public bool LayoutHorizontal { get; set; } = false;
 
   private string GetRowCss => LayoutHorizontal ? "row" : "";
-  private string GetLabelCss => LayoutHorizontal ? "col-6 col-form-label" : "";
-  private string GetValueDivCss => LayoutHorizontal ? "col-6 text-end" : "";
+  private string GetLabelCss => LayoutHorizontal ? "col-3 col-form-label" : "";
+  private string GetValueDivCss => LayoutHorizontal ? "col-3 text-start" : "";
 }

@@ -17,11 +17,16 @@
 <body>
   <Routes @rendermode="@RenderModeForPage" />
   <script src="theme.js"></script>
+  <script src="inputmask.js"></script>
   <script src="_framework/blazor.web.js" autostart="false"></script>
   <script>
     Blazor.start({
       ssr: { disableDomPreservation: true }
     });
+
+    function inputmaskInit(id) {
+      Inputmask().mask(document.getElementById(id));
+    };
   </script>
 </body>
 

@@ -15,13 +15,11 @@ using Team1.Infrastructure.UserIdentity;
 using Team1.Model.UserIdentity;
 using Team1.Web.Client.Helpers;
 using Team1.Web.Client.Layout;
-using Team1.Web.Client.Pages;
 using Team1.Web.Client.Services;
 using Team1.Web.Common.UserIdentity;
 using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
-using Team1.Web.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -158,7 +156,7 @@ builder.Services.AddHttpClient("Auth", client =>
 });
 
 builder.Services.AddTransient(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"));
-builder.Services.AddScoped<AuthorizedClient>((s) => new AuthorizedClient(s.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"), s.GetRequiredService<ServiceResponseHandler>()));
+builder.Services.AddScoped((s) => new AuthorizedClient(s.GetRequiredService<IHttpClientFactory>().CreateClient("Auth"), s.GetRequiredService<ServiceResponseHandler>()));
 
 builder.Services.AddScoped<AnonymousClient>();
 builder.Services.AddScoped<AuthorizedClient>();

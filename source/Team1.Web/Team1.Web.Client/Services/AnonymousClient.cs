@@ -31,18 +31,33 @@ public class AnonymousClient
     return new List<UserDto>();
   }
 
-  //public async Task<List<LaunchDto>> GetLaunches(int rocketId)
-  //{
-  //    try
-  //    {
-  //        var response = await _httpClient.GetAsync($"api/Launches/{rocketId}");
-  //        return await _serviceResponseHandler.HandleJsonResponse<List<LaunchDto>>(response);
-  //    }
-  //    catch (AccessTokenNotAvailableException exception)
-  //    {
-  //        exception.Redirect();
-  //    }
+  public async Task<List<CountryDto>?> GetCountries()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync($"api/countries");
+      return await _serviceResponseHandler.HandleJsonResponse<List<CountryDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
 
-  //    return new List<LaunchDto>();
-  //}
+    return new List<CountryDto>();
+  }
+
+  public async Task<List<GoverningDistrictDto>?> GetGoverningDistricts()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync($"api/governingdistricts");
+      return await _serviceResponseHandler.HandleJsonResponse<List<GoverningDistrictDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<GoverningDistrictDto>();
+  }
 }

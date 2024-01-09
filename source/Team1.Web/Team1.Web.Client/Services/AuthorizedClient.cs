@@ -20,7 +20,7 @@ public class AuthorizedClient
   {
   }
 
-    public async Task<List<UserDto>> GetUsers()
+    public async Task<List<UserDto>?> GetUsers()
     {
         try
         {
@@ -57,7 +57,7 @@ public class AuthorizedClient
         return null;
     }
 
-    public async Task<List<RoleDto>> GetRoles()
+    public async Task<List<RoleDto>?> GetRoles()
     {
         try
         {
@@ -71,7 +71,7 @@ public class AuthorizedClient
         return new List<RoleDto>();
     }
 
-  public async Task<List<LocationDto>> GetLocations()
+  public async Task<List<LocationDto>?> GetLocations()
   {
     try
     {
@@ -86,7 +86,7 @@ public class AuthorizedClient
     return new List<LocationDto>();
   }
 
-  public async Task<LocationDto> SaveLocation(LocationDto dto)
+  public async Task<LocationDto?> SaveLocation(LocationDto dto)
   {
     try
     {
