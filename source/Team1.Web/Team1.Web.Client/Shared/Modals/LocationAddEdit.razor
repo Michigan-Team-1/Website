@@ -17,7 +17,7 @@
             <EditText @bind-Value="Dto.LocationDescription" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.LocationDescription))" ValidationFor="(() => Dto.LocationDescription)" />
             <EditText @bind-Value="Dto.FAAWaiver" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.FAAWaiver))" ValidationFor="(() => Dto.FAAWaiver)" />
             <EditAddress Dto="Dto.AddressObj" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.AddressObj))"
-                         ValidationFor="(() => Dto.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" />
+                         ValidationFor="(() => Dto.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" AddressUpdated="AddressUpdated" />
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.IsActive))" />
 
             <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
@@ -91,5 +91,11 @@
       if (data != null)
         await BlazoredModal.CloseAsync(ModalResult.Ok(data));
     }
+  }
+
+  private Task AddressUpdated()
+  {
+    StateHasChanged();
+    return Task.CompletedTask;
   }
 }

@@ -1,7 +1,7 @@
 ﻿<div class="mb-3 row gx-2">
   <label class="col-form-label col-sm-3">
     <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
-    <InputUnsavedChangesNotifcation Value="@(!DtoOriginal.Equals(Dto))" />
+    <InputUnsavedChangesNotifcation Value="@(DataUpdated)" />
   </label>
   <div class="col-sm-9">
     <EditSelect @bind-Value:get=Dto.CountryId @bind-Value:set="SetCountry" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.CountryId))"
@@ -63,6 +63,20 @@
 
   [Parameter, EditorRequired]
   public AddressObjDto Dto { get; set; }
+
+  [Parameter]
+  public EventCallback AddressUpdated { get; set; }
+
+  public bool DataUpdated
+  {
+    get
+    {
+      var updated = !DtoOriginal.Equals(Dto);
+      if (updated && AddressUpdated.HasDelegate)
+        AddressUpdated.InvokeAsync();
+      return updated;
+    }
+  }
 
   private AddressObjDto DtoOriginal;
   private CountryDto? countryDto;

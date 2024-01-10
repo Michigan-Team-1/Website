@@ -22,10 +22,15 @@ public class LocationDto : LocationBase
 
     if (obj is LocationDto item)
     {
-      return item.FAAWaiver.IfNullThenEmptyString() == FAAWaiver.IfNullThenEmptyString() && item.IsActive == IsActive 
+      if (item.AddressObj != null && AddressObj == null)
+        return false;
+      else if (item.AddressObj == null && AddressObj != null)
+        return false;
+
+      return item.FAAWaiver.IfNullThenEmptyString() == FAAWaiver.IfNullThenEmptyString() && item.IsActive == IsActive
         && item.LocationDescription.IfNullThenEmptyString() == LocationDescription.IfNullThenEmptyString()
         && item.LocationName.IfNullThenEmptyString() == LocationName.IfNullThenEmptyString() && item.LocationId == LocationId
-        && item.AddressObj.Equals(AddressObj);          
+        && (item.AddressObj?.Equals(AddressObj) ?? true);
     }
 
     return false;

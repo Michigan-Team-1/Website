@@ -6,23 +6,23 @@ namespace Team1.Infrastructure.Dtos;
 
 public class AuditFieldsDto : AuditFieldsBase
 {
-    [Display(Name = "Created By")]
-    public string CreatedByName { get; set; }
+  [Display(Name = "Created By")]
+  public string? CreatedByName { get; set; }
 
-    private DateOnly? createdDate;
+  private DateOnly? createdDate;
 
-    [Display(Name = "Created Date")]
-    [JsonIgnore]
-    public DateOnly? CreatedDate
+  [Display(Name = "Created Date")]
+  [JsonIgnore]
+  public DateOnly? CreatedDate
+  {
+    get
     {
-        get
-        {
-            if (!createdDate.HasValue && CreatedDateTime.HasValue)
-                createdDate = DateOnly.FromDateTime(CreatedDateTime.Value.ToLocalTime().Date);
+      if (!createdDate.HasValue && CreatedDateTime.HasValue)
+        createdDate = DateOnly.FromDateTime(CreatedDateTime.Value.ToLocalTime().Date);
 
-            return createdDate;
-        }
+      return createdDate;
     }
+  }
 
   private DateOnly? updatedDate;
   [Display(Name = "Updated Date")]
@@ -39,17 +39,17 @@ public class AuditFieldsDto : AuditFieldsBase
   }
 
   [Display(Name = "Updated By")]
-    public string UpdatedByName { get; set; }
+  public string? UpdatedByName { get; set; }
 
-    public void SetCreated(AuditFields auditFields, string name)
-    {
-        CreatedByName = name;
-        CreatedDateTime = auditFields.CreatedDateTime;
-    }
+  public void SetCreated(AuditFields auditFields, string name)
+  {
+    CreatedByName = name;
+    CreatedDateTime = auditFields.CreatedDateTime;
+  }
 
-    public void SetUpdated(AuditFields auditFields, string name)
-    {
-        UpdatedByName = name;
-        UpdatedDateTime = auditFields.UpdatedDateTime;
-    }
+  public void SetUpdated(AuditFields auditFields, string name)
+  {
+    UpdatedByName = name;
+    UpdatedDateTime = auditFields.UpdatedDateTime;
+  }
 }
