@@ -182,6 +182,23 @@ else
       countries = countriesTask.Result;
       governingDistricts = governingDistrictsTask.Result;
     }
+    if (isNew)
+    {
+      var country = countries!.First(w => w.CountryId == 840);
+      dto = new LocationDto()
+        {
+          IsActive = true,
+          IsUpdated = true,
+          AddressObj = new AddressObjDto()
+          {
+            CountryId = country.CountryId,
+            GoverningDistrictName = country.GoverningDistrictName,
+            GoverningDistrictId = 27,
+            PostalCodeMask = country.PostalCodeMask,
+          },
+          AuditFieldsDto = new AuditFieldsDto()
+        };
+    }
     var parameters = new Blazored.Modal.ModalParameters();
     parameters.Add(nameof(LocationAddEdit.DtoOriginal), dto);
     parameters.Add(nameof(LocationAddEdit.Countries), countries);

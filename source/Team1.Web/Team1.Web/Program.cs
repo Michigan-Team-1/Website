@@ -1,5 +1,7 @@
 using Blazored.Modal;
 using Blazored.Toast;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -20,6 +22,7 @@ using Team1.Web.Common.UserIdentity;
 using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
+using Team1.Infrastructure.Dtos;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -94,6 +97,11 @@ builder.Services.AddScoped<Services.Email.IEmailer, Services.Email.Emailer>();
 builder.Services.AddTransient<Services.FileManager.IFileManager, Services.FileManager.LocalFileManager>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<LocationDtoValidator>();
+
+Team1.Web.Common.FluentValidationHelpers.SetupDisplayNameResolver();
 
 builder.Services.AddScoped<UserPermissionService>((s) =>
 {

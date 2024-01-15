@@ -53,37 +53,31 @@
   public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<CountryDto> Countries { get; set; }
+  public List<CountryDto> Countries { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<GoverningDistrictDto> GoverningDistricts { get; set; }
+  public List<GoverningDistrictDto> GoverningDistricts { get; set; } = default!;
 
   [Parameter]
   public System.Linq.Expressions.Expression<Func<AddressObjDto>>? ValidationFor { get; set; }
 
   [Parameter, EditorRequired]
-  public AddressObjDto Dto { get; set; }
-
-  [Parameter]
-  public EventCallback AddressUpdated { get; set; }
+  public AddressObjDto Dto { get; set; } = default!;
 
   public bool DataUpdated
   {
     get
     {
-      var updated = !DtoOriginal.Equals(Dto);
-      if (updated && AddressUpdated.HasDelegate)
-        AddressUpdated.InvokeAsync();
-      return updated;
+      return !DtoOriginal.Equals(Dto);
     }
   }
 
-  private AddressObjDto DtoOriginal;
+  private AddressObjDto DtoOriginal = default!;
   private CountryDto? countryDto;
 
   protected override void OnInitialized()
   {
-    DtoOriginal = Dto;
+    DtoOriginal = Dto.SerializeJson().DeserializeJson<AddressObjDto>()!;
     SetCountry(Dto.CountryId);
   }
 
@@ -91,5 +85,7 @@
   {
     Dto.CountryId = value;
     countryDto = Countries.FirstOrDefault(w => w.CountryId == value);
+    Dto.GoverningDistrictName = countryDto?.GoverningDistrictName;
+    Dto.PostalCodeMask = countryDto?.PostalCodeMask;
   }
 }

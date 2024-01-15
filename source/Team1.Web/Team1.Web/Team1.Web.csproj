@@ -30,6 +30,7 @@
     <ProjectReference Include="..\..\Team1.Infrastructure\Team1.Infrastructure.csproj" />
     <ProjectReference Include="..\..\Team1.Web.Common\Team1.Web.Common.csproj" />
     <ProjectReference Include="..\Team1.Web.Client\Team1.Web.Client.csproj" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.0" />

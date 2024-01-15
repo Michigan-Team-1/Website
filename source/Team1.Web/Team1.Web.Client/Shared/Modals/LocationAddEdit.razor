@@ -10,14 +10,14 @@
       </div>
       <EditForm EditContext="_editContext" OnValidSubmit="Save">
         <div class="modal-body">
-          <DataAnnotationsValidator />
+          <Blazored.FluentValidation.FluentValidationValidator />
           <ValidationSummary />
           <div class="form-horizontal">
             <EditText @bind-Value="Dto.LocationName" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.LocationName))" ValidationFor="(() => Dto.LocationName)" />
             <EditText @bind-Value="Dto.LocationDescription" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.LocationDescription))" ValidationFor="(() => Dto.LocationDescription)" />
             <EditText @bind-Value="Dto.FAAWaiver" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.FAAWaiver))" ValidationFor="(() => Dto.FAAWaiver)" />
             <EditAddress Dto="Dto.AddressObj" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.AddressObj))"
-                         ValidationFor="(() => Dto.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" AddressUpdated="AddressUpdated" />
+                         ValidationFor="(() => Dto.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" />
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetLocationDtoProperty(nameof(Dto.IsActive))" />
 
             <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
@@ -32,7 +32,6 @@
   </div>
 </div>
 
-
 @inject IModalService ModalService
 @inject AuthorizedClient client
 @code {
@@ -43,10 +42,10 @@
   public LocationDto DtoOriginal { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<CountryDto> Countries { get; set; }
+  public List<CountryDto> Countries { get; set; } = default!;
 
   [Parameter, EditorRequired]
-  public List<GoverningDistrictDto> GoverningDistricts { get; set; }
+  public List<GoverningDistrictDto> GoverningDistricts { get; set; } = default!;
 
   private LocationDto Dto { get; set; } = default!;
 
@@ -62,23 +61,7 @@
 
   protected override void OnInitialized()
   {
-    if (DtoOriginal == null)
-    {
-      DtoOriginal = new LocationDto()
-        {
-          IsActive = true,
-          IsUpdated = true,
-          AddressObj = new AddressObjDto()
-          {
-            CountryId = 840,
-            GoverningDistrictId = 27
-          },
-          AuditFieldsDto = new AuditFieldsDto()
-        };
-    }
-
     Dto = DtoOriginal.SerializeJson().DeserializeJson<LocationDto>()!;
-
     _editContext = new EditContext(Dto);
   }
 
@@ -91,11 +74,5 @@
       if (data != null)
         await BlazoredModal.CloseAsync(ModalResult.Ok(data));
     }
-  }
-
-  private Task AddressUpdated()
-  {
-    StateHasChanged();
-    return Task.CompletedTask;
   }
 }

@@ -8,6 +8,7 @@ using Team1.Infrastructure.UserIdentity;
 using Team1.Web.Client;
 using Team1.Web.Client.Helpers;
 using Team1.Web.Client.Services;
+using Team1.Web.Common;
 using Team1.Web.Common.UserIdentity.Policies;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
@@ -47,6 +48,8 @@ builder.Services.AddScoped<UserPermissionService>((s) =>
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+
+FluentValidationHelpers.SetupDisplayNameResolver();
 
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
