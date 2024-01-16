@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Team1.Infrastructure.Dtos;
+using Team1.Infrastructure.Dtos.Helpers;
 using Team1.Infrastructure.Dtos.Users;
 using Team1.Web.Client.Helpers;
 
@@ -71,6 +72,58 @@ public class AuthorizedClient
         return new List<RoleDto>();
     }
 
+  public async Task<List<EventDto>?> GetEvents()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Events");
+      return await _serviceResponseHandler.HandleJsonResponse<List<EventDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<EventDto>();
+  }
+
+  public async Task<EventDto?> SaveLocation(EventDto dto)
+  {
+    try
+    {
+      Task<HttpResponseMessage>? saveTask;
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      if (dto.EventId == 0)
+        saveTask = _httpClient.PostAsync("api/EventDto", content);
+      else
+        saveTask = _httpClient.PutAsync("api/EventDto", content);
+
+      var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<EventDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new EventDto();
+  }
+
+  public async Task<List<SelectOptionDto<int>>?> GetLocationsForSelection()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Locations/ForSelection");
+      return await _serviceResponseHandler.HandleJsonResponse<List<SelectOptionDto<int>>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<SelectOptionDto<int>>();
+  }
+
   public async Task<List<LocationDto>?> GetLocations()
   {
     try
@@ -85,6 +138,7 @@ public class AuthorizedClient
 
     return new List<LocationDto>();
   }
+  
 
   public async Task<LocationDto?> SaveLocation(LocationDto dto)
   {

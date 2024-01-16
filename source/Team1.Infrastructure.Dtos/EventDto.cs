@@ -10,6 +10,12 @@ public class EventDto : EventBase
       public bool IsUpdated { get; set; }
 
       [Display(Name="Locations")]
-      public IEnumerable<EventLocationDto> EventLocations { get; set; }
-      public IEnumerable<LocationDto> Locations { get; set; }
-  }
+      public IEnumerable<EventLocationDto>? EventLocations { get; set; }
+
+  /// <summary>
+  /// Used on the landing page
+  /// </summary>
+      public IEnumerable<LocationDto>? Locations { get; set; }
+
+    public AuditFieldsDto AuditFieldsDto { get; set; } = default!;
+}

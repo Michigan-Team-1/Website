@@ -11,6 +11,22 @@ public static class PropertyReflections
 
   private static Dictionary<string, List<PropertyInfo>> properties = new Dictionary<string, List<PropertyInfo>>();
 
+  public static PropertyInfo GetEventDtoProperty(string name)
+  {
+    return EventDtoProperties.Single(w => w.Name == name);
+  }
+
+  public static List<PropertyInfo> EventDtoProperties
+  {
+    get
+    {
+      if (!properties.ContainsKey(nameof(EventDto)))
+        properties[nameof(EventDto)] = typeof(EventDto).GetProperties().ToList();
+
+      return properties[nameof(EventDto)];
+    }
+  }
+
   public static PropertyInfo GetLocationDtoProperty(string name)
   {
     return LocationDtoProperties.Single(w => w.Name == name);
