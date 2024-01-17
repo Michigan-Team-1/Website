@@ -17,10 +17,6 @@ public class AuthorizedClient
         _serviceResponseHandler = serviceResponseHandler;
     }
 
-  protected virtual void SetupCookies()
-  {
-  }
-
     public async Task<List<UserDto>?> GetUsers()
     {
         try
@@ -87,16 +83,16 @@ public class AuthorizedClient
     return new List<EventDto>();
   }
 
-  public async Task<EventDto?> SaveLocation(EventDto dto)
+  public async Task<EventDto?> SaveEvent(EventDto dto)
   {
     try
     {
       Task<HttpResponseMessage>? saveTask;
       var content = _serviceResponseHandler.BuildJsonContent(dto);
       if (dto.EventId == 0)
-        saveTask = _httpClient.PostAsync("api/EventDto", content);
+        saveTask = _httpClient.PostAsync("api/Events", content);
       else
-        saveTask = _httpClient.PutAsync("api/EventDto", content);
+        saveTask = _httpClient.PutAsync("api/Events", content);
 
       var response = await saveTask;
       return await _serviceResponseHandler.HandleJsonResponse<EventDto>(response);

@@ -8,9 +8,9 @@
   </label>
   <div class="col-sm-9">
     <InputDate @bind-Value="CurrentValue" class="@($"form-control {CssClass}")" id="@($"{_predicate}{nameSuffix}")" />
-    @if (For != null)
+    @if (ValidationFor != null)
     {
-      <ValidationMessage For="@For" />
+      <ValidationMessage For="@ValidationFor" />
     }
   </div>
 </div>
@@ -22,7 +22,7 @@
   public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
 
   [Parameter]
-  public System.Linq.Expressions.Expression<Func<TValue>>? For { get; set; }
+  public System.Linq.Expressions.Expression<Func<TValue>>? ValidationFor { get; set; }
 
   private string? _predicate;
 

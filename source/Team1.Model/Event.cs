@@ -13,7 +13,7 @@ namespace Team1.Model
 
         [Display(Name = "Name")]
         [Required(ErrorMessage = ErrorMessages.RequiredField), StringLength(Constants.FieldSizes.NameLength, ErrorMessage = ErrorMessages.StringLengthMax)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [DataType(DataType.Date)]
         [Display(Name= "Event Date")]

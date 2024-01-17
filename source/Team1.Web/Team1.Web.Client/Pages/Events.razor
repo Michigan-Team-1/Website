@@ -1,4 +1,5 @@
 ﻿@page "/events"
+@attribute [Authorize(Policy = nameof(PolicyNames.EventAddEditDelete))]
 <PageTitle>Michigan Team-1 - Events</PageTitle>
 
 <div class="row mb-2">

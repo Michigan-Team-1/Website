@@ -14,19 +14,43 @@
           <ValidationSummary />
           <div class="form-horizontal">
             <EditText @bind-Value="Dto.Name" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.Name))" ValidationFor="(() => Dto.Name)" />
-            <EditDate @bind-Value="Dto.EventDate" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventDate))" ValidationFor="(() => Dto.EventDate)" />
+            <EditDate @bind-Value="Dto.EventDateWrapper" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventDate))" ValidationFor="(() => Dto.EventDateWrapper)" />
             <EditDate @bind-Value="Dto.EventAlternateDate" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventAlternateDate))" ValidationFor="(() => Dto.EventAlternateDate)" />
-            @foreach (var item in Dto.EventLocations!)
-            {
-              <EditSelect @bind-Value="item.LocationId" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventLocations))"
-                          ValidationFor="(() => item.LocationId)" HideLabel=true DivContainerCss="mb-2 row">
-                <option value="">Select...</option>
-                @foreach (var l in Locations)
+            <div class="mb-3 row gx-2">
+              <label class="col-form-label col-sm-3">
+                <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetEventDtoProperty(nameof(Dto.EventLocations))) IsRequired="@true"></DefaultLabel>
+                <InputUnsavedChangesNotifcation Value="!Dto.AreEventLocationsEqual(DtoOriginal.EventLocations)" />
+                <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddLocation"><i class="fas fa-plus"></i></button>
+              </label>
+              <div class="col-sm">
+                @foreach (var item in Dto.EventLocations!)
                 {
-                  <option selected=@(item.LocationId == l.Value) value="@(l.Value)">@l.Text</option>
+                  <div class="row">
+                    <div class="col">
+                      <EditSelect @bind-Value="item.LocationId" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventLocations))"
+                                  ValidationFor="(() => item.LocationId)" HideLabel=true DivContainerCss="mb-2 row">
+                        <option value="0">Select...</option>
+                        @foreach (var l in GetLocations(item))
+                        {
+                          <option selected=@(item.LocationId == l.Value) value="@(l.Value)">@l.Text</option>
+                        }
+                      </EditSelect>
+                    </div>
+                    <div class="col-auto">
+                      @if (!item.IsDeleted)
+                      {
+                        <button type="button" class="btn btn-outline-danger" disabled="@(Dto.EventLocations.Count(w => !w.IsDeleted) == 1)" @onclick="(() =>DeleteLocation(item))"><i class="fas fa-fw @(item.EventId > 0 ? "fa-times" : "fa-trash-alt")"></i></button>
+                      }
+                      else
+                      {
+                        <button type="button" class="btn btn-warning" @onclick="(() =>DeleteLocation(item))"><i class="fas fa-fw fa-undo"></i></button>
+                      }
+                    </div>
+                  </div>
                 }
-              </EditSelect>
-            }
+                <ValidationMessage For="(() => Dto.EventLocations)" />
+              </div>
+            </div>
 
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.IsActive))" />
 
@@ -72,12 +96,32 @@
     _editContext = new EditContext(Dto);
   }
 
+  private void AddLocation()
+  {
+    Dto.EventLocations!.Add(new EventLocationDto());
+  }
+
+  private void DeleteLocation(EventLocationDto item)
+  {
+    if (item.EventId == 0)
+    {
+      Dto.EventLocations!.Remove(item);
+      return;
+    }
+    item.IsDeleted = !item.IsDeleted;
+  }
+
+  private List<SelectOptionDto<int>> GetLocations(EventLocationDto item)
+  {
+    return Locations.Where(w => !Dto.EventLocations!.Where(w=>w.LocationId != item.LocationId).Select(s => s.LocationId).Contains(w.Value)).ToList();
+  }
+
   async Task Save()
   {
     Dto.IsUpdated = dataUpdated;
     if (Dto.IsUpdated)
     {
-      var data = await client.SaveLocation(Dto);
+      var data = await client.SaveEvent(Dto);
       if (data != null)
         await BlazoredModal.CloseAsync(ModalResult.Ok(data));
     }

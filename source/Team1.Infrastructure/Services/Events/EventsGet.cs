@@ -23,7 +23,7 @@ namespace Team1.Infrastructure.Services.Events
                 EventId = e.EventId,
                 Name = e.Name,
                 IsActive = !e.AuditFields.InactiveDateTime.HasValue,
-                EventLocations = e.EventLocations.Select(s => new EventLocationDto() { EventId = s.EventId, LocationId = s.LocationId }),
+                EventLocations = e.EventLocations.Select(s => new EventLocationDto() { EventId = s.EventId, LocationId = s.LocationId }).ToList(),
                 AuditFieldsDto = new AuditFieldsDto()
                 {
                   CreatedDateTime = e.AuditFields.CreatedDateTime,
@@ -71,7 +71,7 @@ namespace Team1.Infrastructure.Services.Events
                     GoverningDistrictName = s.Location.AddressObj.GoverningDistrict.Name,
                     PostalCode = s.Location.AddressObj.PostalCode,
                   },
-                })
+                }).ToList()
               }).ToListAsync();
     }
 
@@ -92,7 +92,7 @@ namespace Team1.Infrastructure.Services.Events
                 Name = u.Name,
                 IsActive = !u.AuditFields.InactiveDateTime.HasValue,
                 EventLocations = u.EventLocations.Select(s => new EventLocationDto()
-                { EventId = s.EventId, LocationId = s.LocationId })
+                { EventId = s.EventId, LocationId = s.LocationId }).ToList()
               }).SingleOrDefaultAsync();
     }
   }
