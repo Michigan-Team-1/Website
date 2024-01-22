@@ -18,7 +18,7 @@
 else
 {
   <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
-    <table class="table table-condensed table-hover DCIstyled-table">
+    <table class="table table-condensed table-hover table-striped">
       <thead>
         <tr>
           <SmartishTable.Sort Field="o=>o.Name" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.EventDtoProperties, nameof(EventDto.Name))</SmartishTable.Sort>
@@ -41,7 +41,7 @@ else
           </td>
           <td>
             <select @bind="eventDateTimeOperator" class="form-select form-select-sm">
-              @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+              @foreach (var item in SmartishTable.Filters.DateTimeOperators.Equals.GetList())
               {
                 <option value="@item">@item.GetDisplayName()</option>
               }
@@ -94,8 +94,8 @@ else
                   @row.Item.Name
                 </button>
               </td>
-              <td>@row.Item.EventDate.ToShortDateString()</td>
-              <td class="text-end">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
+              <td class="text-center">@row.Item.EventDate.ToShortDateString()</td>
+              <td class="text-center">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
               <td>@row.Item.AuditFieldsDto.CreatedByName</td>
               <td class="text-center">
                 <IsActive Value="@row.Item.IsActive" />
@@ -148,7 +148,7 @@ else
     stringOperators = PropertyReflections.EventDtoProperties.GetStringOperatorsForTypeProperties();
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<List<EventDto>>("Events", out var restored))
+    if (!ApplicationState.TryTakeFromJson<List<EventDto>>(nameof(Events), out var restored))
     {
       Dtos = await authClient.GetEvents();
     }
@@ -160,7 +160,7 @@ else
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson("Events", Dtos);
+    ApplicationState.PersistAsJson(nameof(Events), Dtos);
 
     return Task.CompletedTask;
   }
@@ -189,7 +189,7 @@ else
         };
     }
     var parameters = new Blazored.Modal.ModalParameters();
-    parameters.Add(nameof(EventAddEdit.DtoOriginal), dto);
+    parameters.Add(nameof(EventAddEdit.DtoOriginal), dto!);
     parameters.Add(nameof(EventAddEdit.Locations), locations!);
     var modalReference = modalService.Show<EventAddEdit>("Event Add/Edit", parameters, new ModalOptions() { });
     var modalResult = await modalReference.Result;
@@ -197,9 +197,9 @@ else
     if (dto != null)
     {
       if (isNew)
-        await smartishTable.Add(dto);
+        await smartishTable!.Add(dto);
       else
-        await smartishTable.UpdateAt(index, dto);
+        await smartishTable!.UpdateAt(index, dto);
     }
   }
 }

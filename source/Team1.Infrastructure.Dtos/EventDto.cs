@@ -49,7 +49,7 @@ public class EventDto : EventBase
     if (obj is EventDto item)
     {
       var areEventLocationsEqual = AreEventLocationsEqual(item.EventLocations);
-      return item.Name.IfNullThenEmptyString() == Name.IfNullThenEmptyString() && item.IsActive == IsActive
+      return item.Name.IfNullThenEmptyString() == Name.IfNullThenEmptyString() && item.IsActive == IsActive && item.EventId == EventId
         && item.EventDate == EventDate && item.EventAlternateDate == EventAlternateDate && areEventLocationsEqual;
     }
 

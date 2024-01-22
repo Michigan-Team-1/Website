@@ -17,7 +17,7 @@
 else
 {
   <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
-    <table class="table table-condensed table-hover DCIstyled-table">
+    <table class="table table-condensed table-hover table-striped">
       <thead>
         <tr>
           <SmartishTable.Sort Field="o=>o.LocationName" IsDefaultSort="true" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.LocationDtoProperties, nameof(LocationDto.LocationName))</SmartishTable.Sort>
@@ -94,7 +94,7 @@ else
                 </button>
               </td>
               <td>@row.Item.FAAWaiver</td>
-              <td class="text-end">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
+              <td class="text-center">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
               <td>@row.Item.AuditFieldsDto.CreatedByName</td>
               <td class="text-center">
                 <IsActive Value="@row.Item.IsActive" />
@@ -147,7 +147,7 @@ else
     stringOperators = PropertyReflections.LocationDtoProperties.GetStringOperatorsForTypeProperties();
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<List<LocationDto>>("Locations", out var restored))
+    if (!ApplicationState.TryTakeFromJson<List<LocationDto>>(nameof(Locations), out var restored))
     {
       Dtos = await authClient.GetLocations();
     }
@@ -159,7 +159,7 @@ else
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson("Locations", Dtos);
+    ApplicationState.PersistAsJson(nameof(Locations), Dtos);
 
     return Task.CompletedTask;
   }
@@ -200,18 +200,18 @@ else
         };
     }
     var parameters = new Blazored.Modal.ModalParameters();
-    parameters.Add(nameof(LocationAddEdit.DtoOriginal), dto);
-    parameters.Add(nameof(LocationAddEdit.Countries), countries);
-    parameters.Add(nameof(LocationAddEdit.GoverningDistricts), governingDistricts);
+    parameters.Add(nameof(LocationAddEdit.DtoOriginal), dto!);
+    parameters.Add(nameof(LocationAddEdit.Countries), countries!);
+    parameters.Add(nameof(LocationAddEdit.GoverningDistricts), governingDistricts!);
     var modalReference = modalService.Show<LocationAddEdit>("Location Add/Edit", parameters, new ModalOptions() { });
     var modalResult = await modalReference.Result;
     dto = modalResult.Data as LocationDto;
     if (dto != null)
     {
       if (isNew)
-        await smartishTable.Add(dto);
+        await smartishTable!.Add(dto);
       else
-        await smartishTable.UpdateAt(index, dto);
+        await smartishTable!.UpdateAt(index, dto);
     }
   }
 }

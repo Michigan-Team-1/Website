@@ -17,7 +17,44 @@ public class AuthorizedClient
         _serviceResponseHandler = serviceResponseHandler;
     }
 
-    public async Task<List<UserDto>?> GetUsers()
+  public async Task<List<AnnouncementDto>?> GetAnnouncements()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Announcements");
+      return await _serviceResponseHandler.HandleJsonResponse<List<AnnouncementDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<AnnouncementDto>();
+  }
+
+  public async Task<AnnouncementDto?> SaveAnnouncement(AnnouncementDto dto)
+  {
+    try
+    {
+      Task<HttpResponseMessage>? saveTask;
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      if (dto.AnnouncementId == 0)
+        saveTask = _httpClient.PostAsync("api/Announcements", content);
+      else
+        saveTask = _httpClient.PutAsync("api/Announcements", content);
+
+      var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<AnnouncementDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new AnnouncementDto();
+  }
+
+  public async Task<List<UserDto>?> GetUsers()
     {
         try
         {
