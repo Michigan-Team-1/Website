@@ -1,6 +1,6 @@
 ﻿<div class="modal-backdrop fade show"></div>
-<div class="modal fade show d-block modal-lg" style="pointer-events: none;" tabindex="-1" role="dialog">
-  <div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal fade show d-block " style="pointer-events: none;" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <div class="col"><h5 class="modal-title">@BlazoredModal.Title</h5></div>
@@ -15,7 +15,8 @@
           <div class="form-horizontal">
             <EditText @bind-Value="Dto.Title" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.Title))" ValidationFor="(() => Dto.Title)" />
             <EditDate @bind-Value="Dto.StartShowingOnDate" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.StartShowingOnDate))" ValidationFor="(() => Dto.StartShowingOnDate)" />
-            
+              
+            <EditRichText @bind-Value="Dto.Body" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.Body))" ValidationFor="(() => Dto.Body)" />
 
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.IsActive))" />
 
@@ -52,7 +53,7 @@
     }
   }
 
-  protected override void OnInitialized()
+  protected override async Task OnInitializedAsync()
   {
     Dto = DtoOriginal.SerializeJson().DeserializeJson<AnnouncementDto>()!;
     _editContext = new EditContext(Dto);
