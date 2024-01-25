@@ -17,6 +17,7 @@
 <body>
   <Routes @rendermode="@RenderModeForPage" />
   <script src="theme.js"></script>
+  <script src="tinyMce.js"></script>
   <script src="inputmask.js"></script>
   <script src="_framework/blazor.web.js" autostart="false"></script>
   <script src="_content/TinyMCE.Blazor/tinymce-blazor.js"></script>
@@ -27,55 +28,7 @@
 
     function inputmaskInit(id) {
       Inputmask().mask(document.getElementById(id));
-    };
-
-    tinyMceConf = {
-      height: 400,
-      toolbar: 'undo redo | styles | bold italic underline | table | link image paste | emoticons',
-      plugins: 'autolink media link image emoticons table paste autoresize',
-      paste_data_images: true,
-      resize: true,
-      min_height:300,
-      paste_postprocess: (editor, args) => {
-        console.log(args.node);
-        // resize image blobs
-      }
-    }
-
-    const maxFileSize = 2 * 1024 * 1024; // 2Mb, image should have width/height which will give not more 2Mb
-
-    let base64: string = await this.resizeImage(base64);
-
-    while (getBase64Size(base64) > maxFileSize) {
-      base64 = await this.resizeImage(base64);
-    }
-
-    // at this point, base64 will be lower than maxFileSize. You can put it in img.src
-
-    private async resizeImage(base64: string): Promise < string > {
-      return new Promise((resolve) => {
-        const image = document.createElement('img');
-
-        image.src = base64;
-
-        image.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-
-          const decreaser = 0.86;
-
-          canvas.width = image.width * decreaser;
-          canvas.height = image.height * decreaser;
-          ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-          resolve(canvas.toDataURL());
-        };
-      });
-    }
-
-    private getBase64Size(base64: string): number {
-      return Math.ceil(base64.length * 0.73);
-    }
+    };    
   </script>
 </body>
 

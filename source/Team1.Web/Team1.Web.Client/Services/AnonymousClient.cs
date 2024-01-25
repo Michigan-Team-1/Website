@@ -16,6 +16,21 @@ public class AnonymousClient
         _serviceResponseHandler = serviceResponseHandler;
     }
 
+  public async Task<List<AnnouncementDto>?> GetAnnouncementsForHome()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Announcements/ForHome");
+      return await _serviceResponseHandler.HandleJsonResponse<List<AnnouncementDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<AnnouncementDto>();
+  }
+
   public async Task<List<UserDto>?> GetBoardOfDirectors()
   {
     try
@@ -59,5 +74,20 @@ public class AnonymousClient
     }
 
     return new List<GoverningDistrictDto>();
+  }
+
+  public async Task<List<EventDto>?> GetEventsForHome()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Events/ForHome");
+      return await _serviceResponseHandler.HandleJsonResponse<List<EventDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<EventDto>();
   }
 }

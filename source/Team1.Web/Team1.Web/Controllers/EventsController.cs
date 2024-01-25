@@ -31,7 +31,7 @@ public class EventsController : BaseController
   /// Get Events for dashboard
   /// </summary>
   /// <returns>list of Event</returns>
-  [HttpGet("ForDashboard")]
+  [HttpGet("ForHome")]
   [AllowAnonymous]
   [ProducesResponseType(typeof(List<EventDto>), (int)HttpStatusCode.OK)]
   public async Task<IActionResult> GetEventsForDashboard()

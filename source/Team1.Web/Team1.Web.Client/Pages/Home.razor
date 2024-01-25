@@ -1,3 +1,69 @@
 ﻿@page "/"
 
 <PageTitle>Michigan Team-1</PageTitle>
+
+
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <PageHeader Name="Home" Icon="fas fa-home" />
+  </div>
+  <div class="col-sm-6 text-sm-start text-md-end">
+  </div>
+</div>
+
+@if (announcements == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <div>
+    @foreach (var item in announcements)
+    {
+      <div>
+          @item.Title
+          <div>
+              @((MarkupString)item.Body)
+          </div>
+      </div>
+    }
+  </div>
+}
+
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+@inject IModalService modalService
+@inject AnonymousClient client
+@code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  private List<AnnouncementDto>? announcements;
+  private List<EventDto>? events;
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<List<AnnouncementDto>>(nameof(Home), out var restored))
+    {
+      announcements = await client.GetAnnouncementsForHome();
+      events = await client.GetEventsForHome();
+    }
+    else
+    {
+      announcements = restored!;
+    }
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(Home), announcements);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+}

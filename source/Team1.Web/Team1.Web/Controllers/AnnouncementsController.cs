@@ -31,7 +31,7 @@ public class AnnouncementsController : BaseController
   /// Get Announcement
   /// </summary>
   /// <returns>list of Announcement</returns>
-  [HttpGet("ForDashboard")]
+  [HttpGet("ForHome")]
   [AllowAnonymous]
   [ProducesResponseType(typeof(List<AnnouncementDto>), (int)HttpStatusCode.OK)]
   public async Task<IActionResult> GetAnnouncementsForDashboard()
