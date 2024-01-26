@@ -38,7 +38,7 @@ namespace Team1.Infrastructure.Services.Events
     /// Gets all events for dashboard
     /// </summary>
     /// <param name="activeOnly">active only items</param>
-    public Task<List<EventDto>> GetEventsForDashboard()
+    public Task<List<EventDto>> GetEventsForHome()
     {
       var compareDate = DateTime.Today.AddDays(-2);
       return (from e in db.EventsByFilter(UserPermissionService, true)

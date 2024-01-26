@@ -1,32 +1,61 @@
 ﻿@page "/"
+@using System.Web
 
 <PageTitle>Michigan Team-1</PageTitle>
 
 
-<div class="row mb-2">
-  <div class="col-sm-6">
-    <PageHeader Name="Home" Icon="fas fa-home" />
-  </div>
-  <div class="col-sm-6 text-sm-start text-md-end">
-  </div>
-</div>
-
-@if (announcements == null)
+@if (announcements == null || events == null)
 {
   <BusyIndicator />
 }
 else
 {
-  <div>
-    @foreach (var item in announcements)
-    {
-      <div>
-          @item.Title
-          <div>
-              @((MarkupString)item.Body)
+  <div class="row">
+    <div class="col-md col-lg-8 order-2 order-md-1">
+        <h4>Announcements</h4>
+      @foreach (var item in announcements)
+      {
+        <div class="card mb-2">
+          <h5 class="card-header">@item.Title</h5>
+          <div class="card-body">
+            @((MarkupString)item.Body)
           </div>
-      </div>
-    }
+          <div class="card-footer">
+            Posted On @item.StartShowingOnDate.ToShortDateString() By @item.AuditFieldsDto.CreatedByName
+          </div>
+        </div>
+      }
+    </div>
+    <div class="col-md-auto col-lg-4 order-1 order-md-2">
+      <h4>Events</h4>
+      @foreach (var item in events)
+      {
+        <div class="card mb-2">
+          <h5 class="card-header">
+            @item.Name
+          </h5>
+          <div class="card-body">
+            <div class="card-text">
+              <div>Date @item.EventDate.ToShortDateString()</div>
+              @if (item.EventAlternateDate.HasValue)
+              {
+                <div>
+                    Alternate Date @item.EventAlternateDate.Value.ToShortDateString()
+                </div>
+              }
+              @for (int i = 0; i < item.Locations!.Count; i++)
+              {
+                @(i == 0 ? "At" : "Alternate") <a href="https://www.google.com/maps/search/?api=1&query=@BuildAddress(item.Locations[i])" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-map-marked"></i> @item.Locations[i].LocationName <i class="fas fa-external-link-alt"></i></a>
+                @if (!string.IsNullOrWhiteSpace(item.Locations[i].FAAWaiver))
+                {
+                  <div class="card-text">Altitude @item.Locations[i].FAAWaiver</div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
   </div>
 }
 
@@ -44,22 +73,52 @@ else
   {
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<List<AnnouncementDto>>(nameof(Home), out var restored))
+    if (!ApplicationState.TryTakeFromJson<List<AnnouncementDto>>(nameof(Home) + nameof(announcements), out var restored))
     {
       announcements = await client.GetAnnouncementsForHome();
-      events = await client.GetEventsForHome();
     }
     else
     {
       announcements = restored!;
     }
+
+    if (!ApplicationState.TryTakeFromJson<List<EventDto>>(nameof(Home) + nameof(events), out var restoredEvents))
+    {
+      events = await client.GetEventsForHome();
+    }
+    else
+    {
+      events = restoredEvents!;
+    }
+
   }
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson(nameof(Home), announcements);
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(announcements), announcements);
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(events), events);
 
     return Task.CompletedTask;
+  }
+
+  private string? BuildAddress(LocationDto dto)
+  {
+    var address = dto!.AddressObj!.Address1;
+    if (dto!.AddressObj!.Address2 != null)
+      address += $" {dto!.AddressObj!.Address2}";
+    if (dto!.AddressObj!.Address3 != null)
+      address += $" {dto!.AddressObj!.Address3}";
+
+    if (dto!.AddressObj!.City != null)
+      address += $", { dto!.AddressObj!.City}";
+
+    if (dto!.AddressObj!.GoverningDistrictName != null)
+      address += $", { dto!.AddressObj!.GoverningDistrictName}";
+
+    if (dto!.AddressObj!.PostalCode != null)
+      address += $", { dto!.AddressObj!.PostalCode}";
+
+    return HttpUtility.UrlEncode(address);
   }
 
   void IDisposable.Dispose()

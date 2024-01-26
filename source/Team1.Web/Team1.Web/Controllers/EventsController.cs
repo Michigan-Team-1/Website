@@ -37,7 +37,7 @@ public class EventsController : BaseController
   public async Task<IActionResult> GetEventsForDashboard()
   {
     var service = GetService<EventsGet>();
-    return Ok(await service.GetEventsForDashboard());
+    return Ok(await service.GetEventsForHome());
   }
 
   /// <summary>

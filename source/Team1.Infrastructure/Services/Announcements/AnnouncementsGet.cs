@@ -67,7 +67,7 @@ public class AnnouncementsGet : BaseService
   /// Gets all Announcements to display for dashboard
   /// </summary>
   /// <returns>list of dto</returns>
-  public Task<List<AnnouncementDto>> GetAnnouncementsForDashboard()
+  public Task<List<AnnouncementDto>> GetAnnouncementsForHome()
   {
     var currentDate = DateTime.Today;
     return (from x in db.AnnouncementsByFilter(UserPermissionService, true)

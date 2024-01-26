@@ -37,7 +37,7 @@ public class AnnouncementsController : BaseController
   public async Task<IActionResult> GetAnnouncementsForDashboard()
   {
     var service = GetService<AnnouncementsGet>();
-    return Ok(await service.GetAnnouncementsForDashboard());
+    return Ok(await service.GetAnnouncementsForHome());
   }
 
   /// <summary>
