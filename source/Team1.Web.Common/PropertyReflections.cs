@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Team1.Infrastructure.Dtos;
+using Team1.Infrastructure.Dtos.Users;
 
 namespace Team1.Web.Common;
 
@@ -88,6 +89,22 @@ public static class PropertyReflections
         properties[nameof(AddressObjDto)] = typeof(AddressObjDto).GetProperties().ToList();
 
       return properties[nameof(AddressObjDto)];
+    }
+  }
+
+  public static PropertyInfo GetUserDtoProperty(string name)
+  {
+    return UserDtoProperties.Single(w => w.Name == name);
+  }
+
+  public static List<PropertyInfo> UserDtoProperties
+  {
+    get
+    {
+      if (!properties.ContainsKey(nameof(UserDto)))
+        properties[nameof(UserDto)] = typeof(UserDto).GetProperties().ToList();
+
+      return properties[nameof(UserDto)];
     }
   }
 

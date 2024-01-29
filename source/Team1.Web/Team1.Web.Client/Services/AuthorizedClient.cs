@@ -8,14 +8,14 @@ namespace Team1.Web.Client.Services;
 
 public class AuthorizedClient
 {
-    protected readonly HttpClient _httpClient;
+  protected readonly HttpClient _httpClient;
   protected readonly ServiceResponseHandler _serviceResponseHandler;
 
-    public AuthorizedClient(HttpClient httpClient, ServiceResponseHandler serviceResponseHandler)
-    {
-        _httpClient = httpClient;
-        _serviceResponseHandler = serviceResponseHandler;
-    }
+  public AuthorizedClient(HttpClient httpClient, ServiceResponseHandler serviceResponseHandler)
+  {
+    _httpClient = httpClient;
+    _serviceResponseHandler = serviceResponseHandler;
+  }
 
   public async Task<List<AnnouncementDto>?> GetAnnouncements()
   {
@@ -55,55 +55,55 @@ public class AuthorizedClient
   }
 
   public async Task<List<UserDto>?> GetUsers()
+  {
+    try
     {
-        try
-        {
-            var response = await _httpClient.GetAsync("api/Users");
-            return await _serviceResponseHandler.HandleJsonResponse<List<UserDto>>(response);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-
-        return new List<UserDto>();
+      var response = await _httpClient.GetAsync("api/Users");
+      return await _serviceResponseHandler.HandleJsonResponse<List<UserDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
     }
 
-    public async Task<UserDto?> SaveUser(UserDto dto)
+    return new List<UserDto>();
+  }
+
+  public async Task<UserDto?> SaveUser(UserDto dto)
+  {
+    try
     {
-        try
-        {
-            Task<HttpResponseMessage>? saveTask;
-            var content = _serviceResponseHandler.BuildJsonContent(dto);
-            if (dto.UserId == 0)
-                saveTask = _httpClient.PostAsync("api/Users", content);
-            else
-                saveTask = _httpClient.PutAsync("api/Users", content);
+      Task<HttpResponseMessage>? saveTask;
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      if (dto.UserId == 0)
+        saveTask = _httpClient.PostAsync("api/Users", content);
+      else
+        saveTask = _httpClient.PutAsync("api/Users", content);
 
-            var response = await saveTask;
-            return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-
-        return null;
+      var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
     }
 
-    public async Task<List<RoleDto>?> GetRoles()
+    return null;
+  }
+
+  public async Task<List<RoleDto>?> GetRoles()
+  {
+    try
     {
-        try
-        {
-            var response = await _httpClient.GetAsync("api/Roles");
-            return await _serviceResponseHandler.HandleJsonResponse<List<RoleDto>>(response);
-        }
-        catch (AccessTokenNotAvailableException exception)
-        {
-            exception.Redirect();
-        }
-        return new List<RoleDto>();
+      var response = await _httpClient.GetAsync("api/Roles");
+      return await _serviceResponseHandler.HandleJsonResponse<List<RoleDto>>(response);
     }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+    return new List<RoleDto>();
+  }
 
   public async Task<List<EventDto>?> GetEvents()
   {
@@ -171,7 +171,7 @@ public class AuthorizedClient
 
     return new List<LocationDto>();
   }
-  
+
 
   public async Task<LocationDto?> SaveLocation(LocationDto dto)
   {

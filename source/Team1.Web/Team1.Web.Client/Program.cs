@@ -1,4 +1,3 @@
-using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
 using Microsoft.AspNetCore.Authorization;
@@ -53,7 +52,6 @@ FluentValidationHelpers.SetupDisplayNameResolver();
 
 builder.Services.AddBlazoredToast();
 builder.Services.AddBlazoredModal();
-//builder.Services.AddBlazoredLocalStorageAsSingleton();
 
 builder.Services.AddScoped<ServiceResponseHandler>();
 await builder.Build().RunAsync();

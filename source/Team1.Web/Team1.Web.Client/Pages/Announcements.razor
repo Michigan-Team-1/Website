@@ -1,5 +1,5 @@
 ﻿@page "/announcements"
-
+@attribute [Authorize(Policy = nameof(PolicyNames.AnnouncementAddEditDelete))]
 <PageTitle>Michigan Team-1 - Announcements</PageTitle>
 
 <div class="row mb-2">

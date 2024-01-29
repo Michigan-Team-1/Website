@@ -2,13 +2,288 @@
 
 <PageTitle>Michigan Team-1 - Gallery</PageTitle>
 
-<Team1.Web.Client.Shared.Helpers.PageHeader Name="Members" Icon="fas fa-users" />
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <PageHeader Name="Members" Icon="fas fa-users" />
+  </div>
+  <div class="col-sm-6 text-sm-start text-md-end">
+    <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+      <Authorized>
+        <button class="btn btn-primary" type="button" @onclick=@(() => AddEdit(null, -1))><i class="fas fa-plus">&nbsp;</i> Add New</button>
+      </Authorized>
+    </AuthorizeView>
+  </div>
+</div>
 
-@inject AnonymousClient anonymousClient
+@if (Dtos == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
+    <table class="table table-condensed table-hover table-striped">
+      <thead>
+        <tr>
+          <SmartishTable.Sort Field="o=>o.LastName" IsDefaultSort="true" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.LastName))</SmartishTable.Sort>
+            <SmartishTable.Sort Field="o=>o.FirstName" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.FirstName))</SmartishTable.Sort>
+            <AuthorizeView>
+              <Authorized>
+                <SmartishTable.Sort Field="o=>o.Email" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.Email))</SmartishTable.Sort>
+              </Authorized>
+            </AuthorizeView>
+            <SmartishTable.Sort Field="o=>o.CertificationLevel" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.CertificationLevel))</SmartishTable.Sort>
+            <SmartishTable.Sort Field="o=>o.UserMemberTypesString" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.UserMemberTypesString))</SmartishTable.Sort>
+            <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+              <Authorized>
+                <SmartishTable.Sort Field="o=>o.RoleNames" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.RoleNames))</SmartishTable.Sort>
+                <SmartishTable.Sort Field="o=>o.AuditFieldsDto.CreatedDate" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(EventDto.AuditFieldsDto.CreatedDate))</SmartishTable.Sort>
+                <SmartishTable.Sort Field="o=>o.AuditFieldsDto.CreatedByName" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.AuditFieldsDtoProperties, nameof(EventDto.AuditFieldsDto.CreatedByName))</SmartishTable.Sort>
+                <SmartishTable.Sort Field="o=>o.IsActive" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.IsActive))</SmartishTable.Sort>
+                <SmartishTable.Sort Field="o=>o.PaidUp" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(UserDto.PaidUp))</SmartishTable.Sort>
+              </Authorized>
+            </AuthorizeView>
+          </tr>
+          <tr>
+            <td>
+              <select @bind="stringOperators[nameof(UserDto.LastName)]" class="form-select form-select-sm">
+                @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+              {
+                <option value="@item">@item.GetDisplayName()</option>
+              }
+            </select>
+            <SmartishTable.FilterString Field="x=>x.LastName" Context="filterContext" Operator="stringOperators[nameof(UserDto.LastName)]">
+              <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+            </SmartishTable.FilterString>
+          </td>
+          <td>
+            <select @bind="stringOperators[nameof(UserDto.FirstName)]" class="form-select form-select-sm">
+              @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+              {
+                <option value="@item">@item.GetDisplayName()</option>
+              }
+            </select>
+            <SmartishTable.FilterString Field="x=>x.FirstName" Context="filterContext" Operator="stringOperators[nameof(UserDto.FirstName)]">
+              <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+            </SmartishTable.FilterString>
+          </td>
+          <AuthorizeView>
+            <Authorized>
+              <td>
+                <select @bind="stringOperators[nameof(UserDto.FirstName)]" class="form-select form-select-sm">
+                  @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+                  {
+                    <option value="@item">@item.GetDisplayName()</option>
+                  }
+                </select>
+                <SmartishTable.FilterString Field="x=>x.FirstName" Context="filterContext" Operator="stringOperators[nameof(UserDto.FirstName)]">
+                  <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+                </SmartishTable.FilterString>
+              </td>
+            </Authorized>
+          </AuthorizeView>
+          <td>
+          </td>
+          <td>
+            <select @bind="stringOperators[nameof(UserDto.UserMemberTypesString)]" class="form-select form-select-sm">
+              @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+              {
+                <option value="@item">@item.GetDisplayName()</option>
+              }
+            </select>
+            <SmartishTable.FilterString Field="x=>x.UserMemberTypesString" Context="filterContext" Operator="stringOperators[nameof(UserDto.UserMemberTypesString)]">
+              <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+            </SmartishTable.FilterString>
+          </td>
+          <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+            <Authorized>
+              <td>
+                <select @bind="stringOperators[nameof(UserDto.RoleNames)]" class="form-select form-select-sm">
+                  @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+                  {
+                    <option value="@item">@item.GetDisplayName()</option>
+                  }
+                </select>
+                <SmartishTable.FilterString Field="x=>x.RoleNames" Context="filterContext" Operator="stringOperators[nameof(UserDto.RoleNames)]">
+                  <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+                </SmartishTable.FilterString>
+              </td>
+              <td>
+                <select @bind="createdDateTimeOperator" class="form-select form-select-sm">
+                  @foreach (var item in SmartishTable.Filters.DateTimeOperators.Equals.GetList())
+                  {
+                    <option value="@item">@item.GetDisplayName()</option>
+                  }
+                </select>
+                <SmartishTable.FilterDatesTimes SmartishTItem="UserDto" Field="x=>x.AuditFieldsDto.CreatedDate" Context="filterContext" Operator="createdDateTimeOperator" FilterType="DateOnly?">
+                  <input type="date" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+                </SmartishTable.FilterDatesTimes>
+              </td>
+              <td>
+                <select @bind="createdByNameOperator" class="form-select form-select-sm">
+                  @foreach (var item in SmartishTable.Filters.StringOperators.Equals.GetList())
+                  {
+                    <option value="@item">@item.GetDisplayName()</option>
+                  }
+                </select>
+                <SmartishTable.FilterString SmartishTItem="UserDto" Field="x=>x.AuditFieldsDto.CreatedByName" Context="filterContext" Operator="createdByNameOperator">
+                  <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+                </SmartishTable.FilterString>
+              </td>
+              <td>
+                <select @bind="activeOperator" class="form-select form-select-sm">
+                  <option value="@SmartishTable.Filters.BooleanOperators.Equals">All</option>
+                  @foreach (var item in SmartishTable.Filters.BooleanOperators.Equals.GetList().Where(w => ((byte)w) > 8))
+                  {
+                    <option selected="@(activeOperator == item)" value="@item">@(item == SmartishTable.Filters.BooleanOperators.IsTrue ? "Yes" : "No")</option>
+                  }
+                </select>
+                <SmartishTable.FilterBoolean Field="o=>o.IsActive" Operator="activeOperator"></SmartishTable.FilterBoolean>
+              </td>
+              <td>
+                <select @bind="paidUpOperator" class="form-select form-select-sm">
+                  <option value="@SmartishTable.Filters.BooleanOperators.Equals">All</option>
+                  @foreach (var item in SmartishTable.Filters.BooleanOperators.Equals.GetList().Where(w => ((byte)w) > 8))
+                  {
+                    <option selected="@(paidUpOperator == item)" value="@item">@(item == SmartishTable.Filters.BooleanOperators.IsTrue ? "Yes" : "No")</option>
+                  }
+                </select>
+                <SmartishTable.FilterBoolean Field="o=>o.PaidUp" Operator="paidUpOperator"></SmartishTable.FilterBoolean>
+              </td>
+            </Authorized>
+          </AuthorizeView>
+        </tr>
+      </thead>
+      <tbody>
+        <SmartishTable.Repeater Context="row">
+          <RowTemplate>
+            <tr class="align-middle">
+              <td>
+                <button class="btn btn-link btn-sm" type="button">
+                  <span class="fa fa-edit"></span>
+                  @row.Item.LastName
+                </button>
+              </td>
+              <td>@row.Item.FirstName</td>
+              <AuthorizeView>
+                <Authorized>
+                  <td>@row.Item.Email</td>
+                </Authorized>
+              </AuthorizeView>
+              <td class="text-center">@row.Item.CertificationLevel</td>
+              <td>@row.Item.UserMemberTypesString</td>
+              <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+                <Authorized>
+                  <td>@row.Item.RoleNames</td>
+                  <td class="text-center">@row.Item.AuditFieldsDto.CreatedDate?.ToShortDateString()</td>
+                  <td>@row.Item.AuditFieldsDto.CreatedByName</td>
+                  <td class="text-center">
+                    <IsActive Value="@row.Item.IsActive" />
+                  </td>
+                  <td class="text-center">
+                    <IsActive Value="@row.Item.PaidUp" />
+                  </td>
+                </Authorized>
+              </AuthorizeView>
+            </tr>
+          </RowTemplate>
+          <EmptyTemplate>
+            <tr>
+              <td colspan="20">
+                <EmptyDataRow />
+              </td>
+            </tr>
+          </EmptyTemplate>
+        </SmartishTable.Repeater>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="20">
+            <SmartishTable.Pagination Context="Pager">
+              <SmartishTablePager Paginator="Pager"></SmartishTablePager>
+            </SmartishTable.Pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </SmartishTable.Root>
+}
+
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+@inject IModalService modalService
+@inject AuthorizedClient authClient
+@inject AnonymousClient client
 @code {
-  
+  private PersistingComponentStateSubscription persistingSubscription;
+  private SmartishTable.Root<UserDto>? smartishTable;
+
+  private List<UserDto>? Dtos;
+
+  private List<SelectOptionDto<int>>? locations;
+
+  private Dictionary<string, SmartishTable.Filters.StringOperators> stringOperators = default!;
+  private SmartishTable.Filters.DateTimeOperators createdDateTimeOperator = SmartishTable.Filters.DateTimeOperators.GreaterThan;
+  private SmartishTable.Filters.StringOperators createdByNameOperator = SmartishTable.Filters.StringOperators.Contains;
+  private SmartishTable.Filters.BooleanOperators? activeOperator = SmartishTable.Filters.BooleanOperators.IsTrue;
+  private SmartishTable.Filters.BooleanOperators? paidUpOperator = SmartishTable.Filters.BooleanOperators.Equals;
+
   protected override async Task OnInitializedAsync()
   {
+    stringOperators = PropertyReflections.UserDtoProperties.GetStringOperatorsForTypeProperties();
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
+    if (!ApplicationState.TryTakeFromJson<List<UserDto>>(nameof(Members), out var restored))
+    {
+      Dtos = await authClient.GetUsers();
+    }
+    else
+    {
+      Dtos = restored!;
+    }
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(Members), Dtos);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+
+  private async Task AddEdit(UserDto? dto, int index)
+  {
+    var isNew = dto == null;
+
+    if (locations == null)
+    {
+      locations = await authClient.GetLocationsForSelection();
+    }
+    if (isNew)
+    {
+      dto = new UserDto()
+        {
+          IsActive = true,
+          IsUpdated = true,
+          AuditFieldsDto = new AuditFieldsDto()
+        };
+    }
+    var parameters = new Blazored.Modal.ModalParameters();
+    parameters.Add(nameof(EventAddEdit.DtoOriginal), dto!);
+    parameters.Add(nameof(EventAddEdit.Locations), locations!);
+    var modalReference = modalService.Show<EventAddEdit>("User Add/Edit", parameters, new ModalOptions() { });
+    var modalResult = await modalReference.Result;
+    dto = modalResult.Data as UserDto;
+    if (dto != null)
+    {
+      if (isNew)
+        await smartishTable!.Add(dto);
+      else
+        await smartishTable!.UpdateAt(index, dto);
+    }
   }
 }

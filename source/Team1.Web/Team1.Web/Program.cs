@@ -103,7 +103,8 @@ builder.Services.AddValidatorsFromAssemblyContaining<LocationDtoValidator>();
 
 Team1.Web.Common.FluentValidationHelpers.SetupDisplayNameResolver();
 
-builder.Services.AddScoped<UserPermissionService>((s) =>
+// must be transient
+builder.Services.AddTransient<UserPermissionService>((s) =>
 {
   var httpContext = s.GetService<IHttpContextAccessor>();
   string? ipAddress = null;

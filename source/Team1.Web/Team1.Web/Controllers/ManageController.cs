@@ -49,7 +49,7 @@ public class ManageController : BaseController
     if (!ModelState.IsValid)
       return CreateResponse(new BaseServiceResponse<UserProfileDto>(dto, System.Net.HttpStatusCode.BadRequest));
 
-    using (var transaction = await SpudContext.BeginTransactionAsync())
+    using (var transaction = await DataContext.BeginTransactionAsync())
     {
       var service = GetService<UsersCreateUpdate>();
       var response = await service.SaveUserProfile(dto);
