@@ -29,7 +29,16 @@ public class UserDto : UserRoot
   public List<UserMemberTypeDto> UserMemberTypes { get; set; } = default!;
 
   [Display(Name = "Member Types")]
-  public string? UserMemberTypesString {  get { return String.Join("/", UserMemberTypes.Select(s => s.MemberTypeString)); } }
+  public string? UserMemberTypesString
+  {
+    get
+    {
+      if (UserMemberTypes == null)
+        return null;
+
+      return String.Join("/", UserMemberTypes.Select(s => s.MemberTypeString));
+    }
+  }
 
   [Display(Name = "Addresses")]
   public List<AddressDto> Addresses { get; set; } = default!;

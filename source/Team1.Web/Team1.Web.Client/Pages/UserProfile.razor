@@ -1,0 +1,73 @@
+﻿@page "/UserProfile"
+@attribute [Authorize(Policy = nameof(PolicyNames.UserProfileEdit))]
+<PageTitle>Michigan Team-1 - User Profile</PageTitle>
+
+@if (Dto == null)
+{
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <PageHeader Name="User Profile" Icon="fas fa-user" />
+    </div>
+  </div>
+  <BusyIndicator />
+}
+else
+{
+  <EditForm EditContext="_editContext" OnValidSubmit="Save">
+    <Blazored.FluentValidation.FluentValidationValidator />
+    <div class="row mb-2">
+      <div class="col-sm-4">
+        <PageHeader Name="User Profile" Icon="fas fa-user" />
+      </div>
+      <div class="col-sm-4">
+        <UnsavedChangesNotifcation Value="dataUpdated" />
+      </div>
+      <div class="col-sm-4 text-sm-start text-md-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+    <EditUserDetails Dto="Dto" />
+    <div class="modal-footer">
+      <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+      <div class="col text-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+  </EditForm>
+}
+
+@inject AuthorizedClient client
+@code {
+  public UserDto? DtoOriginal { get; set; }
+
+  private UserDto Dto { get; set; } = default!;
+
+  private EditContext _editContext = default!;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    DtoOriginal = await client.GetUserProfile();
+    if (DtoOriginal == null)
+      return;
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await client.SaveUser(Dto);
+
+    }
+  }
+}

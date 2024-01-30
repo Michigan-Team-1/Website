@@ -68,6 +68,37 @@ public class AuthorizedClient
 
     return new List<UserDto>();
   }
+  
+  public async Task<UserDto?> GetUser(int userId)
+  {
+    try
+    {
+      var url = $"api/Users/{userId}";
+      var response = await _httpClient.GetAsync(url);
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new UserDto();
+  }
+
+  public async Task<UserDto?> GetUserProfile()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/Users/Profile");
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new UserDto();
+  }
 
   public async Task<UserDto?> SaveUser(UserDto dto)
   {

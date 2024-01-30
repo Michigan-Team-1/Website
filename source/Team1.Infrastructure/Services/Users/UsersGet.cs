@@ -139,8 +139,6 @@ public class UsersGet : BaseService
               CertificationLevel = u.CertificationLevel,
               TripoliNumber = u.TripoliNumber,
               NarNumber = u.NarNumber,
-              OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
-              OptOutOfMemberEmails = u.OptOutOfMemberEmails,
               PaidThroughYear = u.PaidThroughYear,
               MobileCarrierId = u.MobileCarrierId,
               UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
@@ -169,7 +167,7 @@ public class UsersGet : BaseService
   public Task<UserProfileDto?> GetUserProfile()
   {
     return (from u in db.RoleRestrictedUsers(UserPermissionService)
-            where u.UserId == UserPermissionService.UserClaimModel.UserId
+            where u.UserId == UserPermissionService.UserClaimModel!.UserId
             select new UserProfileDto()
             {
               UserId = u.UserId,
@@ -182,8 +180,6 @@ public class UsersGet : BaseService
               CertificationLevel = u.CertificationLevel,
               TripoliNumber = u.TripoliNumber,
               NarNumber = u.NarNumber,
-              OptOutOfGeneralEmails = u.OptOutOfGeneralEmails,
-              OptOutOfMemberEmails = u.OptOutOfMemberEmails,
               MobileCarrierId = u.MobileCarrierId,
               PaidThroughYear = u.PaidThroughYear,
               Addresses = u.Addresses.Where(w => !w.AuditFields.InactiveDateTime.HasValue).Select(x => new AddressDto()

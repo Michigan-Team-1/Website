@@ -10,15 +10,16 @@
       <li class="nav-item dropdown">
         <button class="btn btn-link nav-link dropdown-toggle" @onclick="ToggleProfileMenu" @onfocusout="OutFocusProfileMenu">@context.User.Identity.Name</button>
         <div class="dropdown-menu dropdown-menu-right @profileCss" aria-labelledby="profileLink">
-          <a class="dropdown-item" href="/Account/Manage"><i class="fas fa-user fa-fw"></i> Profile</a>
+          <a class="dropdown-item" href="/UserProfile"><i class="fas fa-user fa-fw"></i> Profile</a>
+          @* <a class="dropdown-item" href="/Account/Manage"><i class="fas fa-user fa-fw"></i> Profile</a> *@
           <div class="dropdown-divider"></div>
-            <form action="Account/Logout" method="post">
-              <AntiforgeryToken />
-              <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-              <button type="submit" class="dropdown-item">
-                <i class="fas fa-sign-out-alt fa-fw"></i> Log out
-              </button>
-            </form>
+          <form action="Account/Logout" method="post">
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+            <button type="submit" class="dropdown-item">
+              <i class="fas fa-sign-out-alt fa-fw"></i> Log out
+            </button>
+          </form>
         </div>
       </li>
     </Authorized>
@@ -37,7 +38,7 @@
       <li>
         <button type="button" class="dropdown-item hover @(theme == "light" ? "active" : "")" data-bs-theme-value="light" @onclick=@(() => SetTheme("light"))>
           <i class="fa-regular fa-sun fa-fw"></i>
-            Light
+          Light
         </button>
       </li>
       <li>
@@ -51,7 +52,7 @@
           <i class="fa-solid fa-circle-half-stroke  fa-fw"></i>
           Auto
         </button>
-      </li> 
+      </li>
     </ul>
   </li>
 </ul>

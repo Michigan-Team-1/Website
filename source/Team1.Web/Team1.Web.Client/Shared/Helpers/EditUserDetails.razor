@@ -1,0 +1,53 @@
+﻿<div>
+  <ValidationSummary />
+  <div class="form-horizontal">
+    <EditText @bind-Value="Dto.FirstName" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.FirstName))" ValidationFor="(() => Dto.FirstName)" />
+    <EditText @bind-Value="Dto.LastName" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.LastName))" ValidationFor="(() => Dto.LastName)" />
+    <EditText @bind-Value="Dto.Email" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Email))" ValidationFor="(() => Dto.Email)" />
+    <EditText @bind-Value="Dto.PhoneNumber" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PhoneNumber))" ValidationFor="(() => Dto.PhoneNumber)" />
+
+    <EditDate @bind-Value="Dto.BirthDate" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.BirthDate))" ValidationFor="(() => Dto.BirthDate)" />
+    <EditText @bind-Value="Dto.TripoliNumber" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.TripoliNumber))" ValidationFor="(() => Dto.TripoliNumber)" />
+    <EditText @bind-Value="Dto.NarNumber" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.NarNumber))" ValidationFor="(() => Dto.NarNumber)" />
+    <EditRadioGroup @bind-Value="Dto.CertificationLevel" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.CertificationLevel))" ValidationFor="(() => Dto.CertificationLevel)">
+      <div class="row">
+        <div class="col-sm-3 col-md-2">
+          <label class="form-check-label"><InputRadio Value="0" class="form-check-input" /> 0 </label>
+        </div>
+        <div class="col-sm-3 col-md-2">
+          <label class="form-check-label"><InputRadio Value="1" class="form-check-input" /> 1</label>
+        </div>
+        <div class="col-sm-3 col-md-2">
+          <label class="form-check-label"><InputRadio Value="2" class="form-check-input" /> 2</label>
+        </div>
+        <div class="col-sm-3 col-md-2">
+          <label class="form-check-label"><InputRadio Value="3" class="form-check-input" /> 3</label>
+        </div>
+      </div>
+    </EditRadioGroup>
+    <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+      <Authorized>
+        <EditNumber @bind-Value="Dto.PaidThroughYear" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
+      </Authorized>
+      <NotAuthorized>
+        <fieldset disabled="true">
+          <EditNumber @bind-Value="Dto.PaidThroughYear" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
+        </fieldset>
+      </NotAuthorized>
+    </AuthorizeView>
+    <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+      <Authorized>
+        <EditCheckbox @bind-Value="@Dto.EmailConfirmed" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.EmailConfirmed))" />
+        <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.IsActive))" />
+        <EditCheckbox @bind-Value="@Dto.IsLoginEnabled" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.IsLoginEnabled))" />
+      </Authorized>
+    </AuthorizeView>
+
+    <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
+  </div>
+</div>
+
+@code {
+  [Parameter, EditorRequired]
+  public UserDto Dto { get; set; } = default!;
+}

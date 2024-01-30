@@ -28,6 +28,28 @@ public class UsersController : BaseController
   }
 
   /// <summary>
+  /// Get user
+  /// </summary>
+  [HttpGet("{userId}")]
+  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+  public async Task<IActionResult> GetUser(int userId)
+  {
+    var service = GetService<UsersGet>();
+    return Ok(await service.GetUser(userId));
+  }
+
+  /// <summary>
+  /// Get user
+  /// </summary>
+  [HttpGet("profile")]
+  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+  public async Task<IActionResult> GetUserProfile()
+  {
+    var service = GetService<UsersGet>();
+    return Ok(await service.GetUserProfile());
+  }
+
+  /// <summary>
   /// Get board of directors
   /// </summary>
   /// <returns>list of users</returns>
@@ -45,8 +67,8 @@ public class UsersController : BaseController
   /// <param name="dto">user object</param>
   /// <returns>updated user object</returns>
   [HttpPost]
-  [Authorize(Policy = PolicyNames.UserAddEditDelete)]
-  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+  [Authorize(Policy = PolicyNames.UserAddEditDelete)]  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
+
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
   public async Task<IActionResult> CreateUser([FromBody] UserDto dto)
   {

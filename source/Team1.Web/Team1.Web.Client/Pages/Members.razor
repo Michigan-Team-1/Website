@@ -9,7 +9,9 @@
   <div class="col-sm-6 text-sm-start text-md-end">
     <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
       <Authorized>
-        <button class="btn btn-primary" type="button" @onclick=@(() => AddEdit(null, -1))><i class="fas fa-plus">&nbsp;</i> Add New</button>
+        <NavLink class="btn btn-primary" href="member">
+          <i class="fas fa-plus">&nbsp;</i> Add New
+        </NavLink>
       </Authorized>
     </AuthorizeView>
   </div>
@@ -159,10 +161,14 @@ else
           <RowTemplate>
             <tr class="align-middle">
               <td>
-                <button class="btn btn-link btn-sm" type="button">
-                  <span class="fa fa-edit"></span>
-                  @row.Item.LastName
-                </button>
+                <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+                  <Authorized>
+                    <NavLink class="btn btn-link btn-sm" href="@($"member/{row.Item.UserId}")">
+                      <span class="fa fa-edit"></span>
+                      @row.Item.LastName
+                    </NavLink>
+                  </Authorized>
+                </AuthorizeView>
               </td>
               <td>@row.Item.FirstName</td>
               <AuthorizeView>
@@ -211,16 +217,12 @@ else
 
 @implements IDisposable
 @inject PersistentComponentState ApplicationState
-@inject IModalService modalService
 @inject AuthorizedClient authClient
-@inject AnonymousClient client
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
   private SmartishTable.Root<UserDto>? smartishTable;
 
   private List<UserDto>? Dtos;
-
-  private List<SelectOptionDto<int>>? locations;
 
   private Dictionary<string, SmartishTable.Filters.StringOperators> stringOperators = default!;
   private SmartishTable.Filters.DateTimeOperators createdDateTimeOperator = SmartishTable.Filters.DateTimeOperators.GreaterThan;
@@ -253,37 +255,5 @@ else
   void IDisposable.Dispose()
   {
     persistingSubscription.Dispose();
-  }
-
-  private async Task AddEdit(UserDto? dto, int index)
-  {
-    var isNew = dto == null;
-
-    if (locations == null)
-    {
-      locations = await authClient.GetLocationsForSelection();
-    }
-    if (isNew)
-    {
-      dto = new UserDto()
-        {
-          IsActive = true,
-          IsUpdated = true,
-          AuditFieldsDto = new AuditFieldsDto()
-        };
-    }
-    var parameters = new Blazored.Modal.ModalParameters();
-    parameters.Add(nameof(EventAddEdit.DtoOriginal), dto!);
-    parameters.Add(nameof(EventAddEdit.Locations), locations!);
-    var modalReference = modalService.Show<EventAddEdit>("User Add/Edit", parameters, new ModalOptions() { });
-    var modalResult = await modalReference.Result;
-    dto = modalResult.Data as UserDto;
-    if (dto != null)
-    {
-      if (isNew)
-        await smartishTable!.Add(dto);
-      else
-        await smartishTable!.UpdateAt(index, dto);
-    }
   }
 }

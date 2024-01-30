@@ -6,16 +6,17 @@
   {
     <label for="@($"{_predicate}{nameSuffix}")" class="@LabelCss">
       <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
-      <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
+      @if (ChangeTracking)
+      {
+        <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
+      }
     </label>
   }
-  <div class="col-sm">
-    <input @bind="CurrentValue" @bind:event="oninput" id="@($"{_predicate}{nameSuffix}")" class="form-control @CssClass" data-inputmask="'mask': '@Inputmask', 'autoUnmask': true" />
-    @if (ValidationFor != null)
-    {
-      <ValidationMessage For="@ValidationFor" />
-    }
-  </div>
+  <input @bind="CurrentValue" @bind:event="oninput" id="@($"{_predicate}{nameSuffix}")" class="form-control @CssClass" data-inputmask="'mask': '(999) 999-9999', 'autoUnmask': true" />
+  @if (ValidationFor != null)
+  {
+    <ValidationMessage For="@ValidationFor" />
+  }
 </div>
 
 @inject IJSRuntime jsRuntime
@@ -26,6 +27,7 @@
   [Parameter]
   public bool HideLabel { get; set; }
 
+  [Parameter] public bool ChangeTracking { get; set; } = true;
   [Parameter] public string LabelCss { get; set; } = "col-sm-3";
 
   [Parameter]
@@ -37,10 +39,6 @@
   private string? _predicate;
 
   private string nameSuffix = Guid.NewGuid().ToString();
-
-  private string? oldInputmask;
-  [Parameter]
-  public string? Inputmask { get; set; }
 
   [Parameter]
   public string? OldValue { get; set; }
@@ -54,10 +52,9 @@
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
-    if (Inputmask != oldInputmask && !string.IsNullOrEmpty(Inputmask))
+    if (firstRender)
     {
-      await jsRuntime.InvokeVoidAsync("inputmaskInit", $"{_predicate}{nameSuffix}");
-      oldInputmask = Inputmask;
+      await jsRuntime.InvokeVoidAsync($"inputmaskInit", $"{_predicate}{nameSuffix}");
     }
   }
 
