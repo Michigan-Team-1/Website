@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Team1.Infrastructure.Dtos;
+using Team1.Infrastructure.Dtos.Helpers;
 using Team1.Infrastructure.Dtos.Users;
 using Team1.Web.Client.Helpers;
 
@@ -89,5 +90,20 @@ public class AnonymousClient
     }
 
     return new List<EventDto>();
+  }
+
+  public async Task<List<SelectOptionDto<int>>?> GetMobileCarriers()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/mobilecarriers");
+      return await _serviceResponseHandler.HandleJsonResponse<List<SelectOptionDto<int>>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<SelectOptionDto<int>>();
   }
 }

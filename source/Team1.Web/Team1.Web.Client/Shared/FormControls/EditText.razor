@@ -5,7 +5,7 @@
   {
     <label for="@($"{_predicate}{nameSuffix}")" class="col-form-label @LabelCss">
       <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
-      <InputUnsavedChangesNotifcation Value="@(OldValue != CurrentValue)" />
+      <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
     </label>
   }
   <div class="col-sm">

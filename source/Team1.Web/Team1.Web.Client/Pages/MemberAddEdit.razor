@@ -24,17 +24,17 @@ else
       </div>
       <div class="col-sm-4 text-sm-start text-md-end">
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
-        <NavLink class="btn btn-primary" href="members">
+        <NavLink class="btn btn-warning" href="members">
           <i class="fa-solid fa-circle-arrow-left"></i> Back To Members
         </NavLink>
       </div>
     </div>
-    <EditUserDetails Dto="Dto" />
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" />
     <div class="modal-footer">
       <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
       <div class="col text-end">
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
-        <NavLink class="btn btn-primary" href="members">
+        <NavLink class="btn btn-warning" href="members">
           <i class="fa-solid fa-circle-arrow-left"></i>  Back To Members
         </NavLink>
       </div>
@@ -42,14 +42,21 @@ else
   </EditForm>
 }
 
+@implements IDisposable
 @inject AuthorizedClient client
+@inject AnonymousClient anonClient
+@inject PersistentComponentState ApplicationState
 @code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
   [Parameter]
   public int UserId { get; set; }
 
   public UserDto? DtoOriginal { get; set; } = default!;
 
   private UserDto Dto { get; set; } = default!;
+
+  private List<SelectOptionDto<int>>? mobileCarriers;
 
   private EditContext _editContext = default!;
 
@@ -63,12 +70,44 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    DtoOriginal = await client.GetUser(UserId);
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(MemberAddEdit)+"User", out var restored))
+    {
+      DtoOriginal = await client.GetUser(UserId);
+    }
+    else
+    {
+      DtoOriginal = restored!;
+    }
+
     if (DtoOriginal == null)
       return;
 
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(MemberAddEdit) + "MobileCarriers", out var restoredMobileCarriers))
+    {
+      mobileCarriers = await anonClient.GetMobileCarriers(); ;
+    }
+    else
+    {
+      mobileCarriers = restoredMobileCarriers!;
+    }
+
     Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
     _editContext = new EditContext(Dto);
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + "User", DtoOriginal);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + "MobileCarriers", mobileCarriers);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
   }
 
   async Task Save()
@@ -79,5 +118,10 @@ else
       var data = await client.SaveUser(Dto);
 
     }
+  }
+
+  private void ChildUpdated()
+  {
+    StateHasChanged();
   }
 }

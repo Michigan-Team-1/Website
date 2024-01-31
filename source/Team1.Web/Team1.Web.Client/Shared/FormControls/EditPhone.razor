@@ -8,15 +8,20 @@
       <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
       @if (ChangeTracking)
       {
+          <text>
+          &nbsp;
         <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
+        </text>
       }
     </label>
   }
-  <input @bind="CurrentValue" @bind:event="oninput" id="@($"{_predicate}{nameSuffix}")" class="form-control @CssClass" data-inputmask="'mask': '(999) 999-9999', 'autoUnmask': true" />
-  @if (ValidationFor != null)
-  {
-    <ValidationMessage For="@ValidationFor" />
-  }
+  <div class="col-sm">
+    <input @bind="CurrentValue" @bind:event="oninput" id="@($"{_predicate}{nameSuffix}")" class="form-control @CssClass" data-inputmask="'mask': '(999) 999-9999', 'autoUnmask': true" />
+    @if (ValidationFor != null)
+    {
+      <ValidationMessage For="@ValidationFor" />
+    }
+  </div>
 </div>
 
 @inject IJSRuntime jsRuntime

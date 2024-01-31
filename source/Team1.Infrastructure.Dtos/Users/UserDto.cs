@@ -58,8 +58,9 @@ public class UserDto : UserRoot
       return item.PhoneNumber.IfNullThenEmptyString() == PhoneNumber.IfNullThenEmptyString() && item.Email.IfNullThenEmptyString() == Email.IfNullThenEmptyString()
                     && item.FirstName.IfNullThenEmptyString() == FirstName.IfNullThenEmptyString() && LastName.IfNullThenEmptyString() == item.LastName.IfNullThenEmptyString()
                     && item.UserId == UserId && IsActive == item.IsActive && item.IsLoginEnabled == IsLoginEnabled && item.PaidUp == PaidUp
-                    && item.TripoliNumber == item.TripoliNumber && item.NarNumber == NarNumber && item.BirthDate == BirthDate
-                    && item.MobileCarrierId == MobileCarrierId;
+                    && item.TripoliNumber.IfNullThenEmptyString() == TripoliNumber.IfNullThenEmptyString() && item.NarNumber.IfNullThenEmptyString() == NarNumber.IfNullThenEmptyString()
+                    && item.BirthDate == BirthDate && item.MobileCarrierId == MobileCarrierId && item.CertificationLevel == CertificationLevel
+                    && item.PaidThroughYear == PaidThroughYear;
     }
 
     return false;
