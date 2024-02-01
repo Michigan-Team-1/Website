@@ -141,13 +141,12 @@ public class UsersGet : BaseService
               NarNumber = u.NarNumber,
               PaidThroughYear = u.PaidThroughYear,
               MobileCarrierId = u.MobileCarrierId,
+              EmailConfirmed = u.EmailConfirmed,
               UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
-              Roles = u.UserRoles.Select(r => new RoleDto()
+              UserRoles = u.UserRoles.Select(r => new UserRoleDto()
               {
                 RoleId = r.RoleId,
-                Level = r.Role.Level,
-                Name = r.Role.Name,
-                Type = r.Role.Type,
+                UserId = r.UserId
               }).ToList(),
               AuditFieldsDto = new AuditFieldsDto()
               {

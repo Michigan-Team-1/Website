@@ -17,7 +17,7 @@
             <EditDate @bind-Value="Dto.EventDateWrapper" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventDate))" ValidationFor="(() => Dto.EventDateWrapper)" />
             <EditDate @bind-Value="Dto.EventAlternateDate" PropertyInfo="PropertyReflections.GetEventDtoProperty(nameof(Dto.EventAlternateDate))" ValidationFor="(() => Dto.EventAlternateDate)" />
             <div class="mb-3 row gx-2">
-              <label class="col-form-label col-sm-3">
+              <label class="col-form-label col-sm-3" @onclick:preventDefault=true>
                 <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetEventDtoProperty(nameof(Dto.EventLocations))) IsRequired="@true"></DefaultLabel>
                 <InputUnsavedChangesNotifcation Value="!Dto.AreEventLocationsEqual(DtoOriginal.EventLocations)" />
                 <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddLocation"><i class="fas fa-plus"></i></button>

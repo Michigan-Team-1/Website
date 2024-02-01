@@ -1,51 +1,132 @@
-﻿<div>
+﻿@using Team1.Model.Enums
+<div>
   <ValidationSummary />
   <div class="form-horizontal">
-    <EditText @bind-Value="Dto.FirstName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.FirstName))" ValidationFor="(() => Dto.FirstName)" />
-    <EditText @bind-Value="Dto.LastName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.LastName))" ValidationFor="(() => Dto.LastName)" />
-    <EditText @bind-Value="Dto.Email" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Email))" ValidationFor="(() => Dto.Email)" />
-    <EditPhone @bind-Value="Dto.PhoneNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PhoneNumber))" ValidationFor="(() => Dto.PhoneNumber)" />
-    <EditSelect @bind-Value="Dto.MobileCarrierId" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.MobileCarrierId))" ValidationFor="(() => Dto.MobileCarrierId)">
-      <option value="">Select...</option>
-      @if (MobileCarriers != null)
-      {
-        foreach (var item in MobileCarriers)
-        {
-          <option selected=@(Dto.MobileCarrierId == item.Value) value="@(item.Value)">@item.Text</option>
-        }
-      }
-    </EditSelect>
-    <EditDate @bind-Value="Dto.BirthDate" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.BirthDate))" ValidationFor="(() => Dto.BirthDate)" />
-    <EditText @bind-Value="Dto.TripoliNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.TripoliNumber))" ValidationFor="(() => Dto.TripoliNumber)" />
-    <EditText @bind-Value="Dto.NarNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.NarNumber))" ValidationFor="(() => Dto.NarNumber)" />
-    <EditRadioGroup @bind-Value="Dto.CertificationLevel" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.CertificationLevel))" ValidationFor="(() => Dto.CertificationLevel)">
-      <div class="row">
-        <div class="col-sm-3 col-md-2">
-          <label class="form-check-label"><InputRadio Value="0" class="form-check-input" TValue="byte" /> 0 </label>
-        </div>
-        <div class="col-sm-3 col-md-2">
-          <label class="form-check-label"><InputRadio Value="1" class="form-check-input" TValue="byte" /> 1</label>
-        </div>
-        <div class="col-sm-3 col-md-2">
-          <label class="form-check-label"><InputRadio Value="2" class="form-check-input" TValue="byte" /> 2</label>
-        </div>
-        <div class="col-sm-3 col-md-2">
-          <label class="form-check-label"><InputRadio Value="3" class="form-check-input" TValue="byte" /> 3</label>
-        </div>
+    <div class="row">
+      <div class="col-12 col-lg-6">
+        <EditText @bind-Value="Dto.FirstName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.FirstName))" ValidationFor="(() => Dto.FirstName)" />
+        <EditText @bind-Value="Dto.LastName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.LastName))" ValidationFor="(() => Dto.LastName)" />
+        <EditText @bind-Value="Dto.Email" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Email))" ValidationFor="(() => Dto.Email)" />
+        <EditPhone @bind-Value="Dto.PhoneNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PhoneNumber))" ValidationFor="(() => Dto.PhoneNumber)" />
+        <EditSelect @bind-Value="Dto.MobileCarrierId" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.MobileCarrierId))" ValidationFor="(() => Dto.MobileCarrierId)">
+          <option value="">Select...</option>
+          @if (MobileCarriers != null)
+          {
+            foreach (var item in MobileCarriers)
+            {
+              <option selected=@(Dto.MobileCarrierId == item.Value) value="@(item.Value)">@item.Text</option>
+            }
+          }
+        </EditSelect>
       </div>
-    </EditRadioGroup>
+      <div class="col-12 col-lg-6">
+        <EditDate @bind-Value="Dto.BirthDate" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.BirthDate))" ValidationFor="(() => Dto.BirthDate)" />
+        <EditText @bind-Value="Dto.TripoliNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.TripoliNumber))" ValidationFor="(() => Dto.TripoliNumber)" />
+        <EditText @bind-Value="Dto.NarNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.NarNumber))" ValidationFor="(() => Dto.NarNumber)" />
+        <EditRadioGroup @bind-Value="Dto.CertificationLevel" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.CertificationLevel))" ValidationFor="(() => Dto.CertificationLevel)">
+          <div class="row">
+            <div class="col-sm-3 col-md-2">
+              <label class="form-check-label"><InputRadio Value="0" class="form-check-input" TValue="byte" /> 0 </label>
+            </div>
+            <div class="col-sm-3 col-md-2">
+              <label class="form-check-label"><InputRadio Value="1" class="form-check-input" TValue="byte" /> 1</label>
+            </div>
+            <div class="col-sm-3 col-md-2">
+              <label class="form-check-label"><InputRadio Value="2" class="form-check-input" TValue="byte" /> 2</label>
+            </div>
+            <div class="col-sm-3 col-md-2">
+              <label class="form-check-label"><InputRadio Value="3" class="form-check-input" TValue="byte" /> 3</label>
+            </div>
+          </div>
+        </EditRadioGroup>
+        <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
+          <Authorized>
+            <EditNumber @bind-Value="Dto.PaidThroughYear" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
+          </Authorized>
+          <NotAuthorized>
+            @if (Dto.PaidThroughYear > 0)
+            {
+              <fieldset disabled>
+                <EditNumber @bind-Value="Dto.PaidThroughYear" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
+              </fieldset>
+            }
+          </NotAuthorized>
+        </AuthorizeView>
+      </div>
+    </div>
+
     <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
       <Authorized>
-        <EditNumber @bind-Value="Dto.PaidThroughYear" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
-      </Authorized>
-      <NotAuthorized>
-        <fieldset disabled="true">
-          <EditNumber @bind-Value="Dto.PaidThroughYear" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PaidThroughYear))" ValidationFor="(() => Dto.PaidThroughYear)" />
-        </fieldset>
-      </NotAuthorized>
-    </AuthorizeView>
-    <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
-      <Authorized>
+        <div class="mb-3 row gx-2">
+          <label class="col-form-label col-sm-3" @onclick:preventDefault=true>
+            <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetUserDtoProperty(nameof(Dto.Roles))) IsRequired="@false"></DefaultLabel>
+            <InputUnsavedChangesNotifcation Value="!Dto.AreRolesEqual(DtoOriginal.UserRoles)" />
+            <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddRole"><i class="fas fa-plus"></i></button>
+          </label>
+          <div class="col-sm">
+            @foreach (var item in Dto.UserRoles!)
+            {
+              <div class="row">
+                <div class="col">
+                  <EditSelect @bind-Value="item.RoleId" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Roles))"
+                              ValidationFor="(() => item.RoleId)" HideLabel=true DivContainerCss="mb-2 row">
+                    <option value="0">Select...</option>
+                    @foreach (var l in GetRoles(item))
+                    {
+                      <option selected=@(item.RoleId == l.RoleId) value="@(l.RoleId)">@l.Name</option>
+                    }
+                  </EditSelect>
+                </div>
+                <div class="col-auto">
+                  @if (!item.IsDeleted)
+                  {
+                    <button type="button" class="btn btn-outline-danger" @onclick="(() =>DeleteRole(item))"><i class="fas fa-fw @(item.UserId > 0 ? "fa-times" : "fa-trash-alt")"></i></button>
+                  }
+                  else
+                  {
+                    <button type="button" class="btn btn-warning" @onclick="(() =>DeleteRole(item))"><i class="fas fa-fw fa-undo"></i></button>
+                  }
+                </div>
+              </div>
+            }
+            <ValidationMessage For="(() => Dto.Roles)" />
+          </div>
+        </div>
+        <div class="mb-3 row gx-2">
+          <label class="col-form-label col-sm-3" @onclick:preventDefault=true>
+            <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetUserDtoProperty(nameof(Dto.UserMemberTypes))) IsRequired="@false"></DefaultLabel>
+            <InputUnsavedChangesNotifcation Value="!Dto.AreUserMemberTypesEqual(DtoOriginal.UserMemberTypes)" />
+            <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddUserMemberType"><i class="fas fa-plus"></i></button>
+          </label>
+          <div class="col-sm">
+            @foreach (var item in Dto.UserMemberTypes!)
+            {
+              <div class="row">
+                <div class="col">
+                  <EditSelect @bind-Value="item.MemberTypeId" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.UserMemberTypes))"
+                              ValidationFor="(() => item.MemberTypeId)" HideLabel=true DivContainerCss="mb-2 row">
+                    <option value="0">Select...</option>
+                    @foreach (var l in GetUserMemberTypes(item))
+                    {
+                      <option selected=@(item.MemberTypeId == l.MemberTypeId) value="@(l.MemberTypeId)">@l.MemberTypeString</option>
+                    }
+                  </EditSelect>
+                </div>
+                <div class="col-auto">
+                  @if (!item.IsDeleted)
+                  {
+                    <button type="button" class="btn btn-outline-danger" @onclick="(() =>DeleteUserMemberType(item))"><i class="fas fa-fw @(item.UserId > 0 ? "fa-times" : "fa-trash-alt")"></i></button>
+                  }
+                  else
+                  {
+                    <button type="button" class="btn btn-warning" @onclick="(() => DeleteUserMemberType(item))"><i class="fas fa-fw fa-undo"></i></button>
+                  }
+                </div>
+              </div>
+            }
+            <ValidationMessage For="(() => Dto.UserMemberTypes)" />
+          </div>
+        </div>
         <EditCheckbox @bind-Value="@Dto.EmailConfirmed" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.EmailConfirmed))" />
         <EditCheckbox @bind-Value="@Dto.IsActive" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.IsActive))" />
         <EditCheckbox @bind-Value="@Dto.IsLoginEnabled" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.IsLoginEnabled))" />
@@ -61,14 +142,78 @@
   public UserDto Dto { get; set; } = default!;
 
   [Parameter, EditorRequired]
+  public UserDto DtoOriginal { get; set; } = default!;
+
+  [Parameter, EditorRequired]
   public List<SelectOptionDto<int>>? MobileCarriers { get; set; }
 
   [Parameter, EditorRequired]
+  public List<CountryDto> Countries { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public List<GoverningDistrictDto> GoverningDistricts { get; set; } = default!;
+
+  [Parameter, EditorRequired]
   public EventCallback Updated { get; set; }
+
+  [Parameter]
+  public List<RoleDto>? Roles { get; set; }
+
+  private List<UserMemberTypeDto>? _userMemberTypes;
+  private List<UserMemberTypeDto>? userMemberTypes
+  {
+    get
+    {
+      if (_userMemberTypes == null)
+        _userMemberTypes = MemberTypeEnum.Prefect.GetList().Select(s => new UserMemberTypeDto() { MemberTypeId = s }).ToList();
+
+      return _userMemberTypes;
+    }
+  }
 
   private async Task DataUpdated()
   {
     if (Updated.HasDelegate)
       await Updated.InvokeAsync();
+  }
+
+  private void AddRole()
+  {
+    Dto.UserRoles!.Add(new UserRoleDto());
+  }
+
+  private void DeleteRole(UserRoleDto item)
+  {
+    if (item.UserId == 0)
+    {
+      Dto.UserRoles!.Remove(item);
+      return;
+    }
+    item.IsDeleted = !item.IsDeleted;
+  }
+
+  private List<RoleDto> GetRoles(UserRoleDto item)
+  {
+    return Roles!.Where(w => !Dto.UserRoles!.Where(w => w.RoleId != item.RoleId).Select(s => s.RoleId).Contains(w.RoleId)).ToList();
+  }
+
+  private void AddUserMemberType()
+  {
+    Dto.UserMemberTypes!.Add(new UserMemberTypeDto());
+  }
+
+  private void DeleteUserMemberType(UserMemberTypeDto item)
+  {
+    if (item.UserId == 0)
+    {
+      Dto.UserMemberTypes!.Remove(item);
+      return;
+    }
+    item.IsDeleted = !item.IsDeleted;
+  }
+
+  private List<UserMemberTypeDto> GetUserMemberTypes(UserMemberTypeDto item)
+  {
+    return userMemberTypes!.Where(w => !Dto.UserMemberTypes!.Where(w => w.MemberTypeId != item.MemberTypeId).Select(s => s.MemberTypeId).Contains(w.MemberTypeId)).ToList();
   }
 }

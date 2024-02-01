@@ -260,7 +260,7 @@ namespace Team1.Entities.UserIdentity
             });
             Context.SaveChanges();
 
-            return Users.FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.UserId == id && w.IsLoginEnabled, cancellationToken);
+            return Users.Include(i=>i.UserRoles).ThenInclude(i=>i.Role).FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.UserId == id && w.IsLoginEnabled, cancellationToken);
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace Team1.Entities.UserIdentity
             });
             Context.SaveChanges();
 
-            return Users.FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.Email == userName && w.IsLoginEnabled, cancellationToken);
+            return Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.Email == userName && w.IsLoginEnabled, cancellationToken);
         }
 
         #endregion

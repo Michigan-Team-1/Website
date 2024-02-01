@@ -22,6 +22,8 @@ public class UserDto : UserRoot
     }
   }
 
+  public List<UserRoleDto> UserRoles { get; set; }
+
   [Display(Name = "Paid Up")]
   public bool PaidUp { get { return DateTime.Today.Year <= PaidThroughYear; } }
 
@@ -55,6 +57,11 @@ public class UserDto : UserRoot
 
     if (obj is UserDto item)
     {
+      if (!AreRolesEqual(item.UserRoles))
+        return false;
+      if (!AreUserMemberTypesEqual(item.UserMemberTypes))
+        return false;
+
       return item.PhoneNumber.IfNullThenEmptyString() == PhoneNumber.IfNullThenEmptyString() && item.Email.IfNullThenEmptyString() == Email.IfNullThenEmptyString()
                     && item.FirstName.IfNullThenEmptyString() == FirstName.IfNullThenEmptyString() && LastName.IfNullThenEmptyString() == item.LastName.IfNullThenEmptyString()
                     && item.UserId == UserId && IsActive == item.IsActive && item.IsLoginEnabled == IsLoginEnabled && item.PaidUp == PaidUp
@@ -64,6 +71,56 @@ public class UserDto : UserRoot
     }
 
     return false;
+  }
+
+  public bool AreRolesEqual(List<UserRoleDto>? userRoles)
+  {
+    if (userRoles == null && UserRoles == null)
+      return true;
+    else if (userRoles == null && UserRoles != null)
+      return false;
+    else if (userRoles != null && UserRoles == null)
+      return false;
+    else if (userRoles!.Count != UserRoles!.Count)
+      return false;
+    
+    foreach (var item in from el in userRoles
+                         join eel in UserRoles on el.RoleId equals eel.RoleId into ljEEL
+                         from eel in ljEEL.DefaultIfEmpty()
+                         select new { el, eel })
+    {
+      if (item.eel == null)
+        return false;
+      if (item.eel.RoleId != item.el.RoleId && item.eel.IsDeleted != item.el.IsDeleted)
+        return false;
+    }
+
+    return true;
+  }
+
+  public bool AreUserMemberTypesEqual(List<UserMemberTypeDto>? userMemberTypes)
+  {
+    if (userMemberTypes == null && UserMemberTypes == null)
+      return true;
+    else if (userMemberTypes == null && UserMemberTypes != null)
+      return false;
+    else if (userMemberTypes != null && UserMemberTypes == null)
+      return false;
+    else if (userMemberTypes!.Count != UserMemberTypes!.Count)
+      return false;
+
+    foreach (var item in from el in userMemberTypes
+                         join eel in UserMemberTypes on el.MemberTypeId equals eel.MemberTypeId into ljEEL
+                         from eel in ljEEL.DefaultIfEmpty()
+                         select new { el, eel })
+    {
+      if (item.eel == null)
+        return false;
+      if (item.eel.MemberTypeId != item.el.MemberTypeId && item.eel.IsDeleted != item.el.IsDeleted)
+        return false;
+    }
+
+    return true;
   }
 
   public override int GetHashCode()
@@ -80,7 +137,13 @@ public class UserDtoValidator : AbstractValidator<UserDto>
       .MaximumLength(FieldSizes.NameLength).WithMessage(ErrorMessages.FVStringLengthMax);
     RuleFor(x => x.LastName).NotEmpty().WithMessage(ErrorMessages.FVRequiredField)
       .MaximumLength(FieldSizes.DescriptionLength).WithMessage(ErrorMessages.FVStringLengthMax);
-    //RuleFor(x => x.Addresses).SetValidator(new AddressObjDtoValidator()).NotNull();
+    RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
+    RuleFor(x => x.Email).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
+    RuleFor(x => x.BirthDate).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
+    RuleFor(x => x.CertificationLevel).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
+    RuleForEach(x => x.UserRoles).SetValidator(new UserRoleDtoValidator());
+    RuleForEach(x => x.UserMemberTypes).SetValidator(new UserMemberTypeDtoValidator());
 
+    //RuleFor(x => x.Addresses).SetValidator(new AddressObjDtoValidator()).NotNull();
   }
 }

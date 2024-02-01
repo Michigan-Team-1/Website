@@ -95,5 +95,6 @@ public class EventDtoValidator : AbstractValidator<EventDto>
       .MaximumLength(FieldSizes.NameLength).WithMessage(ErrorMessages.FVStringLengthMax);
     RuleFor(x => x.EventDateWrapper).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
     RuleFor(x => x.EventLocations).Must(x=>x.Count(w=>w.LocationId > 0 && !w.IsDeleted) > 0).WithMessage("You must select at least one location.");
+    RuleForEach(x => x.EventLocations).SetValidator(new EventLocationDtoValidator());
   }
 }

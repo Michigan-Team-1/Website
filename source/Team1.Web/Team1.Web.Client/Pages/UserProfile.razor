@@ -26,7 +26,7 @@ else
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
       </div>
     </div>
-    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" />
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" />
     <div class="modal-footer">
       <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
       <div class="col text-end">
@@ -51,6 +51,8 @@ else
   private UserDto Dto { get; set; } = default!;
 
   private List<SelectOptionDto<int>>? mobileCarriers;
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
 
   private EditContext _editContext = default!;
 
@@ -66,7 +68,7 @@ else
   {
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(UserProfile) + "User", out var restored))
+    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(UserProfile) + nameof(Dto), out var restored))
     {
       DtoOriginal = await client.GetUser(UserId);
     }
@@ -78,7 +80,7 @@ else
     if (DtoOriginal == null)
       return;
 
-    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + "MobileCarriers", out var restoredMobileCarriers))
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + nameof(mobileCarriers), out var restoredMobileCarriers))
     {
       mobileCarriers = await anonClient.GetMobileCarriers(); ;
     }
@@ -87,14 +89,34 @@ else
       mobileCarriers = restoredMobileCarriers!;
     }
 
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(UserProfile) + nameof(countries), out var restoredCountries))
+    {
+      countries = await anonClient.GetCountries();
+    }
+    else
+    {
+      countries = restoredCountries!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(UserProfile) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    {
+      governingDistricts = await anonClient.GetGoverningDistricts();
+    }
+    else
+    {
+      governingDistricts = restoredGoverningDistricts!;
+    }
+
     Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
     _editContext = new EditContext(Dto);
   }
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson(nameof(UserProfile) + "User", DtoOriginal);
-    ApplicationState.PersistAsJson(nameof(UserProfile) + "MobileCarriers", mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(Dto), DtoOriginal);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(governingDistricts), governingDistricts);
 
     return Task.CompletedTask;
   }

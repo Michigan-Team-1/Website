@@ -54,6 +54,21 @@ public class AuthorizedClient
     return new AnnouncementDto();
   }
 
+  public async Task<List<RoleDto>?> GetRoles()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/roles");
+      return await _serviceResponseHandler.HandleJsonResponse<List<RoleDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<RoleDto>();
+  }
+
   public async Task<List<UserDto>?> GetUsers()
   {
     try
@@ -120,20 +135,6 @@ public class AuthorizedClient
     }
 
     return null;
-  }
-
-  public async Task<List<RoleDto>?> GetRoles()
-  {
-    try
-    {
-      var response = await _httpClient.GetAsync("api/Roles");
-      return await _serviceResponseHandler.HandleJsonResponse<List<RoleDto>>(response);
-    }
-    catch (AccessTokenNotAvailableException exception)
-    {
-      exception.Redirect();
-    }
-    return new List<RoleDto>();
   }
 
   public async Task<List<EventDto>?> GetEvents()

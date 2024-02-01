@@ -9,6 +9,7 @@
   <div class="col-sm-6 text-sm-start text-md-end">
     <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
       <Authorized>
+        <button type="button" class="btn btn-info"><i class="fas fa-download"></i> Export CSV</button>
         <NavLink class="btn btn-primary" href="member">
           <i class="fas fa-plus">&nbsp;</i> Add New
         </NavLink>

@@ -29,7 +29,7 @@ else
         </NavLink>
       </div>
     </div>
-    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" />
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Roles="roles" Countries="countries" GoverningDistricts="governingDistricts" />
     <div class="modal-footer">
       <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
       <div class="col text-end">
@@ -57,6 +57,9 @@ else
   private UserDto Dto { get; set; } = default!;
 
   private List<SelectOptionDto<int>>? mobileCarriers;
+  private List<RoleDto>? roles;
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
 
   private EditContext _editContext = default!;
 
@@ -72,7 +75,7 @@ else
   {
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(MemberAddEdit)+"User", out var restored))
+    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(MemberAddEdit) + nameof(Dto), out var restored))
     {
       DtoOriginal = await client.GetUser(UserId);
     }
@@ -84,13 +87,40 @@ else
     if (DtoOriginal == null)
       return;
 
-    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(MemberAddEdit) + "MobileCarriers", out var restoredMobileCarriers))
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(MemberAddEdit) + nameof(mobileCarriers), out var restoredMobileCarriers))
     {
-      mobileCarriers = await anonClient.GetMobileCarriers(); ;
+      mobileCarriers = await anonClient.GetMobileCarriers();
     }
     else
     {
       mobileCarriers = restoredMobileCarriers!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<RoleDto>>(nameof(MemberAddEdit) + nameof(roles), out var restoredRoles))
+    {
+      roles = await client.GetRoles();
+    }
+    else
+    {
+      roles = restoredRoles!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(MemberAddEdit) + nameof(countries), out var restoredCountries))
+    {
+      countries = await anonClient.GetCountries();
+    }
+    else
+    {
+      countries = restoredCountries!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(MemberAddEdit) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    {
+      governingDistricts = await anonClient.GetGoverningDistricts();
+    }
+    else
+    {
+      governingDistricts = restoredGoverningDistricts!;
     }
 
     Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
@@ -99,8 +129,11 @@ else
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + "User", DtoOriginal);
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + "MobileCarriers", mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(Dto), DtoOriginal);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(roles), roles);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(governingDistricts), governingDistricts);
 
     return Task.CompletedTask;
   }
