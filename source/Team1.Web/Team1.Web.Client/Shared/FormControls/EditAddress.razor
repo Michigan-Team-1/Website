@@ -1,9 +1,12 @@
-﻿<div class="mb-3 row gx-2">
-  <label class="col-form-label col-sm-3">
+﻿<div class="@DivContainerCss">
+    @if(!HideLabel)
+    {
+    <label class="@LabelCss">
     <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
-    <InputUnsavedChangesNotifcation Value="@(DataUpdated)" />
+      <InputUnsavedChangesNotifcation Value="@(!DtoOriginal.Equals(Dto))" />
   </label>
-  <div class="col-sm-9">
+  }
+  <div class="col-sm">
     <EditSelect @bind-Value:get=Dto.CountryId @bind-Value:set="SetCountry" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.CountryId))"
                 ValidationFor="(() => Dto.CountryId)" HideLabel=true DivContainerCss="mb-2 row">
       <option value="">Select...</option>
@@ -12,18 +15,18 @@
         <option selected=@(Dto.CountryId == item.CountryId) value="@(item.CountryId)">@item.Name</option>
       }
     </EditSelect>
-    <EditText @bind-Value="Dto.Address1" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address1))" ValidationFor="(() => Dto.Address1)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
-    <EditText @bind-Value="Dto.Address2" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address2))" ValidationFor="(() => Dto.Address2)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
+    <EditText @bind-Value="Dto.Address1" @bind-Value:after=DataChanged PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address1))" ValidationFor="(() => Dto.Address1)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
+    <EditText @bind-Value="Dto.Address2" @bind-Value:after=DataChanged PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address2))" ValidationFor="(() => Dto.Address2)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
     @if (countryDto?.GoverningDistrictName == null)
     {
-      <EditText @bind-Value="Dto.Address3" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address3))" ValidationFor="(() => Dto.Address3)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
+      <EditText @bind-Value="Dto.Address3" @bind-Value:after=DataChanged PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.Address3))" ValidationFor="(() => Dto.Address3)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
     }
-    <EditText @bind-Value="Dto.City" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.City))" ValidationFor="(() => Dto.City)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
+    <EditText @bind-Value="Dto.City" @bind-Value:after=DataChanged PropertyInfo ="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.City))" ValidationFor="(() => Dto.City)" HideLabel=true DivContainerCss="mb-2 row" ShowPlaceHolder="true" />
     <div class="row">
       @if (!string.IsNullOrWhiteSpace(countryDto?.GoverningDistrictName))
       {
         <div class="col-6">
-          <EditSelect @bind-Value="Dto.GoverningDistrictId" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.GoverningDistrictId))"
+          <EditSelect @bind-Value="Dto.GoverningDistrictId" @bind-Value:after=DataChanged PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.GoverningDistrictId))"
                       ValidationFor="(() => Dto.GoverningDistrictId)" HideLabel=true DivContainerCss="mb-2 row">
             <option value="">Select...</option>
             @foreach (var item in GoverningDistricts.Where(w => w.CountryId == Dto.CountryId))
@@ -36,7 +39,7 @@
       @if (countryDto?.PostalCodeMask != null)
       {
         <div class="col-6">
-          <EditInputmask @bind-Value="Dto.PostalCode" PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.PostalCode))" Inputmask="@countryDto.PostalCodeMask"
+          <EditInputmask @bind-Value="Dto.PostalCode" @bind-Value:after=DataChanged PropertyInfo="PropertyReflections.GetAddressObjDtoProperty(nameof(Dto.PostalCode))" Inputmask="@countryDto.PostalCodeMask"
                          ValidationFor="(() => Dto.PostalCode)" HideLabel=true DivContainerCss="mb-2 row" />
         </div>
       }
@@ -49,6 +52,11 @@
 </div>
 
 @code {
+  [Parameter] public string LabelCss { get; set; } = "col-form-label col-sm-3";
+
+  [Parameter]
+  public string DivContainerCss { get; set; } = "mb-3 row gx-2";
+
   [Parameter, EditorRequired]
   public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
 
@@ -64,28 +72,33 @@
   [Parameter, EditorRequired]
   public AddressObjDto Dto { get; set; } = default!;
 
-  public bool DataUpdated
-  {
-    get
-    {
-      return !DtoOriginal.Equals(Dto);
-    }
-  }
+  [Parameter, EditorRequired]
+  public EventCallback Updated { get; set; }
+
+  [Parameter]
+  public bool HideLabel { get; set; }
 
   private AddressObjDto DtoOriginal = default!;
   private CountryDto? countryDto;
 
-  protected override void OnInitialized()
+  protected override async Task OnInitializedAsync()
   {
     DtoOriginal = Dto.SerializeJson().DeserializeJson<AddressObjDto>()!;
-    SetCountry(Dto.CountryId);
+    await SetCountry(Dto.CountryId);
   }
 
-  private void SetCountry(int? value)
+  private async Task SetCountry(int? value)
   {
     Dto.CountryId = value;
     countryDto = Countries.FirstOrDefault(w => w.CountryId == value);
     Dto.GoverningDistrictName = countryDto?.GoverningDistrictName;
     Dto.PostalCodeMask = countryDto?.PostalCodeMask;
+    await DataChanged();
+  }
+
+  private async Task DataChanged()
+  {
+    if (Updated.HasDelegate)
+      await Updated.InvokeAsync();
   }
 }

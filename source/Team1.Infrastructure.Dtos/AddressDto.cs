@@ -1,15 +1,38 @@
+using FluentValidation;
 using Team1.Model;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Team1.Infrastructure.Dtos
+namespace Team1.Infrastructure.Dtos;
+
+public class AddressDto : AddressBase
 {
-    public class AddressDto : AddressBase
+  public AddressObjDto AddressObj { get; set; } = default!;
+  public bool IsActive { get; set; }
+  public bool IsUpdated { get; set; }
+  public bool IsDeleted { get; set; }
+
+  public override bool Equals(object? obj)
+  {
+    if (obj == null)
+      return false;
+
+    if (obj is AddressDto item)
     {
-        public AddressObjDto AddressObj { get; set; }
-        public bool IsActive { get; set; } 
-        public bool IsUpdated { get; set; }
-        public bool IsDeleted { get; set; }
+      return item.IsActive == IsActive && item.IsDeleted == IsDeleted && AddressObj.Equals(item);
     }
+
+    return false;
+  }
+
+  public override int GetHashCode()
+  {
+    return base.GetHashCode();
+  }
+}
+
+public class AddressDtoValidator : AbstractValidator<AddressDto>
+{
+  public AddressDtoValidator()
+  {
+    RuleFor(x => x.AddressObj).SetValidator(new AddressObjDtoValidator()).NotNull();
+  }
 }

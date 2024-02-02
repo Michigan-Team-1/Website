@@ -54,12 +54,46 @@
         </AuthorizeView>
       </div>
     </div>
+    <div class="mb-3 row gx-2">
+      <label class="col-form-label col-sm-3" @onclick:preventDefault=true>
+        <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetUserDtoProperty(nameof(Dto.Addresses))) IsRequired="@true"></DefaultLabel>
+        <InputUnsavedChangesNotifcation Value="!Dto.AreAddressesEqual(DtoOriginal.Addresses)" />
+        <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddAddress"><i class="fas fa-plus"></i></button>
+      </label>
+      <div class="col-sm">
+        @if (Dto.Addresses != null)
+        {
+          for (int blah = 0; blah < Dto.Addresses.Count; blah++)
+          {
+            var tempKey = blah;
+            var item = Dto.Addresses[tempKey];
+            <div class="row">
+              <div class="col">
+                <EditAddress DivContainerCss="mb-2 row" Dto="item.AddressObj" PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Addresses))" HideLabel="true"
+                             ValidationFor="(() => item.AddressObj)" Countries="Countries" GoverningDistricts="GoverningDistricts" Updated="DataUpdated" />
+              </div>
+              <div class="col-auto">
+                @if (!item.IsDeleted)
+                {
+                  <button type="button" class="btn btn-outline-danger" @onclick="(() =>DeleteAddress(tempKey))"><i class="fas fa-fw @(item.AddressId > 0 ? "fa-times" : "fa-trash-alt")"></i></button>
+                }
+                else
+                {
+                  <button type="button" class="btn btn-warning" @onclick="(() =>DeleteAddress(tempKey))"><i class="fas fa-fw fa-undo"></i></button>
+                }
+              </div>
+            </div>
+          }
+        }
+        <ValidationMessage For="(() => Dto.Roles)" />
+      </div>
+    </div>
 
     <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
       <Authorized>
         <div class="mb-3 row gx-2">
           <label class="col-form-label col-sm-3" @onclick:preventDefault=true>
-            <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetUserDtoProperty(nameof(Dto.Roles))) IsRequired="@false"></DefaultLabel>
+            <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetUserDtoProperty(nameof(Dto.UserRoles))) IsRequired="@false"></DefaultLabel>
             <InputUnsavedChangesNotifcation Value="!Dto.AreRolesEqual(DtoOriginal.UserRoles)" />
             <button type="button" class="btn btn-sm btn-success ms-2" @onclick="AddRole"><i class="fas fa-plus"></i></button>
           </label>
@@ -175,6 +209,36 @@
   {
     if (Updated.HasDelegate)
       await Updated.InvokeAsync();
+  }
+
+  private void AddAddress()
+  {
+    if (Dto.Addresses == null)
+      Dto.Addresses = new List<AddressDto>();
+
+    var country = Countries!.First(w => w.CountryId == 840);
+    Dto.Addresses!.Add(new AddressDto()
+    {
+        IsActive = true,
+        IsUpdated = true,
+        AddressObj = new AddressObjDto()
+        {
+          CountryId = country.CountryId,
+          GoverningDistrictName = country.GoverningDistrictName,
+          GoverningDistrictId = 27,
+          PostalCodeMask = country.PostalCodeMask,
+        },
+    });
+  }
+
+  private void DeleteAddress(int index)
+  {
+    if (Dto.Addresses[index].AddressId == 0)
+    {
+      Dto.Addresses!.RemoveAt(index);
+      return;
+    }
+    Dto.Addresses[index].IsDeleted = !Dto.Addresses[index].IsDeleted;
   }
 
   private void AddRole()

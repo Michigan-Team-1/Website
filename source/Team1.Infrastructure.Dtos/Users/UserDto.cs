@@ -8,7 +8,7 @@ namespace Team1.Infrastructure.Dtos.Users;
 public class UserDto : UserRoot
 {
   [Display(Name = "Role")]
-  public List<RoleDto> Roles { get; set; } = default!;
+  public List<RoleDto>? Roles { get; set; }
 
   [Display(Name = "Roles")]
   public string? RoleNames
@@ -22,7 +22,8 @@ public class UserDto : UserRoot
     }
   }
 
-  public List<UserRoleDto> UserRoles { get; set; }
+  [Display(Name = "Roles")]
+  public List<UserRoleDto>? UserRoles { get; set; }
 
   [Display(Name = "Paid Up")]
   public bool PaidUp { get { return DateTime.Today.Year <= PaidThroughYear; } }
@@ -61,6 +62,8 @@ public class UserDto : UserRoot
         return false;
       if (!AreUserMemberTypesEqual(item.UserMemberTypes))
         return false;
+      if (!AreAddressesEqual(item.Addresses))
+        return false;
 
       return item.PhoneNumber.IfNullThenEmptyString() == PhoneNumber.IfNullThenEmptyString() && item.Email.IfNullThenEmptyString() == Email.IfNullThenEmptyString()
                     && item.FirstName.IfNullThenEmptyString() == FirstName.IfNullThenEmptyString() && LastName.IfNullThenEmptyString() == item.LastName.IfNullThenEmptyString()
@@ -71,6 +74,31 @@ public class UserDto : UserRoot
     }
 
     return false;
+  }
+
+  public bool AreAddressesEqual(List<AddressDto> addresses)
+  {
+    if (addresses == null && Addresses == null)
+      return true;
+    else if (addresses == null && Addresses != null)
+      return false;
+    else if (addresses != null && Addresses == null)
+      return false;
+    else if (addresses!.Count != Addresses!.Count)
+      return false;
+
+    foreach (var item in from el in addresses
+                         join eel in Addresses on el.AddressId equals eel.AddressId into ljEEL
+                         from eel in ljEEL.DefaultIfEmpty()
+                         select new { el, eel })
+    {
+      if (item.eel == null)
+        return false;
+      if (!item.el.Equals(item.eel))
+        return false;
+    }
+
+    return true;
   }
 
   public bool AreRolesEqual(List<UserRoleDto>? userRoles)
@@ -140,10 +168,9 @@ public class UserDtoValidator : AbstractValidator<UserDto>
     RuleFor(x => x.PhoneNumber).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
     RuleFor(x => x.Email).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
     RuleFor(x => x.BirthDate).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
-    RuleFor(x => x.CertificationLevel).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
     RuleForEach(x => x.UserRoles).SetValidator(new UserRoleDtoValidator());
     RuleForEach(x => x.UserMemberTypes).SetValidator(new UserMemberTypeDtoValidator());
-
-    //RuleFor(x => x.Addresses).SetValidator(new AddressObjDtoValidator()).NotNull();
+    RuleFor(x => x.Addresses).NotEmpty().WithMessage("Must have at least one address.");
+    RuleForEach(x => x.Addresses).SetValidator(new AddressDtoValidator());
   }
 }
