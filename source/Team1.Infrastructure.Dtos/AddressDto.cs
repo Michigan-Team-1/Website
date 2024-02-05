@@ -7,7 +7,6 @@ public class AddressDto : AddressBase
 {
   public AddressObjDto AddressObj { get; set; } = default!;
   public bool IsActive { get; set; }
-  public bool IsUpdated { get; set; }
   public bool IsDeleted { get; set; }
 
   public override bool Equals(object? obj)
@@ -17,7 +16,7 @@ public class AddressDto : AddressBase
 
     if (obj is AddressDto item)
     {
-      return item.IsActive == IsActive && item.IsDeleted == IsDeleted && AddressObj.Equals(item);
+      return item.IsActive == IsActive && item.IsDeleted == IsDeleted && AddressObj.Equals(item.AddressObj);
     }
 
     return false;

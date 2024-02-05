@@ -34,7 +34,7 @@ public class UsersCreateUpdate : BaseService
       return response;
 
     var timestamp = DateTime.UtcNow;
-    User dbObj;
+    User? dbObj;
     var isNew = dto.UserId == 0;
     if (isNew)
     {
@@ -90,11 +90,9 @@ public class UsersCreateUpdate : BaseService
       dbObj.EmailConfirmed = dto.EmailConfirmed;
     }
 
-    if (dbObj.UserMemberTypes == null)
-      dbObj.UserMemberTypes = new List<UserMemberType>();
+    dbObj.UserMemberTypes ??= new List<UserMemberType>();
 
-    if (dto.UserMemberTypes == null)
-      dto.UserMemberTypes = new List<UserMemberTypeDto>();
+    dto.UserMemberTypes ??= new List<UserMemberTypeDto>();
 
     foreach (var item in dto.UserMemberTypes)
     {

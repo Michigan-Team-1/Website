@@ -1,4 +1,5 @@
 ﻿@page "/member/{UserId:int}"
+@using Blazored.Toast.Services
 @attribute [Authorize(Policy = nameof(PolicyNames.UserAddEditDelete))]
 <PageTitle>Michigan Team-1 - Member Add/Edit</PageTitle>
 
@@ -46,6 +47,7 @@ else
 @inject AuthorizedClient client
 @inject AnonymousClient anonClient
 @inject PersistentComponentState ApplicationState
+@inject IToastService toastService;
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
 
@@ -149,7 +151,13 @@ else
     if (Dto.IsUpdated)
     {
       var data = await client.SaveUser(Dto);
-
+      if (data != null)
+      {
+        toastService.ShowSuccess("Save successful!");
+        DtoOriginal = data;
+        Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+        _editContext = new EditContext(Dto);
+      }
     }
   }
 

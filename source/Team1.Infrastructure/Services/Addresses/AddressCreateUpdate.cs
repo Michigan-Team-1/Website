@@ -25,10 +25,6 @@ namespace Team1.Infrastructure.Services.Addresses
         {
             var response = new BaseServiceResponse<AddressDto>(dto);
 
-            // nothing changed, return
-            if (!dto.IsUpdated)
-                return response;
-
             var isNew = dto.AddressId == 0;
             // make sure user has access to this
             if (!UserPermissionService.UserClaimModel.UserPolicies.UserAddEditDelete &&
@@ -41,7 +37,7 @@ namespace Team1.Infrastructure.Services.Addresses
             }
 
             var timestamp = DateTime.UtcNow;
-            Address dbObj;
+            Address? dbObj;
             
             if (isNew)
             {
@@ -75,8 +71,6 @@ namespace Team1.Infrastructure.Services.Addresses
 
             if (isNew)
                 dto.AddressId = dbObj.AddressId;
-
-            dto.IsUpdated = false;
 
             return response;
         }
@@ -148,9 +142,9 @@ namespace Team1.Infrastructure.Services.Addresses
                 return response;
             }
             // delete (need to delete owned types and dependent tables)
-            db.Remove(dbObj);
             db.Remove(dbObj.AddressObj);
             db.Remove(dbObj.AuditFields);
+            db.Remove(dbObj);
             // inactivate
             //dbObj.AuditFields.SetActiveInactive(false, ups.UserClaimModel.UserId, DateTime.UtcNow);
 

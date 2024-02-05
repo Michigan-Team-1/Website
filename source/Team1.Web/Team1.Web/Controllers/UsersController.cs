@@ -117,8 +117,6 @@ public class UsersController : BaseController
     {
       var service = GetService<UsersCreateUpdate>();
       var response = await service.SaveUser(dto);
-      //var loggingService = GetService<Team1.Infrastructure.Services.Logs.SystemLogsCreate>();
-      //await loggingService.SaveLog(Model.Enums.LogTypeEnum.Unknown, new Exception("blah"));
       if (response.Succeeded)
       {
         var addressService = GetService<AddressCreateUpdate>();

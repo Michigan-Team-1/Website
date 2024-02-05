@@ -119,7 +119,7 @@ public class UserDto : UserRoot
     {
       if (item.eel == null)
         return false;
-      if (item.eel.RoleId != item.el.RoleId && item.eel.IsDeleted != item.el.IsDeleted)
+      if (item.eel.RoleId != item.el.RoleId || item.eel.IsDeleted != item.el.IsDeleted)
         return false;
     }
 
@@ -144,7 +144,7 @@ public class UserDto : UserRoot
     {
       if (item.eel == null)
         return false;
-      if (item.eel.MemberTypeId != item.el.MemberTypeId && item.eel.IsDeleted != item.el.IsDeleted)
+      if (item.eel.MemberTypeId != item.el.MemberTypeId || item.eel.IsDeleted != item.el.IsDeleted)
         return false;
     }
 
@@ -170,7 +170,7 @@ public class UserDtoValidator : AbstractValidator<UserDto>
     RuleFor(x => x.BirthDate).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
     RuleForEach(x => x.UserRoles).SetValidator(new UserRoleDtoValidator());
     RuleForEach(x => x.UserMemberTypes).SetValidator(new UserMemberTypeDtoValidator());
-    RuleFor(x => x.Addresses).NotEmpty().WithMessage("Must have at least one address.");
+    RuleFor(x => x.Addresses).Must((x) => x != null && x.Count(w => !w.IsDeleted) > 0).WithMessage("Must have at least one address.");
     RuleForEach(x => x.Addresses).SetValidator(new AddressDtoValidator());
   }
 }

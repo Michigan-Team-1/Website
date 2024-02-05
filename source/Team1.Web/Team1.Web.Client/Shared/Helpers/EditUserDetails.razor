@@ -220,7 +220,6 @@
     Dto.Addresses!.Add(new AddressDto()
     {
         IsActive = true,
-        IsUpdated = true,
         AddressObj = new AddressObjDto()
         {
           CountryId = country.CountryId,
@@ -231,49 +230,60 @@
     });
   }
 
-  private void DeleteAddress(int index)
+  private async Task DeleteAddress(int index)
   {
     if (Dto.Addresses[index].AddressId == 0)
     {
       Dto.Addresses!.RemoveAt(index);
+      await DataUpdated();
       return;
     }
     Dto.Addresses[index].IsDeleted = !Dto.Addresses[index].IsDeleted;
+    await DataUpdated();
   }
 
-  private void AddRole()
+  private async Task AddRole()
   {
     Dto.UserRoles!.Add(new UserRoleDto());
+    await DataUpdated();
   }
 
-  private void DeleteRole(UserRoleDto item)
+  private async Task DeleteRole(UserRoleDto item)
   {
     if (item.UserId == 0)
     {
       Dto.UserRoles!.Remove(item);
+      await DataUpdated();
       return;
     }
     item.IsDeleted = !item.IsDeleted;
+    await DataUpdated();
   }
 
   private List<RoleDto> GetRoles(UserRoleDto item)
   {
-    return Roles!.Where(w => !Dto.UserRoles!.Where(w => w.RoleId != item.RoleId).Select(s => s.RoleId).Contains(w.RoleId)).ToList();
+      var query = Roles!.AsQueryable();
+      if (Dto.UserRoles != null && Dto.UserRoles.Count > 0)
+        query = query.Where(w => !Dto.UserRoles!.Where(w => w.RoleId != item.RoleId).Select(s => s.RoleId).Contains(w.RoleId));
+    return query.ToList();
   }
 
-  private void AddUserMemberType()
+  private async Task AddUserMemberType()
   {
     Dto.UserMemberTypes!.Add(new UserMemberTypeDto());
+    await DataUpdated();
   }
 
-  private void DeleteUserMemberType(UserMemberTypeDto item)
+  private async Task DeleteUserMemberType(UserMemberTypeDto item)
   {
     if (item.UserId == 0)
     {
       Dto.UserMemberTypes!.Remove(item);
+      await DataUpdated();
       return;
     }
     item.IsDeleted = !item.IsDeleted;
+    await DataUpdated();
   }
 
   private List<UserMemberTypeDto> GetUserMemberTypes(UserMemberTypeDto item)

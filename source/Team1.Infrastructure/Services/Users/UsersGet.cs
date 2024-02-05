@@ -148,6 +148,22 @@ public class UsersGet : BaseService
                 RoleId = r.RoleId,
                 UserId = r.UserId
               }).ToList(),
+              Addresses = u.Addresses.Where(w => !w.AuditFields.InactiveDateTime.HasValue).Select(x => new AddressDto()
+              {
+                AddressId = x.AddressId,
+                IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+                AddressObj = new AddressObjDto()
+                {
+                  Address1 = x.AddressObj.Address1,
+                  Address2 = x.AddressObj.Address2,
+                  Address3 = x.AddressObj.Address3,
+                  City = x.AddressObj.City,
+                  CountryId = x.AddressObj.CountryId,
+                  GoverningDistrictId = x.AddressObj.GoverningDistrictId,
+                  PostalCode = x.AddressObj.PostalCode,
+                },
+                UserId = x.UserId
+              }).ToList(),
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = u.AuditFields.CreatedDateTime,
