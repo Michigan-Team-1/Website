@@ -27,7 +27,7 @@ else
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
       </div>
     </div>
-    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" />
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" IsMemberAddEdit="false" />
     <div class="modal-footer">
       <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
       <div class="col text-end">
@@ -44,9 +44,6 @@ else
 @inject IToastService toastService;
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
-
-  [Parameter]
-  public int UserId { get; set; }
 
   public UserDto? DtoOriginal { get; set; } = default!;
 
@@ -72,7 +69,7 @@ else
 
     if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(UserProfile) + nameof(Dto), out var restored))
     {
-      DtoOriginal = await client.GetUser(UserId);
+      DtoOriginal = await client.GetUserProfile();
     }
     else
     {
@@ -134,7 +131,7 @@ else
     Dto.IsUpdated = dataUpdated;
     if (Dto.IsUpdated)
     {
-      var data = await client.SaveUser(Dto);
+      var data = await client.SaveUserProfile(Dto);
       if (data != null)
       {
         toastService.ShowSuccess("Save successful!");

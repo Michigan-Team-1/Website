@@ -39,17 +39,6 @@ public class UsersController : BaseController
   }
 
   /// <summary>
-  /// Get user
-  /// </summary>
-  [HttpGet("profile")]
-  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
-  public async Task<IActionResult> GetUserProfile()
-  {
-    var service = GetService<UsersGet>();
-    return Ok(await service.GetUserProfile());
-  }
-
-  /// <summary>
   /// Get board of directors
   /// </summary>
   /// <returns>list of users</returns>

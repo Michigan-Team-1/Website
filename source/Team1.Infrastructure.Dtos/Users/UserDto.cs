@@ -29,7 +29,7 @@ public class UserDto : UserRoot
   public bool PaidUp { get { return DateTime.Today.Year <= PaidThroughYear; } }
 
   [Display(Name = "Member Types")]
-  public List<UserMemberTypeDto> UserMemberTypes { get; set; } = default!;
+  public List<UserMemberTypeDto>? UserMemberTypes { get; set; }
 
   [Display(Name = "Member Types")]
   public string? UserMemberTypesString
@@ -51,6 +51,15 @@ public class UserDto : UserRoot
   public bool IsUpdated { get; set; }
   public AuditFieldsDto AuditFieldsDto { get; set; } = default!;
 
+  /// <summary>
+  /// Only used on register
+  /// </summary>
+  public string? Password { get; set; }
+  /// <summary>
+  /// only used on register
+  /// </summary>
+  public string? Code { get; set; }
+
   public override bool Equals(object? obj)
   {
     if (obj == null)
@@ -70,7 +79,7 @@ public class UserDto : UserRoot
                     && item.UserId == UserId && IsActive == item.IsActive && item.IsLoginEnabled == IsLoginEnabled && item.PaidUp == PaidUp
                     && item.TripoliNumber.IfNullThenEmptyString() == TripoliNumber.IfNullThenEmptyString() && item.NarNumber.IfNullThenEmptyString() == NarNumber.IfNullThenEmptyString()
                     && item.BirthDate == BirthDate && item.MobileCarrierId == MobileCarrierId && item.CertificationLevel == CertificationLevel
-                    && item.PaidThroughYear == PaidThroughYear;
+                    && item.PaidThroughYear == PaidThroughYear && item.EmailConfirmed == EmailConfirmed;
     }
 
     return false;

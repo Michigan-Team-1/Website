@@ -22,7 +22,7 @@ public class ManageController : BaseController
   /// </summary>
   /// <returns>user profile</returns>
   [HttpGet]
-  [ProducesResponseType(typeof(UserProfileDto), (int)HttpStatusCode.OK)]
+  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
   public async Task<IActionResult> GetUserProfile()
   {
     var service = GetService<UsersGet>();
@@ -35,19 +35,19 @@ public class ManageController : BaseController
   /// <param name="dto">user object</param>
   /// <returns>updated user object</returns>
   [HttpPut]
-  [ProducesResponseType(typeof(UserProfileDto), (int)HttpStatusCode.OK)]
+  [ProducesResponseType(typeof(UserDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> UpdateUserProfile([FromBody] UserProfileDto dto)
+  public async Task<IActionResult> UpdateUserProfile([FromBody] UserDto dto)
   {
     return await SaveUser(dto);
   }
 
   #region private helpers
 
-  private async Task<IActionResult> SaveUser(UserProfileDto dto)
+  private async Task<IActionResult> SaveUser(UserDto dto)
   {
     if (!ModelState.IsValid)
-      return CreateResponse(new BaseServiceResponse<UserProfileDto>(dto, System.Net.HttpStatusCode.BadRequest));
+      return CreateResponse(new BaseServiceResponse<UserDto>(dto, System.Net.HttpStatusCode.BadRequest));
 
     using (var transaction = await DataContext.BeginTransactionAsync())
     {

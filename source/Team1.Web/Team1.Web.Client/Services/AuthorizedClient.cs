@@ -100,21 +100,6 @@ public class AuthorizedClient
     return new UserDto();
   }
 
-  public async Task<UserDto?> GetUserProfile()
-  {
-    try
-    {
-      var response = await _httpClient.GetAsync("api/Users/Profile");
-      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
-    }
-    catch (AccessTokenNotAvailableException exception)
-    {
-      exception.Redirect();
-    }
-
-    return new UserDto();
-  }
-
   public async Task<UserDto?> SaveUser(UserDto dto)
   {
     try
@@ -127,6 +112,37 @@ public class AuthorizedClient
         saveTask = _httpClient.PutAsync("api/Users", content);
 
       var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return null;
+  }
+
+  public async Task<UserDto?> GetUserProfile()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/manage");
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new UserDto();
+  }
+
+  public async Task<UserDto?> SaveUserProfile(UserDto dto)
+  {
+    try
+    {
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      var response = await _httpClient.PutAsync("api/manage", content);
       return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
     }
     catch (AccessTokenNotAvailableException exception)

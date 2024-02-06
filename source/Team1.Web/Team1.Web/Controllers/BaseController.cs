@@ -32,7 +32,7 @@ public class BaseController : Controller
   /// <summary>
   /// Base Url of the site
   /// </summary>
-  public string BaseUrl
+  public string? BaseUrl
   {
     get
     {

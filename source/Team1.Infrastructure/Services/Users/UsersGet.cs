@@ -179,11 +179,15 @@ public class UsersGet : BaseService
   /// </summary>
   /// <param name="userId">userId to get</param>
   /// <returns>userDto</returns>
-  public Task<UserProfileDto?> GetUserProfile()
+  public Task<UserDto?> GetUserProfile()
   {
     return (from u in db.RoleRestrictedUsers(UserPermissionService)
+            join createdBy in db.Users on u.AuditFields.CreatedById equals createdBy.UserId into ljCreatedBy
+            from createdBy in ljCreatedBy.DefaultIfEmpty()
+            join updatedBy in db.Users on u.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
+            from updatedBy in ljUpdatedBy.DefaultIfEmpty()
             where u.UserId == UserPermissionService.UserClaimModel!.UserId
-            select new UserProfileDto()
+            select new UserDto()
             {
               UserId = u.UserId,
               FirstName = u.FirstName,
@@ -221,7 +225,14 @@ public class UsersGet : BaseService
                   PostalCode = x.AddressObj.PostalCode,
                 },
                 UserId = x.UserId
-              }).ToList()
+              }).ToList(),
+              AuditFieldsDto = new AuditFieldsDto()
+              {
+                CreatedDateTime = u.AuditFields.CreatedDateTime,
+                UpdatedDateTime = u.AuditFields.UpdatedDateTime,
+                CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
+                UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
+              },
             }).SingleOrDefaultAsync();
   }
 

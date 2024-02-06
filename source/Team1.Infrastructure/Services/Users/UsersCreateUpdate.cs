@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Team1.Infrastructure.Dtos;
 using Team1.Infrastructure.Dtos.Users;
 using Team1.Infrastructure.UserIdentity;
 using Team1.Model.OwnedTypes;
@@ -58,7 +58,7 @@ public class UsersCreateUpdate : BaseService
     else
     {
       dbObj = await db.RoleRestrictedUsers(UserPermissionService, false)
-          .Include(i => i.UserMemberTypes)
+          .Include(i => i.UserMemberTypes).Include(i => i.UserRoles)
           .SingleOrDefaultAsync(w => w.UserId == dto.UserId);
       if (dbObj == null)
       {
@@ -80,8 +80,6 @@ public class UsersCreateUpdate : BaseService
     dbObj.CertificationLevel = dto.CertificationLevel;
     dbObj.TripoliNumber = dto.TripoliNumber;
     dbObj.NarNumber = dto.NarNumber;
-    dbObj.OptOutOfGeneralEmails = dto.OptOutOfGeneralEmails;
-    dbObj.OptOutOfMemberEmails = dto.OptOutOfMemberEmails;
     dbObj.MobileCarrierId = dto.MobileCarrierId;
 
     if (UserPermissionService.UserClaimModel.IsAdmin)
@@ -162,11 +160,11 @@ public class UsersCreateUpdate : BaseService
   /// </summary>
   /// <param name="dto">dto to save</param>
   /// <returns>updated dto object</returns>
-  public async Task<BaseServiceResponse<T>> SaveUserProfile<T>(T dto) where T : UserProfileDto
+  public async Task<BaseServiceResponse<T>> SaveUserProfile<T>(T dto) where T : UserDto
   {
     var response = new BaseServiceResponse<T>(dto);
 
-    if (!UserPermissionService.UserClaimModel.UserPolicies.UserProfileEdit)
+    if (!UserPermissionService.UserClaimModel!.UserPolicies!.UserProfileEdit)
     {
       response.Message = "You are not authorized to edit the user profile.";
       response.Status = System.Net.HttpStatusCode.Unauthorized;
@@ -205,8 +203,6 @@ public class UsersCreateUpdate : BaseService
     dbObj.CertificationLevel = dto.CertificationLevel;
     dbObj.TripoliNumber = dto.TripoliNumber;
     dbObj.NarNumber = dto.NarNumber;
-    dbObj.OptOutOfGeneralEmails = dto.OptOutOfGeneralEmails;
-    dbObj.OptOutOfMemberEmails = dto.OptOutOfMemberEmails;
     dbObj.MobileCarrierId = dto.MobileCarrierId;
 
     dbObj.AuditFields.SetUpdated(UserPermissionService.UserClaimModel.UserId, timestamp);
@@ -257,72 +253,72 @@ public class UsersCreateUpdate : BaseService
   /// </summary>
   /// <param name="dto">dto to save</param>
   /// <returns>updated dto object</returns>
-  //public async Task<BaseServiceResponse<RegisterDto>> RegisterUser(RegisterDto dto, UserManager<User> userManager, IDbContextTransaction transaction)
-  //{
-  //    var response = new BaseServiceResponse<RegisterDto>(dto);
+  public async Task<BaseServiceResponse<UserDto>> RegisterUser(UserDto dto, UserManager<User> userManager)
+  {
+    var response = new BaseServiceResponse<UserDto>(dto);
 
-  //    var timestamp = DateTime.UtcNow;
-  //    User dbObj;
-  //    var isNew = dto.UserId == 0;
-  //    if (isNew)
-  //    {
-  //        // validation
-  //        if (db.Users.Any(w => w.Email == dto.Email))
-  //        {
-  //            response.Message = "Email already in use.";
-  //            response.Status = System.Net.HttpStatusCode.Conflict;
-  //            return response;
-  //        }
+    var timestamp = DateTime.UtcNow;
+    User dbObj;
+    var isNew = dto.UserId == 0;
+    if (isNew)
+    {
+      // validation
+      if (db.Users.Any(w => w.Email == dto.Email))
+      {
+        response.Message = "Email already in use.";
+        response.Status = System.Net.HttpStatusCode.Conflict;
+        return response;
+      }
 
-  //        dbObj = new User()
-  //        {
-  //            AuditFields = new AuditFields(UserPermissionService.UserClaimModel.UserId, timestamp),
-  //            LockoutEnabled = true,
-  //            SecurityStamp = Guid.NewGuid().ToString(),
-  //            IsLoginEnabled = true,
-  //        };
-  //        db.Users.Add(dbObj);
-  //    }
-  //    else
-  //    {
-  //        response.Message = "You are not authorized to register a new user.";
-  //        response.Status = System.Net.HttpStatusCode.Unauthorized;
-  //        return response;
-  //    }
+      dbObj = new User()
+      {
+        AuditFields = new AuditFields(UserPermissionService.UserClaimModel!.UserId, timestamp),
+        LockoutEnabled = true,
+        SecurityStamp = Guid.NewGuid().ToString(),
+        IsLoginEnabled = true,
+      };
+      db.Users.Add(dbObj);
+    }
+    else
+    {
+      response.Message = "You are not authorized to register a new user.";
+      response.Status = System.Net.HttpStatusCode.Unauthorized;
+      return response;
+    }
 
-  //    dbObj.Email = dto.Email.Trim();
-  //    dbObj.FirstName = dto.FirstName.Trim();
-  //    dbObj.LastName = dto.LastName.Trim();
-  //    dbObj.NormalizedEmail = dto.Email.Trim().ToUpper();
-  //    dbObj.PhoneNumber = dto.PhoneNumber?.RemoveNonNumerics();
-  //    dbObj.PhoneNumberConfirmed = !string.IsNullOrWhiteSpace(dbObj.PhoneNumber);
-  //    dbObj.BirthDate = dto.BirthDate;
-  //    dbObj.CertificationLevel = dto.CertificationLevel;
-  //    dbObj.TripoliNumber = dto.TripoliNumber;
-  //    dbObj.NarNumber = dto.NarNumber;
-  //    dbObj.MobileCarrierId = dto.MobileCarrierId;
+    dbObj.Email = dto.Email.Trim();
+    dbObj.FirstName = dto.FirstName.Trim();
+    dbObj.LastName = dto.LastName.Trim();
+    dbObj.NormalizedEmail = dto.Email.Trim().ToUpper();
+    dbObj.PhoneNumber = dto.PhoneNumber?.RemoveNonNumerics();
+    dbObj.PhoneNumberConfirmed = !string.IsNullOrWhiteSpace(dbObj.PhoneNumber);
+    dbObj.BirthDate = dto.BirthDate;
+    dbObj.CertificationLevel = dto.CertificationLevel;
+    dbObj.TripoliNumber = dto.TripoliNumber;
+    dbObj.NarNumber = dto.NarNumber;
+    dbObj.MobileCarrierId = dto.MobileCarrierId;
 
-  //    dbObj.AuditFields.SetActiveInactive(true, UserPermissionService.UserClaimModel.UserId, timestamp);
+    dbObj.AuditFields.SetActiveInactive(true, UserPermissionService.UserClaimModel.UserId, timestamp);
 
-  //    dbObj.AuditFields.SetUpdated(UserPermissionService.UserClaimModel.UserId, timestamp);
+    dbObj.AuditFields.SetUpdated(UserPermissionService.UserClaimModel.UserId, timestamp);
 
-  //    var passwordResult = await userManager.AddPasswordAsync(dbObj, dto.Password);
-  //    if (!passwordResult.Succeeded)
-  //    {
-  //        response.Message = $"Password not accepted. {String.Join(", ", passwordResult.Errors.Select(s => s.Description))}";
-  //        response.Status = System.Net.HttpStatusCode.BadRequest;
-  //        return response;
-  //    }
+    var passwordResult = await userManager.AddPasswordAsync(dbObj, dto.Password);
+    if (!passwordResult.Succeeded)
+    {
+      response.Message = $"Password not accepted. {String.Join(", ", passwordResult.Errors.Select(s => s.Description))}";
+      response.Status = System.Net.HttpStatusCode.BadRequest;
+      return response;
+    }
 
-  //    await db.SaveChangesAsync();
+    await db.SaveChangesAsync();
 
-  //    dto.Code = await userManager.GenerateEmailConfirmationTokenAsync(dbObj);
+    dto.Code = await userManager.GenerateEmailConfirmationTokenAsync(dbObj);
 
-  //    if (isNew)
-  //        dto.UserId = dbObj.UserId;
+    if (isNew)
+      dto.UserId = dbObj.UserId;
 
-  //    return response;
-  //}
+    return response;
+  }
 
   /// <summary>
   /// Saves the ip address of the user.
