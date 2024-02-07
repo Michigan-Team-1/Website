@@ -55,6 +55,8 @@ public class UserDto : UserRoot
   /// Only used on register
   /// </summary>
   public string? Password { get; set; }
+  [Display(Name = "Confirm Password")]
+  public string? ConfirmPassword { get; set; }
   /// <summary>
   /// only used on register
   /// </summary>
@@ -181,5 +183,12 @@ public class UserDtoValidator : AbstractValidator<UserDto>
     RuleForEach(x => x.UserMemberTypes).SetValidator(new UserMemberTypeDtoValidator());
     RuleFor(x => x.Addresses).Must((x) => x != null && x.Count(w => !w.IsDeleted) > 0).WithMessage("Must have at least one address.");
     RuleForEach(x => x.Addresses).SetValidator(new AddressDtoValidator());
+
+    // userId = -1, then we are on the registration page and password is required.
+    When(w => w.UserId == -1, () =>
+    {
+      RuleFor(x => x.Password).NotEmpty().WithMessage(ErrorMessages.FVRequiredField);
+      RuleFor(x => x.ConfirmPassword).Equal(s => s.Password).WithMessage("Confirm password must equal password.");
+    });
   }
 }

@@ -4,12 +4,12 @@
   @if (!HideLabel)
   {
     <label for="@($"{_predicate}{nameSuffix}")" class="col-form-label @LabelCss">
-      <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@PropertyReflections.IsRequired(PropertyInfo)"></DefaultLabel>
+      <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@(IsRequired || PropertyReflections.IsRequired(PropertyInfo))"></DefaultLabel>
       <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
     </label>
   }
   <div class="col-sm">
-    <input @bind="CurrentValue" id="@($"{_predicate}{nameSuffix}")" type="text" class="form-control @CssClass" placeholder="@(ShowPlaceHolder ? PropertyReflections.GetLabelName(PropertyInfo) : "")" />
+    <input @bind="CurrentValue" id="@($"{_predicate}{nameSuffix}")" type="@InputType" class="form-control @CssClass" placeholder="@(ShowPlaceHolder ? PropertyReflections.GetLabelName(PropertyInfo) : "")" />
     @if (ValidationFor != null)
     {
       <ValidationMessage For="@ValidationFor" />
@@ -21,8 +21,11 @@
 
   [Parameter] public string LabelCss { get; set; } = "col-sm-3";
 
-    [Parameter]
+  [Parameter]
   public string DivContainerCss { get; set; } = "mb-3 row gx-2";
+
+  [Parameter]
+  public string InputType { get; set; } = "text";
 
   [Parameter]
   public System.Reflection.PropertyInfo PropertyInfo { get; set; } = default!;
@@ -35,6 +38,9 @@
 
   [Parameter]
   public System.Linq.Expressions.Expression<Func<string>>? ValidationFor { get; set; }
+
+  [Parameter]
+  public bool IsRequired { get; set; }
 
   private string? _predicate;
 

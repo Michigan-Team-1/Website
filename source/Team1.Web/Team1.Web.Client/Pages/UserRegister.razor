@@ -1,13 +1,12 @@
-﻿@page "/member/{UserId:int?}"
+﻿@page "/UserRegister"
 @using Blazored.Toast.Services
-@attribute [Authorize(Policy = nameof(PolicyNames.UserAddEditDelete))]
-<PageTitle>Michigan Team-1 - Member Add/Edit</PageTitle>
+<PageTitle>Michigan Team-1 - Register</PageTitle>
 
 @if (Dto == null)
 {
   <div class="row mb-2">
     <div class="col-sm-6">
-      <PageHeader Name="Member Add/Edit" Icon="fas fa-user" />
+      <PageHeader Name="Register" Icon="fas fa-user" />
     </div>
   </div>
   <BusyIndicator />
@@ -18,26 +17,20 @@ else
     <Blazored.FluentValidation.FluentValidationValidator />
     <div class="row mb-2">
       <div class="col-sm-4">
-        <PageHeader Name="Member Add/Edit" Icon="fas fa-user" />
+        <PageHeader Name="Register" Icon="fas fa-user" />
       </div>
       <div class="col-sm-4">
         <UnsavedChangesNotifcation Value="dataUpdated" />
       </div>
       <div class="col-sm-4 text-sm-start text-md-end">
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
-        <NavLink class="btn btn-warning" href="members">
-          <i class="fa-solid fa-circle-arrow-left"></i> Back To Members
-        </NavLink>
       </div>
     </div>
-    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Roles="roles" Countries="countries" GoverningDistricts="governingDistricts" OnPage=Helpers.PageEnum.MemberAddEdit />
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" OnPage=Helpers.PageEnum.UserRegister />
     <div class="modal-footer">
       <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
       <div class="col text-end">
         <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
-        <NavLink class="btn btn-warning" href="members">
-          <i class="fa-solid fa-circle-arrow-left"></i>  Back To Members
-        </NavLink>
       </div>
     </div>
   </EditForm>
@@ -48,18 +41,15 @@ else
 @inject AnonymousClient anonClient
 @inject PersistentComponentState ApplicationState
 @inject IToastService toastService;
+@inject NavigationManager navMan;
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
-
-  [Parameter]
-  public int UserId { get; set; }
 
   public UserDto? DtoOriginal { get; set; } = default!;
 
   private UserDto Dto { get; set; } = default!;
 
   private List<SelectOptionDto<int>>? mobileCarriers;
-  private List<RoleDto>? roles;
   private List<CountryDto>? countries;
   private List<GoverningDistrictDto>? governingDistricts;
 
@@ -77,37 +67,18 @@ else
   {
     persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (UserId > 0)
-    {
-      if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(MemberAddEdit) + nameof(Dto), out var restored))
-      {
-        DtoOriginal = await client.GetUser(UserId);
-      }
-      else
-      {
-        DtoOriginal = restored!;
-      }
-    }
 
-    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(MemberAddEdit) + nameof(mobileCarriers), out var restoredMobileCarriers))
+
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + nameof(mobileCarriers), out var restoredMobileCarriers))
     {
-      mobileCarriers = await anonClient.GetMobileCarriers();
+      mobileCarriers = await anonClient.GetMobileCarriers(); ;
     }
     else
     {
       mobileCarriers = restoredMobileCarriers!;
     }
 
-    if (!ApplicationState.TryTakeFromJson<List<RoleDto>>(nameof(MemberAddEdit) + nameof(roles), out var restoredRoles))
-    {
-      roles = await client.GetRoles();
-    }
-    else
-    {
-      roles = restoredRoles!;
-    }
-
-    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(MemberAddEdit) + nameof(countries), out var restoredCountries))
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(UserProfile) + nameof(countries), out var restoredCountries))
     {
       countries = await anonClient.GetCountries();
     }
@@ -116,7 +87,7 @@ else
       countries = restoredCountries!;
     }
 
-    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(MemberAddEdit) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(UserProfile) + nameof(governingDistricts), out var restoredGoverningDistricts))
     {
       governingDistricts = await anonClient.GetGoverningDistricts();
     }
@@ -125,12 +96,11 @@ else
       governingDistricts = restoredGoverningDistricts!;
     }
 
-    if (UserId == 0)
-    {
-      var country = countries!.First(w => w.CountryId == 840);
-      DtoOriginal = new UserDto()
-        {
-          Addresses = new List<AddressDto>()
+    var country = countries!.First(w => w.CountryId == 840);
+    DtoOriginal = new UserDto()
+      {
+        UserId = -1, // required to make the password field required
+        Addresses = new List<AddressDto>()
         {
           new AddressDto()
           {
@@ -144,15 +114,10 @@ else
                 },
           }
         },
-          EmailConfirmed = true,
-          BirthDate = DateTime.Today.AddYears(-35),
-          UserRoles = new List<UserRoleDto>(),
-          UserMemberTypes = new List<UserMemberTypeDto>(),
-          AuditFieldsDto = new AuditFieldsDto(),
-          IsActive = true,
-          IsLoginEnabled = true,
-        };
-    }
+        BirthDate = DateTime.Today.AddYears(-35),
+        AuditFieldsDto = new AuditFieldsDto(),
+        IsActive = true,
+      };
 
     Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
     _editContext = new EditContext(Dto);
@@ -160,11 +125,9 @@ else
 
   private Task PersistData()
   {
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(Dto), DtoOriginal);
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(mobileCarriers), mobileCarriers);
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(roles), roles);
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(countries), countries);
-    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(governingDistricts), governingDistricts);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(governingDistricts), governingDistricts);
 
     return Task.CompletedTask;
   }
@@ -179,13 +142,19 @@ else
     Dto.IsUpdated = dataUpdated;
     if (Dto.IsUpdated)
     {
-      var data = await client.SaveUser(Dto);
+      var data = await anonClient.SaveUserRegister(Dto);
       if (data != null)
       {
-        toastService.ShowSuccess("Save successful!");
+        RenderFragment renderFragment = (myBuilder) =>
+        {
+          myBuilder.AddMarkupContent(0, "Save successful!<br/>Check your email for an email confirmation!<br/>Check the Join Us page on how to join our discussion group.");
+        };
+        toastService.ShowSuccess(renderFragment, c => c.Timeout = 30);
         DtoOriginal = data;
         Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
         _editContext = new EditContext(Dto);
+        await Task.Delay(4000);
+        navMan.NavigateTo("");
       }
     }
   }

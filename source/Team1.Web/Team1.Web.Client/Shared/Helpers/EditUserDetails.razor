@@ -1,12 +1,18 @@
 ﻿@using Team1.Model.Enums
+@using Team1.Web.Client.Helpers
 <div>
   <ValidationSummary />
   <div class="form-horizontal">
     <div class="row">
       <div class="col-12 col-lg-6">
+        <EditText @bind-Value="Dto.Email" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Email))" ValidationFor="(() => Dto.Email)" />
+        @if (OnPage == PageEnum.UserRegister)
+        {
+          <EditText @bind-Value="Dto.Password" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Password))" ValidationFor="(() => Dto.Password)" InputType="password" IsRequired=true />
+          <EditText @bind-Value="Dto.ConfirmPassword" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.ConfirmPassword))" ValidationFor="(() => Dto.ConfirmPassword)" InputType="password" IsRequired=true />
+        }
         <EditText @bind-Value="Dto.FirstName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.FirstName))" ValidationFor="(() => Dto.FirstName)" />
         <EditText @bind-Value="Dto.LastName" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.LastName))" ValidationFor="(() => Dto.LastName)" />
-        <EditText @bind-Value="Dto.Email" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.Email))" ValidationFor="(() => Dto.Email)" />
         <EditPhone @bind-Value="Dto.PhoneNumber" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.PhoneNumber))" ValidationFor="(() => Dto.PhoneNumber)" />
         <EditSelect @bind-Value="Dto.MobileCarrierId" @bind-Value:after=DataUpdated PropertyInfo="PropertyReflections.GetUserDtoProperty(nameof(Dto.MobileCarrierId))" ValidationFor="(() => Dto.MobileCarrierId)">
           <option value="">Select...</option>
@@ -89,7 +95,7 @@
       </div>
     </div>
 
-    @if (IsMemberAddEdit)
+    @if (OnPage == PageEnum.MemberAddEdit)
     {
       <AuthorizeView Policy=@nameof(PolicyNames.UserAddEditDelete)>
         <Authorized>
@@ -196,7 +202,7 @@
   public List<RoleDto>? Roles { get; set; }
 
   [Parameter]
-  public bool IsMemberAddEdit { get; set; }
+  public PageEnum OnPage { get; set; }
 
   private List<UserMemberTypeDto>? _userMemberTypes;
   private List<UserMemberTypeDto>? userMemberTypes

@@ -184,7 +184,7 @@ public class UsersCreateUpdate : BaseService
       return response;
     }
 
-    var dbObj = await db.RoleRestrictedUsers(UserPermissionService, false).Include(i => i.UserRoles).SingleOrDefaultAsync(w => w.UserId == dto.UserId);
+    var dbObj = await db.RoleRestrictedUsers(UserPermissionService, false).SingleOrDefaultAsync(w => w.UserId == dto.UserId);
     if (dbObj == null)
     {
       response.Message = "You are not authorized to edit this user.";
@@ -259,7 +259,8 @@ public class UsersCreateUpdate : BaseService
 
     var timestamp = DateTime.UtcNow;
     User dbObj;
-    var isNew = dto.UserId == 0;
+    // -1 is used to know the page is the register page for UserDto validation.
+    var isNew = dto.UserId == -1;
     if (isNew)
     {
       // validation

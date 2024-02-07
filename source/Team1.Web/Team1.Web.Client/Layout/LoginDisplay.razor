@@ -10,8 +10,9 @@
       <li class="nav-item dropdown">
         <button class="btn btn-link nav-link dropdown-toggle" @onclick="ToggleProfileMenu" @onfocusout="OutFocusProfileMenu">@context.User.Identity.Name</button>
         <div class="dropdown-menu dropdown-menu-right @profileCss" aria-labelledby="profileLink">
-          <a class="dropdown-item" href="/UserProfile"><i class="fas fa-user fa-fw"></i> Profile</a>
-          @* <a class="dropdown-item" href="/Account/Manage"><i class="fas fa-user fa-fw"></i> Profile</a> *@
+          <a class="dropdown-item" href="/UserProfile"><i class="fas fa-user fa-fw"></i> My Account</a>
+          <a class="dropdown-item" href="/Account/Manage/ChangePassword"><i class="fa-solid fa-key fa-fw"></i> Change Password</a>
+          <a class="dropdown-item" href=""><i class="fas fa-user fa-fw"></i> Renew Online!</a>
           <div class="dropdown-divider"></div>
           <form action="Account/Logout" method="post">
             <AntiforgeryToken />
@@ -24,12 +25,14 @@
       </li>
     </Authorized>
     <NotAuthorized>
-      <li class="nav-item"><a href="account/register" class="nav-link"><i class="fas fa-user-plus fa-fw"></i> Register</a></li>
+      <li class="nav-item"><a href="UserRegister" class="nav-link"><i class="fas fa-user-plus fa-fw"></i> Register</a></li>
       <li class="nav-item"><a href="Account/Login" class="nav-link"><i class="fas fa-sign-in-alt fa-fw"></i> Log in</a></li>
     </NotAuthorized>
   </AuthorizeView>
-  <li class="nav-item dropdown">
-    <button class="nav-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)"
+  @if (!NavigationManager.Uri.Contains("Account/", StringComparison.InvariantCultureIgnoreCase))
+  {
+    <li class="nav-item dropdown">
+      <button class="nav-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)"
             @onclick="ToggleTheme" @onfocusout="OutFocusTheme">
       <i class="fa-solid fa-circle-half-stroke fa-fw"></i>
       <span class="d-lg-none ms-2" id="bd-theme-text">Toggle theme</span>
@@ -55,6 +58,7 @@
       </li>
     </ul>
   </li>
+  }
 </ul>
 
 @inject IJSRuntime jsRuntime

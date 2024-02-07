@@ -106,4 +106,20 @@ public class AnonymousClient
 
     return new List<SelectOptionDto<int>>();
   }
+
+  public async Task<UserDto?> SaveUserRegister(UserDto dto)
+  {
+    try
+    {
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      var response = await _httpClient.PostAsync("api/manage/register", content);
+      return await _serviceResponseHandler.HandleJsonResponse<UserDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return null;
+  }
 }
