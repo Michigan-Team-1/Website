@@ -73,3 +73,19 @@ html, body {
 [data-bs-theme=dark] .hover:hover {
     background-color: dimgray !important;
 }
+
+.toolbar-logo {
+    display:inline;
+}
+
+.toolbar-logo-dark {
+    display: none;
+}
+
+[data-bs-theme=dark] .toolbar-logo {
+    display: none;
+}
+
+[data-bs-theme=dark] .toolbar-logo-dark {
+    display: inline;
+}
