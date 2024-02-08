@@ -26,7 +26,7 @@ public class AddressObjBase
   [Column(nameof(City))]
   public string? City { get; set; }
 
-  [Display(Name = "Governing District"), Required(ErrorMessage = ErrorMessages.RequiredField)]
+  [Display(Name = "Governing District")]
   [Column(nameof(GoverningDistrictId))]
   public int? GoverningDistrictId { get; set; }
 
@@ -35,7 +35,7 @@ public class AddressObjBase
   public int? CountryId { get; set; }
 
   // inputmask handles length
-  [Display(Name = "Postal Code"), Required(ErrorMessage = ErrorMessages.RequiredField)]
+  [Display(Name = "Postal Code")]
   [StringLength(12)]
   [Column(nameof(PostalCode))]
   public string? PostalCode { get; set; }
@@ -58,9 +58,9 @@ public class AddressObj : AddressObjBase
   #region Navigation Links
 
   [ForeignKey(nameof(CountryId))]
-  public virtual Country Country { get; set; }
+  public virtual Country? Country { get; set; }
   [ForeignKey(nameof(GoverningDistrictId))]
-  public virtual GoverningDistrict GoverningDistrict { get; set; }
+  public virtual GoverningDistrict? GoverningDistrict { get; set; }
 
   #endregion
 }

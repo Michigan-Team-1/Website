@@ -147,14 +147,14 @@ else
       {
         RenderFragment renderFragment = (myBuilder) =>
         {
-          myBuilder.AddMarkupContent(0, "Save successful!<br/>Check your email for an email confirmation!<br/>Check the Join Us page on how to join our discussion group.");
+          myBuilder.AddMarkupContent(0, "Save successful!<br/><strong class='text-danger'>Check your email for an email confirmation!<br/>Taking you to the Join Us page for instructions on how to join our discussion group.</strong>");
         };
         toastService.ShowSuccess(renderFragment, c => c.Timeout = 30);
         DtoOriginal = data;
         Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
         _editContext = new EditContext(Dto);
         await Task.Delay(4000);
-        navMan.NavigateTo("");
+        navMan.NavigateTo("joinus/true");
       }
     }
   }
