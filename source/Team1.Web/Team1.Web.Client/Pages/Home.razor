@@ -11,7 +11,7 @@
 else
 {
   <div class="row">
-    <div class="col-md col-lg-8 order-2 order-md-1">
+    <div class="col-sm col-md-8 order-2 order-md-1">
         <h4>Announcements</h4>
       @foreach (var item in announcements)
       {
@@ -26,7 +26,7 @@ else
         </div>
       }
     </div>
-    <div class="col-md-auto col-lg-4 order-1 order-md-2">
+    <div class="col-sm col-md-4 order-1 order-md-2">
       <h4>Events</h4>
       @foreach (var item in events)
       {
@@ -68,6 +68,7 @@ else
 
   private List<AnnouncementDto>? announcements;
   private List<EventDto>? events;
+  private List<PictureDto>? pictures;
 
   protected override async Task OnInitializedAsync()
   {
@@ -89,6 +90,15 @@ else
     else
     {
       events = restoredEvents!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Home) + nameof(pictures), out var restoredPictures))
+    {
+      pictures = await client.GetRandomPictures();
+    }
+    else
+    {
+      pictures = restoredPictures!;
     }
 
   }

@@ -53,15 +53,17 @@ public class PicturesGet : BaseService
   /// </summary>
   public Task<List<PictureDto>> GetRandomPictures()
   {
-    return (from x in db.PicturesByFilter(UserPermissionService, true)
-            where x.ApprovedDateTime.HasValue
-            select new PictureDto()
-            {
-              IsApproved = x.ApprovedDateTime.HasValue,
-              Description = x.Description,
-              PictureId = x.PictureId,
-              IsActive = !x.AuditFields.InactiveDateTime.HasValue,
-            }).OrderBy(o => Guid.NewGuid()).Take(5).ToListAsync();
+    var query = (from x in db.PicturesByFilter(UserPermissionService, true)
+                 where x.ApprovedDateTime.HasValue
+                 orderby x.AuditFields.CreatedDateTime descending
+                 select new PictureDto()
+                 {
+                   IsApproved = x.ApprovedDateTime.HasValue,
+                   Description = x.Description,
+                   PictureId = x.PictureId,
+                   IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+                 }).Take(20);
+    return query.OrderBy(o => Guid.NewGuid()).Take(5).ToListAsync();
   }
 
   /// <summary>

@@ -32,6 +32,21 @@ public class AnonymousClient
     return new List<AnnouncementDto>();
   }
 
+  public async Task<List<PictureDto>?> GetRandomPictures()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/pictures");
+      return await _serviceResponseHandler.HandleJsonResponse<List<PictureDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<PictureDto>();
+  }
+
   public async Task<List<UserDto>?> GetBoardOfDirectors()
   {
     try

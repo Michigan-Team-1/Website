@@ -3,9 +3,9 @@
 
 @inject NavigationManager NavigationManager
 
-<nav class="navbar navbar-expand-md bg-body-tertiary sticky-md-top shadow-sm py-0">
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-lg-top shadow-lg py-0">
   <div class="container-fluid">
-    <a class="navbar-brand" href="">
+    <a class="navbar-brand" href="" title="Michigan Team-1">
       <img src="logo.png" class="toolbar-logo" alt="logo" />
       <img src="logo-white.png" class="toolbar-logo-dark" alt="logo" />
     </a>
@@ -74,6 +74,13 @@
                   <li>
                     <NavLink class="dropdown-item hover" href="locations" Match="NavLinkMatch.All">
                       <span class="fas fa-map-marked-alt fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Locations
+                    </NavLink>
+                  </li>
+                </AuthorizeView>
+                <AuthorizeView Policy=@nameof(PolicyNames.CanApprovePicture)>
+                  <li>
+                    <NavLink class="dropdown-item hover" href="gallery" Match="NavLinkMatch.All">
+                      <span class="fas fa-images fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Gallery Admin
                     </NavLink>
                   </li>
                 </AuthorizeView>
@@ -160,6 +167,7 @@
   {
     await Task.Delay(Constants.FocusOutDelayMS);
     expandAdmin = false;
+    collapseNavMenu = true;
   }
 
   private void ToggleDownloads()
@@ -171,6 +179,7 @@
   {
     await Task.Delay(Constants.FocusOutDelayMS);
     expandDownloads = false;
+    collapseNavMenu = true;
   }
 }
 
