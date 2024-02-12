@@ -12,8 +12,8 @@ using Team1.Entities;
 namespace Team1.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240208195842_add_picture")]
-    partial class add_picture
+    [Migration("20240212203130_addPic")]
+    partial class addPic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -292,19 +292,15 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("OwnerUserId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("PictureId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Pictures");
                 });
@@ -1000,9 +996,9 @@ namespace Team1.Entities.Migrations
 
             modelBuilder.Entity("Team1.Model.Picture", b =>
                 {
-                    b.HasOne("Team1.Model.UserIdentity.User", "User")
+                    b.HasOne("Team1.Model.UserIdentity.User", "OwnerUser")
                         .WithMany("Pictures")
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("OwnerUserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -1080,7 +1076,7 @@ namespace Team1.Entities.Migrations
                     b.Navigation("DocumentObj")
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("Team1.Model.SystemLog", b =>

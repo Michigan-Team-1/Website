@@ -4,9 +4,62 @@
 
 <Team1.Web.Client.Shared.Helpers.PageHeader Name="Gallery" Icon="fas fa-images" />
 
+@if (Dtos == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
+    <table class="table table-condensed table-hover table-striped">
+      <thead>
+        <tr>
+          <SmartishTable.Sort Field="o=>o.Description" IsDefaultSort="true" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.UserDtoProperties, nameof(PictureDto.Description))</SmartishTable.Sort>
+          </tr>
+          <tr>
+            <td>
+            <SmartishTable.FilterString Field="x=>x.Description" Context="filterContext" Operator="descriptionOperator">
+              <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" />
+            </SmartishTable.FilterString>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        <SmartishTable.Repeater Context="row">
+          <RowTemplate>
+           <div class="">
+
+           </div>
+          </RowTemplate>
+          <EmptyTemplate>
+            <tr>
+              <td colspan="20">
+                <EmptyDataRow />
+              </td>
+            </tr>
+          </EmptyTemplate>
+        </SmartishTable.Repeater>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="20">
+            <SmartishTable.Pagination Context="Pager">
+              <SmartishTablePager Paginator="Pager"></SmartishTablePager>
+            </SmartishTable.Pagination>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </SmartishTable.Root>
+}
+
 @inject AnonymousClient anonymousClient
 @code {
-  
+  private SmartishTable.Root<PictureDto>? smartishTable;
+  private SmartishTable.Filters.StringOperators descriptionOperator = SmartishTable.Filters.StringOperators.Contains;
+  private List<PictureDto>? Dtos;
+
+
   protected override async Task OnInitializedAsync()
   {
 
