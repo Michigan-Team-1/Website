@@ -243,4 +243,55 @@ public class AuthorizedClient
     return new LocationDto();
   }
 
+  public async Task<List<PictureDto>?> GetMyMedia()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/pictures/mine");
+      return await _serviceResponseHandler.HandleJsonResponse<List<PictureDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<PictureDto>();
+  }
+
+  public async Task<List<PictureDto>?> GetAdminMedia()
+  {
+    try
+    {
+      var response = await _httpClient.GetAsync("api/pictures/admin");
+      return await _serviceResponseHandler.HandleJsonResponse<List<PictureDto>>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new List<PictureDto>();
+  }
+
+  public async Task<PictureDto?> SaveMedia(PictureDto dto)
+  {
+    try
+    {
+      Task<HttpResponseMessage>? saveTask;
+      var content = _serviceResponseHandler.BuildJsonContent(dto);
+      if (dto.PictureId == 0)
+        saveTask = _httpClient.PostAsync("api/pictures", content);
+      else
+        saveTask = _httpClient.PutAsync("api/pictures", content);
+
+      var response = await saveTask;
+      return await _serviceResponseHandler.HandleJsonResponse<PictureDto>(response);
+    }
+    catch (AccessTokenNotAvailableException exception)
+    {
+      exception.Redirect();
+    }
+
+    return new PictureDto();
+  }
 }

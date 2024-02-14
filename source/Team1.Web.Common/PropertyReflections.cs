@@ -92,6 +92,22 @@ public static class PropertyReflections
     }
   }
 
+  public static PropertyInfo GetPictureDtoProperty(string name)
+  {
+    return PictureDtoProperties.Single(w => w.Name == name);
+  }
+
+  public static List<PropertyInfo> PictureDtoProperties
+  {
+    get
+    {
+      if (!properties.ContainsKey(nameof(PictureDto)))
+        properties[nameof(PictureDto)] = typeof(PictureDto).GetProperties().ToList();
+
+      return properties[nameof(PictureDto)];
+    }
+  }
+
   public static PropertyInfo GetUserDtoProperty(string name)
   {
     return UserDtoProperties.Single(w => w.Name == name);

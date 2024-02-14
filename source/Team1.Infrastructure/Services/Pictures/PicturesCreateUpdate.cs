@@ -130,7 +130,7 @@ namespace Team1.Infrastructure.Services.Pictures
                 dto.FileUpload = null;
             }
 
-            if (UserPermissionService.UserPolicies.CanApprovePicture)
+            if (UserPermissionService.UserPolicies!.CanApprovePicture)
             {
                 if (dto.IsApproved && !dbObj.ApprovedDateTime.HasValue)
                 {

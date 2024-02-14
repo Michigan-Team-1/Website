@@ -26,24 +26,39 @@ public class PicturesController : BaseController
   /// Get Picture
   /// </summary>
   /// <returns>list of Picture</returns>
-  [HttpGet("{galleryType}")]
+  [HttpGet("public")]
   [AllowAnonymous]
   [ProducesResponseType(typeof(List<PictureDto>), (int)HttpStatusCode.OK)]
-  public async Task<IActionResult> GetPictures(byte galleryType)
+  public async Task<IActionResult> GetPublicPictures()
   {
-    var galleryTypeEnum = (GalleryTypeEnum)galleryType;
     var service = GetService<PicturesGet>();
-    _logger.LogInformation("User {0}:  Getting pictures for galleryType: {1}: {2}", UserPermissionService.UserClaimModel.UserId, galleryTypeEnum.GetDisplayName(), (byte)galleryTypeEnum);
-    switch (galleryTypeEnum)
-    {
-      case GalleryTypeEnum.Public:
-        return Ok(await service.GetPicturesForBrowsing());
-      case GalleryTypeEnum.MyGallery:
-        return Ok(await service.GetMyPictures());
-      case GalleryTypeEnum.AdminMode:
-        return Ok(await service.GetPictures(false));
-    }
-    return Ok();
+    return Ok(await service.GetPicturesForBrowsing());
+  }
+
+  /// <summary>
+  /// Get My Picture
+  /// </summary>
+  /// <returns>list of Picture</returns>
+  [HttpGet("admin")]
+  [Authorize]
+  [ProducesResponseType(typeof(List<PictureDto>), (int)HttpStatusCode.OK)]
+  public async Task<IActionResult> GetAdminMedia()
+  {
+    var service = GetService<PicturesGet>();
+    return Ok(await service.GetPictures(false));
+  }
+
+  /// <summary>
+  /// Get My Picture
+  /// </summary>
+  /// <returns>list of Picture</returns>
+  [HttpGet("mine")]
+  [Authorize]
+  [ProducesResponseType(typeof(List<PictureDto>), (int)HttpStatusCode.OK)]
+  public async Task<IActionResult> GetMyMedia()
+  {
+    var service = GetService<PicturesGet>();
+    return Ok(await service.GetMyPictures());
   }
 
   /// <summary>

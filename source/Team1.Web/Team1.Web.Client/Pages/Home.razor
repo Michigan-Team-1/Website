@@ -106,6 +106,7 @@ else
   {
     ApplicationState.PersistAsJson(nameof(Home) + nameof(announcements), announcements);
     ApplicationState.PersistAsJson(nameof(Home) + nameof(events), events);
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(pictures), pictures);
 
     return Task.CompletedTask;
   }

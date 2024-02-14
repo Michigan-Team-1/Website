@@ -1,0 +1,140 @@
+﻿@page "/mygallery"
+@attribute [Authorize]
+<PageTitle>Michigan Team-1 - My Gallery</PageTitle>
+
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <Team1.Web.Client.Shared.Helpers.PageHeader Name="My Gallery" Icon="fas fa-images" />
+  </div>
+  <div class="col-sm-6 text-start text-sm-end">
+    <AuthorizeView>
+      <Authorized>
+        <button class="btn btn-primary" type="button" @onclick=@(() => AddEdit(null, -1))><i class="fas fa-plus"></i> Upload/Embed Media</button>
+      </Authorized>
+    </AuthorizeView>
+  </div>
+</div>
+
+@if (Dtos == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
+    <table class="table table-condensed table-hover table-striped">
+      <thead>
+        <tr>
+          <SmartishTable.Sort Field="o=>o.Description" IsDefaultSort="true" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.PictureDtoProperties, nameof(PictureDto.Description))</SmartishTable.Sort>
+          </tr>
+          <tr>
+            <td>
+              <SmartishTable.FilterString Field="x=>x.Description" Context="filterContext" Operator="descriptionOperator">
+                <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" placeholder="Search Description..." />
+              </SmartishTable.FilterString>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <SmartishTable.Repeater Context="row">
+            <RowTemplate>
+              <div class="">
+                <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
+                  <span class="fa fa-edit"></span>&nbsp;
+                  @if (string.IsNullOrWhiteSpace(row.Item.Description))
+              {
+               <text>Edit</text> 
+              }
+              else
+              {
+              @row.Item.Description
+              }
+              </button>
+              </div>
+            </RowTemplate>
+            <EmptyTemplate>
+              <tr>
+                <td colspan="20">
+                  <EmptyDataRow />
+                </td>
+              </tr>
+            </EmptyTemplate>
+          </SmartishTable.Repeater>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="20">
+              <SmartishTable.Pagination Context="Pager">
+                <SmartishTablePager Paginator="Pager"></SmartishTablePager>
+              </SmartishTable.Pagination>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </SmartishTable.Root>
+}
+
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+@inject IModalService modalService
+@inject AuthorizedClient authClient
+@inject AnonymousClient anonymousClient
+@code {
+  private SmartishTable.Root<PictureDto>? smartishTable;
+  private SmartishTable.Filters.StringOperators descriptionOperator = SmartishTable.Filters.StringOperators.Contains;
+  private List<PictureDto>? Dtos;
+
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  private async Task AddEdit(PictureDto? dto, int index)
+  {
+    var isNew = dto == null;
+
+    if (isNew)
+    {
+      dto = new PictureDto()
+        {
+          IsActive = true,
+          IsUpdated = true,
+        };
+    }
+    var parameters = new Blazored.Modal.ModalParameters();
+    parameters.Add(nameof(MediaAddEdit.DtoOriginal), dto!);
+    var modalReference = modalService.Show<MediaAddEdit>("Upload/Embed Media Add/Edit", parameters, new ModalOptions() { });
+    var modalResult = await modalReference.Result;
+    dto = modalResult.Data as PictureDto;
+    if (dto != null)
+    {
+      if (isNew)
+        await smartishTable!.Add(dto);
+      else
+        await smartishTable!.UpdateAt(index, dto);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(MyGallery), out var restored))
+    {
+      Dtos = await authClient.GetMyMedia();
+    }
+    else
+    {
+      Dtos = restored!;
+    }
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(MyGallery), Dtos);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+}

@@ -22,12 +22,23 @@ public class PicturesGet : BaseService
   public Task<List<PictureDto>> GetPictures(bool activeOnly)
   {
     return (from x in db.PicturesByFilter(UserPermissionService, activeOnly)
+            join createdBy in db.Users on x.AuditFields.CreatedById equals createdBy.UserId into ljCreatedBy
+            from createdBy in ljCreatedBy.DefaultIfEmpty()
+            join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
+            from updatedBy in ljUpdatedBy.DefaultIfEmpty()
             select new PictureDto()
             {
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              AuditFieldsDto = new AuditFieldsDto()
+              {
+                CreatedDateTime = x.AuditFields.CreatedDateTime,
+                UpdatedDateTime = x.AuditFields.UpdatedDateTime,
+                CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
+                UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
+              },
             }).ToListAsync();
   }
 
@@ -38,6 +49,10 @@ public class PicturesGet : BaseService
   public Task<List<PictureDto>> GetPicturesForBrowsing()
   {
     return (from x in db.PicturesByFilter(UserPermissionService, true)
+            join createdBy in db.Users on x.AuditFields.CreatedById equals createdBy.UserId into ljCreatedBy
+            from createdBy in ljCreatedBy.DefaultIfEmpty()
+            join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
+            from updatedBy in ljUpdatedBy.DefaultIfEmpty()
             where x.ApprovedDateTime.HasValue
             select new PictureDto()
             {
@@ -45,6 +60,13 @@ public class PicturesGet : BaseService
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              AuditFieldsDto = new AuditFieldsDto()
+              {
+                CreatedDateTime = x.AuditFields.CreatedDateTime,
+                UpdatedDateTime = x.AuditFields.UpdatedDateTime,
+                CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
+                UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
+              },
             }).ToListAsync();
   }
 
@@ -72,13 +94,24 @@ public class PicturesGet : BaseService
   public Task<List<PictureDto>> GetMyPictures()
   {
     return (from x in db.PicturesByFilter(UserPermissionService, false)
-            where x.OwnerUserId == UserPermissionService.UserClaimModel.UserId
+            join createdBy in db.Users on x.AuditFields.CreatedById equals createdBy.UserId into ljCreatedBy
+            from createdBy in ljCreatedBy.DefaultIfEmpty()
+            join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
+            from updatedBy in ljUpdatedBy.DefaultIfEmpty()
+            where x.OwnerUserId == UserPermissionService.UserClaimModel!.UserId
             select new PictureDto()
             {
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              AuditFieldsDto = new AuditFieldsDto()
+              {
+                CreatedDateTime = x.AuditFields.CreatedDateTime,
+                UpdatedDateTime = x.AuditFields.UpdatedDateTime,
+                CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
+                UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
+              },
             }).ToListAsync();
   }
 
