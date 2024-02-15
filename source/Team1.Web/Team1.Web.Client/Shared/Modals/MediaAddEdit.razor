@@ -8,11 +8,27 @@
         <button type="button" class="btn-close" aria-label="Close" @onclick="(async () => await BlazoredModal.CancelAsync())">
         </button>
       </div>
-      <EditForm EditContext="_editContext" OnValidSubmit="Save" >
+      <EditForm EditContext="_editContext" OnValidSubmit="Save">
         <div class="modal-body">
           <Blazored.FluentValidation.FluentValidationValidator />
           <ValidationSummary />
           <div class="form-horizontal">
+            <div class="mb-3 row gx-2">
+              <label for="" class="col-form-label col-sm-3">
+                <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))) IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))))"></DefaultLabel>
+                <InputUnsavedChangesNotifcation Value="@(false)" />
+              </label>
+              <div class="col-sm">
+                <InputFile class="form-control" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                <ValidationMessage For="@(() => Dto.Document.DocumentFilename)" />
+              </div>
+            </div>
+
+            @if (!string.IsNullOrEmpty(Dto.Upload))
+            {
+              <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" />
+            }
+
             <EditText @bind-Value="Dto.Description" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))" ValidationFor="(() => Dto.Description)" />
 
             <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsActive))" />
@@ -59,6 +75,30 @@
   {
     Dto = DtoOriginal.SerializeJson().DeserializeJson<PictureDto>()!;
     _editContext = new EditContext(Dto);
+  }
+
+  async Task OnChange(InputFileChangeEventArgs e)
+  {
+    var file = e.GetMultipleFiles().FirstOrDefault(); // get the files selected by the users
+    if (file == null)
+    {
+      if (Dto.Document.MimeType != null)
+      {
+        Dto.Document.MimeType = DtoOriginal.Document.MimeType;
+        Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
+        Dto.Upload = null;
+      }
+      return;
+    }
+    Dto.Document.MimeType = file.ContentType;
+    Dto.Document.DocumentDisplayName = file.Name;
+    var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
+    var buf = new byte[resizedFile.Size]; // allocate a buffer to fill with the file's data
+    using (var stream = resizedFile.OpenReadStream())
+    {
+      await stream.ReadAsync(buf); // copy the stream to the buffer
+    }
+    Dto.Upload = Convert.ToBase64String(buf);
   }
 
   async Task Save()

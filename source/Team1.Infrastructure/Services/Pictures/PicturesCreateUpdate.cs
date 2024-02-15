@@ -30,7 +30,7 @@ namespace Team1.Infrastructure.Services.Pictures
         {
             var response = new BaseServiceResponse<T>(dto);
             // make sure user has access to this
-            if (!UserPermissionService.UserClaimModel.UserPolicies.PictureAddEditDelete)
+            if (!UserPermissionService.UserPolicies!.PictureAddEditDelete)
             {
                 response.Message = "You are not authorized to add/edit a picture.";
                 response.Status = System.Net.HttpStatusCode.Unauthorized;
@@ -42,10 +42,10 @@ namespace Team1.Infrastructure.Services.Pictures
                 return response;
 
             var timestamp = DateTime.UtcNow;
-            Team1.Model.Picture dbObj;
+            Team1.Model.Picture? dbObj;
             var isNew = dto.PictureId == 0;
 
-            if(isNew && dto.FileUpload == null)
+            if(isNew && string.IsNullOrWhiteSpace(dto.Upload))
             {
                 response.Message = "You must have a file uploaded.";
                 response.Status = System.Net.HttpStatusCode.BadRequest;
@@ -55,7 +55,7 @@ namespace Team1.Infrastructure.Services.Pictures
             {
                 dbObj = new Model.Picture()
                 {
-                    OwnerUserId = UserPermissionService.UserClaimModel.UserId,
+                    OwnerUserId = UserPermissionService.UserClaimModel!.UserId,
                     AuditFields = new AuditFields(UserPermissionService.UserClaimModel.UserId, timestamp),
                 };
                 db.Pictures.Add(dbObj);
@@ -73,9 +73,9 @@ namespace Team1.Infrastructure.Services.Pictures
 
             dbObj.Description = dto.Description;
 
-            if (dto.FileUpload != null)
+            if (!string.IsNullOrWhiteSpace(dto.Upload))
             {
-                if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel.IsAdmin)
+                if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel!.IsAdmin)
                 {
                     response.Message = "You can not change an image once it has been approved.  Contact an admin for more information.";
                     response.Status = System.Net.HttpStatusCode.Unauthorized;
@@ -127,7 +127,7 @@ namespace Team1.Infrastructure.Services.Pictures
                 //}
 
                 // clear out file upload
-                dto.FileUpload = null;
+                dto.Upload = null;
             }
 
             if (UserPermissionService.UserPolicies!.CanApprovePicture)

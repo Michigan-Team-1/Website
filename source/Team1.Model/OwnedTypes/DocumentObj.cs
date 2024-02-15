@@ -8,7 +8,7 @@ namespace Team1.Model.OwnedTypes;
 public class DocumentObj
 {
   /// <summary>
-  /// File Name or Embed Html
+  /// File Name on disk or Embed Html
   /// </summary>
   [Column(nameof(DocumentFilename))]
   [Display(Name = "Filename On Disk")]
