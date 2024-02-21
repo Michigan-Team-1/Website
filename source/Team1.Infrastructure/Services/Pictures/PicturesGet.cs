@@ -26,12 +26,14 @@ public class PicturesGet : BaseService
             from createdBy in ljCreatedBy.DefaultIfEmpty()
             join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
             from updatedBy in ljUpdatedBy.DefaultIfEmpty()
+            orderby x.AuditFields.CreatedDateTime descending
             select new PictureDto()
             {
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              Document = new DocumentObjDto(),
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = x.AuditFields.CreatedDateTime,
@@ -54,6 +56,7 @@ public class PicturesGet : BaseService
             join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
             from updatedBy in ljUpdatedBy.DefaultIfEmpty()
             where x.ApprovedDateTime.HasValue
+            orderby x.AuditFields.CreatedDateTime descending
             select new PictureDto()
             {
               IsApproved = x.ApprovedDateTime.HasValue,
@@ -99,12 +102,14 @@ public class PicturesGet : BaseService
             join updatedBy in db.Users on x.AuditFields.UpdatedById equals updatedBy.UserId into ljUpdatedBy
             from updatedBy in ljUpdatedBy.DefaultIfEmpty()
             where x.OwnerUserId == UserPermissionService.UserClaimModel!.UserId
+            orderby x.AuditFields.CreatedDateTime descending
             select new PictureDto()
             {
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              Document = new DocumentObjDto(),
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = x.AuditFields.CreatedDateTime,

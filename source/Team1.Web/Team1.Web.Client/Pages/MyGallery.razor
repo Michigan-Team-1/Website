@@ -21,57 +21,55 @@
 }
 else
 {
-  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable">
-    <table class="table table-condensed table-hover table-striped">
-      <thead>
-        <tr>
-          <SmartishTable.Sort Field="o=>o.Description" IsDefaultSort="true" Css="canSelect">@PropertyReflections.GetLabelName(PropertyReflections.PictureDtoProperties, nameof(PictureDto.Description))</SmartishTable.Sort>
-          </tr>
-          <tr>
-            <td>
-              <SmartishTable.FilterString Field="x=>x.Description" Context="filterContext" Operator="descriptionOperator">
-                <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" placeholder="Search Description..." />
-              </SmartishTable.FilterString>
-            </td>
-          </tr>
-        </thead>
-        <tbody>
-          <SmartishTable.Repeater Context="row">
-            <RowTemplate>
-              <div class="">
+  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable" HeaderTag="button">
+    <div class="row">
+      <div class="col-sm mb-2">
+        <SmartishTable.FilterString Field="x=>x.Description" Context="filterContext" Operator="SmartishTable.Filters.StringOperators.Contains">
+          <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" placeholder="Search Description..." />
+        </SmartishTable.FilterString>
+      </div>
+      <div class="col-sm mb-2">
+        <SmartishTable.Sort StartingSortDescending="true" Field="o=>o.AuditFieldsDto.CreatedDateTime" IsDefaultSort="true" Css="canSelect btn btn-outline-primary btn-sm">Sort By Upload Date</SmartishTable.Sort>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-5 mb-2 g-2">
+      <SmartishTable.Repeater Context="row">
+        <RowTemplate>
+          <div class="col">
+            <div class="card h-100 bg-body-tertiary">
+              <img src="@($"api/Pictures/{row.Item.PictureId}/viewing")" />
+              <div class="card-body">
                 <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
                   <span class="fa fa-edit"></span>&nbsp;
                   @if (string.IsNullOrWhiteSpace(row.Item.Description))
-              {
-               <text>Edit</text> 
-              }
-              else
-              {
-              @row.Item.Description
-              }
-              </button>
+                  {
+                    <text>Edit</text>
+                  }
+                  else
+                  {
+                    @row.Item.Description
+                  }
+                </button>
               </div>
-            </RowTemplate>
-            <EmptyTemplate>
-              <tr>
-                <td colspan="20">
-                  <EmptyDataRow />
-                </td>
-              </tr>
-            </EmptyTemplate>
-          </SmartishTable.Repeater>
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colspan="20">
-              <SmartishTable.Pagination Context="Pager">
-                <SmartishTablePager Paginator="Pager"></SmartishTablePager>
-              </SmartishTable.Pagination>
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </SmartishTable.Root>
+            </div>
+          </div>
+        </RowTemplate>
+        <EmptyTemplate>
+          @if (Dtos.Count == 0)
+          {
+            <div>Be the first to upload!</div>
+          }
+          else
+          {
+            <div>Nothing found</div>
+          }
+        </EmptyTemplate>
+      </SmartishTable.Repeater>
+    </div>
+    <SmartishTable.Pagination Context="Pager">
+      <SmartishTablePager Paginator="Pager"></SmartishTablePager>
+    </SmartishTable.Pagination>
+  </SmartishTable.Root>
 }
 
 @implements IDisposable
@@ -81,7 +79,6 @@ else
 @inject AnonymousClient anonymousClient
 @code {
   private SmartishTable.Root<PictureDto>? smartishTable;
-  private SmartishTable.Filters.StringOperators descriptionOperator = SmartishTable.Filters.StringOperators.Contains;
   private List<PictureDto>? Dtos;
 
   private PersistingComponentStateSubscription persistingSubscription;
