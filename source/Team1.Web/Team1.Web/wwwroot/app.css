@@ -89,3 +89,11 @@ html, body {
 [data-bs-theme=dark] .toolbar-logo-dark {
     display: inline;
 }
+
+/************************ gallery ********************************/
+.image-thumbnail {
+    max-height:300px;
+    max-width:400px;
+}
+
+/****************************************************************/

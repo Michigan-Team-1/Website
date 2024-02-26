@@ -23,10 +23,10 @@
                 <ValidationMessage For="@(() => Dto.Document.DocumentFilename)" />
               </div>
             </div>
-
+            <div class="alert alert-danger mb-2">@Message</div>
             @if (!string.IsNullOrEmpty(Dto.Upload))
             {
-              <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" />
+              <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" class="mb-2 image-thumbnail" />
             }
 
             <EditText @bind-Value="Dto.Description" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))" ValidationFor="(() => Dto.Description)" />
@@ -61,6 +61,8 @@
 
   private PictureDto Dto { get; set; } = default!;
 
+  private string? Message { get; set; }
+
   private EditContext _editContext = default!;
 
   private bool dataUpdated
@@ -79,6 +81,7 @@
 
   async Task OnChange(InputFileChangeEventArgs e)
   {
+    Message = null;
     var file = e.GetMultipleFiles().FirstOrDefault(); // get the files selected by the users
     if (file == null)
     {
@@ -90,11 +93,16 @@
       }
       return;
     }
+    if (file.Size > 1024*1024*100)
+    {
+      Message = "File size is too large.  Please resize the image and try again.";
+      return;
+    }
     Dto.Document.MimeType = file.ContentType;
     Dto.Document.DocumentDisplayName = file.Name;
-    var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
-    var buf = new byte[resizedFile.Size]; // allocate a buffer to fill with the file's data
-    using (var stream = resizedFile.OpenReadStream())
+    //var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
+    var buf = new byte[file.Size]; // allocate a buffer to fill with the file's data
+    using (var stream = file.OpenReadStream())
     {
       await stream.ReadAsync(buf); // copy the stream to the buffer
     }
