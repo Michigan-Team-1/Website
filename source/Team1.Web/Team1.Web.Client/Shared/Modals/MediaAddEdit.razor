@@ -13,20 +13,40 @@
           <Blazored.FluentValidation.FluentValidationValidator />
           <ValidationSummary />
           <div class="form-horizontal">
-            <div class="mb-3 row gx-2">
-              <label for="" class="col-form-label col-sm-3">
-                <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))) IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))))"></DefaultLabel>
-                <InputUnsavedChangesNotifcation Value="@(false)" />
-              </label>
-              <div class="col-sm">
-                <InputFile class="form-control" OnChange="OnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
-                <ValidationMessage For="@(() => Dto.Document.DocumentFilename)" />
+            <EditRadioGroup @bind-Value=Dto.IsEmbed @bind-Value:after=ResetUpload PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsEmbed))" ValidationFor="(() => Dto.IsEmbed)">
+              <div class="row">
+                <div class="col-sm-12 col-md">
+                  <label class="form-check-label"><InputRadio Value="false" class="form-check-input" TValue="bool" /> Picture Upload </label>
+                </div>
+                <div class="col-sm-12 col-md">
+                  <label class="form-check-label"><InputRadio Value="true" class="form-check-input" TValue="bool" /> Video Embed (i.e. YouTube)</label>
+                </div>
               </div>
-            </div>
-            <div class="alert alert-danger mb-2">@Message</div>
-            @if (!string.IsNullOrEmpty(Dto.Upload))
+            </EditRadioGroup>
+            @if (Dto.IsEmbed)
             {
-              <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" class="mb-2 image-thumbnail" />
+              <EditTextArea @bind-Value=Dto.Upload PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Upload))" LabelTextOverride="Media Embed" ValidationFor="(() => Dto.Upload)" />
+            }
+            else
+            {
+              <div class="mb-3 row gx-2">
+                <label for="" class="col-form-label col-sm-3">
+                  <DefaultLabel Name="Picture Upload" IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Upload))))"></DefaultLabel>
+                  <InputUnsavedChangesNotifcation Value="@(Dto.Upload != null)" />
+                </label>
+                <div class="col-sm">
+                  <InputFile class="form-control" OnChange="InputFileOnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                  <ValidationMessage For="@(() => Dto.Upload)" />
+                </div>
+              </div>
+              @if (!string.IsNullOrEmpty(Dto.Upload))
+              {
+                <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" class="mb-2 image-thumbnail" />
+              }
+            }
+            @if (!string.IsNullOrWhiteSpace(Message))
+            {
+              <div class="alert alert-danger mb-2">@Message</div>
             }
 
             <EditText @bind-Value="Dto.Description" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))" ValidationFor="(() => Dto.Description)" />
@@ -79,7 +99,8 @@
     _editContext = new EditContext(Dto);
   }
 
-  async Task OnChange(InputFileChangeEventArgs e)
+  const int maxAllowedSize = 1024 * 1024 * 50;
+  async Task InputFileOnChange(InputFileChangeEventArgs e)
   {
     Message = null;
     var file = e.GetMultipleFiles().FirstOrDefault(); // get the files selected by the users
@@ -93,7 +114,7 @@
       }
       return;
     }
-    if (file.Size > 1024*1024*100)
+    if (file.Size > maxAllowedSize)
     {
       Message = "File size is too large.  Please resize the image and try again.";
       return;
@@ -102,11 +123,20 @@
     Dto.Document.DocumentDisplayName = file.Name;
     //var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
     var buf = new byte[file.Size]; // allocate a buffer to fill with the file's data
-    using (var stream = file.OpenReadStream())
+    using (var stream = file.OpenReadStream(maxAllowedSize))
     {
+      Console.WriteLine("hi");
       await stream.ReadAsync(buf); // copy the stream to the buffer
+      Console.WriteLine("hi2");
     }
     Dto.Upload = Convert.ToBase64String(buf);
+  }
+
+  void ResetUpload()
+  {
+    Dto.Upload = null;
+    Dto.Document.MimeType = null!;
+    Dto.Document.DocumentDisplayName = null!;
   }
 
   async Task Save()

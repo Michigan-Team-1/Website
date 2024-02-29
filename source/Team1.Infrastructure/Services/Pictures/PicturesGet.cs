@@ -33,7 +33,11 @@ public class PicturesGet : BaseService
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
-              Document = new DocumentObjDto(),
+              IsEmbed = x.IsEmbed,
+              Document = new DocumentObjDto()
+              {
+                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+              },
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = x.AuditFields.CreatedDateTime,
@@ -62,7 +66,12 @@ public class PicturesGet : BaseService
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
+              IsEmbed = x.IsEmbed,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+              Document = new DocumentObjDto()
+              {
+                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+              },
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = x.AuditFields.CreatedDateTime,
@@ -79,13 +88,14 @@ public class PicturesGet : BaseService
   public Task<List<PictureDto>> GetRandomPictures()
   {
     var query = (from x in db.PicturesByFilter(UserPermissionService, true)
-                 where x.ApprovedDateTime.HasValue
+                 where x.ApprovedDateTime.HasValue && !x.IsEmbed
                  orderby x.AuditFields.CreatedDateTime descending
                  select new PictureDto()
                  {
                    IsApproved = x.ApprovedDateTime.HasValue,
                    Description = x.Description,
                    PictureId = x.PictureId,
+                   IsEmbed = x.IsEmbed,
                    IsActive = !x.AuditFields.InactiveDateTime.HasValue,
                  }).Take(20);
     return query.OrderBy(o => Guid.NewGuid()).Take(5).ToListAsync();
@@ -108,8 +118,12 @@ public class PicturesGet : BaseService
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
+              IsEmbed = x.IsEmbed,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
-              Document = new DocumentObjDto(),
+              Document = new DocumentObjDto()
+              {
+                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+              },
               AuditFieldsDto = new AuditFieldsDto()
               {
                 CreatedDateTime = x.AuditFields.CreatedDateTime,

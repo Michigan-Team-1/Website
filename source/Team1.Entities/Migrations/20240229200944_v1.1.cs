@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Team1.Entities.Migrations
 {
     /// <inheritdoc />
-    public partial class addPic : Migration
+    public partial class v11 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -51,12 +51,6 @@ namespace Team1.Entities.Migrations
                 oldType: "nvarchar(50)",
                 oldMaxLength: 50,
                 oldNullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "Picture",
-                table: "Users",
-                type: "nvarchar(max)",
-                nullable: true);
 
             migrationBuilder.AlterColumn<string>(
                 name: "NormalizedName",
@@ -129,6 +123,13 @@ namespace Team1.Entities.Migrations
                 oldType: "nvarchar(500)",
                 oldMaxLength: 500,
                 oldNullable: true);
+
+            migrationBuilder.AddColumn<bool>(
+                name: "IsEmbed",
+                table: "Pictures",
+                type: "bit",
+                nullable: false,
+                defaultValue: false);
 
             migrationBuilder.AlterColumn<string>(
                 name: "Name",
@@ -270,8 +271,8 @@ namespace Team1.Entities.Migrations
                 table: "Pictures");
 
             migrationBuilder.DropColumn(
-                name: "Picture",
-                table: "Users");
+                name: "IsEmbed",
+                table: "Pictures");
 
             migrationBuilder.AlterColumn<string>(
                 name: "ConcurrencyStamp",

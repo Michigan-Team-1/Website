@@ -37,7 +37,14 @@ else
         <RowTemplate>
           <div class="col">
             <div class="card h-100 bg-body-tertiary">
-              <img src="@($"api/Pictures/{row.Item.PictureId}/viewing")" />
+              @if (row.Item.IsEmbed)
+              {
+                  @((MarkupString)row.Item.Document.DocumentFilename)
+              }
+              else
+              {
+                <img src="@($"api/Pictures/{row.Item.PictureId}/viewing")" />
+              }
               <div class="card-body">
                 <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
                   <span class="fa fa-edit"></span>&nbsp;

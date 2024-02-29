@@ -11,11 +11,11 @@ public class UserRoot
 
   [Display(Name = "First Name")]
   [Required(ErrorMessage = ErrorMessages.RequiredField), StringLength(Constants.FieldSizes.NameLength, ErrorMessage = ErrorMessages.StringLengthMax)]
-  public string FirstName { get; set; }
+  public string FirstName { get; set; } = default!;
 
   [Display(Name = "Last Name")]
   [Required(ErrorMessage = ErrorMessages.RequiredField), StringLength(Constants.FieldSizes.NameLength, ErrorMessage = ErrorMessages.StringLengthMax)]
-  public string LastName { get; set; }
+  public string LastName { get; set; } = default!;
 
   /// <summary>
   /// Gets or sets the email address for this user.
@@ -23,7 +23,7 @@ public class UserRoot
   [Required(ErrorMessage = ErrorMessages.RequiredField)]
   [Display(Name = "Email")]
   [StringLength(Constants.FieldSizes.EmailLength, ErrorMessage = ErrorMessages.StringLengthMax), EmailAddress(ErrorMessage = "Invalid Email")]
-  public string Email { get; set; }
+  public string Email { get; set; } = default!;
 
   /// <summary>
   /// Gets or sets a telephone number for the user.
@@ -31,7 +31,7 @@ public class UserRoot
   [Display(Name = "Phone Number")]
   [StringLength(Constants.FieldSizes.PhoneLength)]
   [Required(ErrorMessage = ErrorMessages.RequiredField)]
-  public string PhoneNumber { get; set; }
+  public string PhoneNumber { get; set; } = default!;
 
   [DataType(DataType.Date)]
   [Display(Name = "Birth Date")]
@@ -75,8 +75,6 @@ public class UserRoot
   /// <value>True if the email address has been confirmed, otherwise false.</value>
   [Display(Name = "Email Confirmed?")]
   public bool EmailConfirmed { get; set; }
-
-  public string? Picture { get; set; }
 }
 
 public class UserBase : UserRoot

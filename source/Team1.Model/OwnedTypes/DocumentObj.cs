@@ -17,7 +17,7 @@ public class DocumentObj
   public string DocumentFilename { get; set; } = default!;
 
   /// <summary>
-  /// Display name for the file or Embed Html
+  /// Display name for the file
   /// </summary>
   [Column(nameof(DocumentDisplayName))]
   [Display(Name = "Filename")]

@@ -110,9 +110,9 @@ public class PicturesController : BaseController
   [HttpPost]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> CreatePicture()
+  public async Task<IActionResult> CreatePicture([FromBody] PictureDto dto)
   {
-    return await SavePicture();
+    return await SavePicture(dto);
   }
 
   /// <summary>
@@ -123,9 +123,9 @@ public class PicturesController : BaseController
   [HttpPut]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> UpdatePicture()
+  public async Task<IActionResult> UpdatePicture([FromBody] PictureDto dto)
   {
-    return await SavePicture();
+    return await SavePicture(dto);
   }
 
   /// <summary>
@@ -146,10 +146,8 @@ public class PicturesController : BaseController
 
   #region private helpers
 
-  private async Task<IActionResult> SavePicture()
+  private async Task<IActionResult> SavePicture(PictureDto dto)
   {
-    PictureDto dto = null;// GetPostedFileAndData<PictureDto>();
-
     if (!ModelState.IsValid)
       return CreateResponse(new BaseServiceResponse<PictureDto>(dto, System.Net.HttpStatusCode.BadRequest));
 

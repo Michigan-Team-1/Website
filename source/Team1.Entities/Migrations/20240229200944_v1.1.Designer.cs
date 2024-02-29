@@ -12,8 +12,8 @@ using Team1.Entities;
 namespace Team1.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240212203130_addPic")]
-    partial class addPic
+    [Migration("20240229200944_v1.1")]
+    partial class v11
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -295,6 +295,9 @@ namespace Team1.Entities.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
+                    b.Property<bool>("IsEmbed")
+                        .HasColumnType("bit");
+
                     b.Property<int>("OwnerUserId")
                         .HasColumnType("int");
 
@@ -493,9 +496,6 @@ namespace Team1.Entities.Migrations
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
-
-                    b.Property<string>("Picture")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .IsRequired()
