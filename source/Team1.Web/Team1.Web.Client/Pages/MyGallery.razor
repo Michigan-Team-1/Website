@@ -39,7 +39,7 @@ else
             <div class="card h-100 bg-body-tertiary">
               @if (row.Item.IsEmbed)
               {
-                  @((MarkupString)row.Item.Document.DocumentFilename)
+                  <iframe allowfullscreen src="@(row.Item.Document.DocumentFilename)"></iframe>
               }
               else
               {
@@ -64,7 +64,7 @@ else
         <EmptyTemplate>
           @if (Dtos.Count == 0)
           {
-            <div>Add a picture and/or video embed!!</div>
+            <div>Add a picture and/or video link!!</div>
           }
           else
           {

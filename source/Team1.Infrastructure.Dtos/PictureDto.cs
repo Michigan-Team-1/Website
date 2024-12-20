@@ -29,7 +29,7 @@ public class PictureDto : PictureBase
     if (obj is PictureDto item)
     {
       return item.Description.IfNullThenEmptyString() == Description.IfNullThenEmptyString() && item.IsActive == IsActive && item.PictureId == PictureId
-        && item.IsApproved == IsApproved && item.IsActive == IsActive
+        && item.IsApproved == IsApproved && item.Upload.IfNullThenEmptyString() == Upload.IfNullThenEmptyString() && item.IsEmbed == IsEmbed
         && item.Document.DocumentFilename.IfNullThenEmptyString() == Document.DocumentFilename.IfNullThenEmptyString() && item.Document.DocumentDisplayName.IfNullThenEmptyString() == Document.DocumentDisplayName.IfNullThenEmptyString()
         && item.Document.MimeType.IfNullThenEmptyString() == Document.MimeType.IfNullThenEmptyString();
     }

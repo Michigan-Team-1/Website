@@ -29,10 +29,10 @@
             }
             else
             {
-                @if (Dto.PictureId > 0)
-                {
+              @if (Dto.PictureId > 0)
+              {
                 <img src="@($"api/Pictures/{Dto.PictureId}/viewing")" class="mb-2 image-thumbnail" />
-                }
+              }
               <div class="mb-3 row gx-2">
                 <label for="" class="col-form-label col-sm-3">
                   <DefaultLabel Name="Picture Upload" IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Upload))))"></DefaultLabel>
@@ -114,7 +114,6 @@
       {
         Dto.Document.MimeType = DtoOriginal.Document.MimeType;
         Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
-        Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
         Dto.Upload = null;
       }
       return;
@@ -138,9 +137,18 @@
 
   void ResetUpload()
   {
-    Dto.Upload = null;
-    Dto.Document.MimeType = null!;
-    Dto.Document.DocumentDisplayName = null!;
+    if (Dto.IsEmbed)
+    {
+      Dto.Document.MimeType = "embed";
+      Dto.Document.DocumentDisplayName = "embed";
+      Dto.Document.DocumentFilename = "embed";
+    }
+    else
+    {
+      Dto.Upload = null;
+      Dto.Document.MimeType = null!;
+      Dto.Document.DocumentDisplayName = null!;
+    }
   }
 
   async Task Save()

@@ -78,6 +78,9 @@ public class PicturesCreateUpdate : BaseService
         return response;
       }
 
+      if (dbObj.DocumentObj == null)
+        dbObj.DocumentObj = new DocumentObj();
+
       if (dto.IsEmbed)
       {
         dbObj.DocumentObj.DocumentFilename = dto.Upload;
@@ -108,8 +111,7 @@ public class PicturesCreateUpdate : BaseService
 
         var newFileName = PathManager.GetUserGalleryFilename(fileName, timestamp);
         dto.Document.DocumentFilename = newFileName;
-        if (dbObj.DocumentObj == null)
-          dbObj.DocumentObj = new DocumentObj();
+        
         dbObj.DocumentObj.DocumentFilename = dto.Document.DocumentFilename;
         dbObj.DocumentObj.DocumentDisplayName = dto.Document.DocumentDisplayName;
         dbObj.DocumentObj.MimeType = dto.Document.MimeType;
