@@ -80,7 +80,7 @@ public class PicturesController : BaseController
   /// <returns>list of Picture</returns>
   [HttpGet("{id}/viewing")]
   [AllowAnonymous]
-  [ProducesResponseType(typeof(List<PictureDto>), (int)HttpStatusCode.OK)]
+  [ProducesResponseType(typeof(FileContentResult), (int)HttpStatusCode.OK)]
   public async Task<IActionResult> GetPictureForViewing(int id)
   {
     var service = GetService<PicturesGet>();

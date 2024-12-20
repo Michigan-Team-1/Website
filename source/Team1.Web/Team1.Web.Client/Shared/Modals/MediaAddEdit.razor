@@ -29,6 +29,10 @@
             }
             else
             {
+                @if (Dto.PictureId > 0)
+                {
+                <img src="@($"api/Pictures/{Dto.PictureId}/viewing")" class="mb-2 image-thumbnail" />
+                }
               <div class="mb-3 row gx-2">
                 <label for="" class="col-form-label col-sm-3">
                   <DefaultLabel Name="Picture Upload" IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Upload))))"></DefaultLabel>
@@ -110,6 +114,7 @@
       {
         Dto.Document.MimeType = DtoOriginal.Document.MimeType;
         Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
+        Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
         Dto.Upload = null;
       }
       return;
@@ -121,13 +126,12 @@
     }
     Dto.Document.MimeType = file.ContentType;
     Dto.Document.DocumentDisplayName = file.Name;
+    Dto.Document.DocumentFilename = file.Name;
     //var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
     var buf = new byte[file.Size]; // allocate a buffer to fill with the file's data
     using (var stream = file.OpenReadStream(maxAllowedSize))
     {
-      Console.WriteLine("hi");
       await stream.ReadAsync(buf); // copy the stream to the buffer
-      Console.WriteLine("hi2");
     }
     Dto.Upload = Convert.ToBase64String(buf);
   }
