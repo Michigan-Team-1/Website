@@ -21,7 +21,7 @@ public class PicturesCreateUpdate : BaseService
   /// </summary>
   /// <param name="dto">dto to save</param>
   /// <returns>updated dto object</returns>
-  public async Task<BaseServiceResponse<T>> SavePicture<T>(T dto) where T : PictureDto
+  public async Task<BaseServiceResponse<T>> SavePicture<T>(T dto, Stream? file) where T : PictureDto
   {
     var response = new BaseServiceResponse<T>(dto);
     // make sure user has access to this
@@ -40,9 +40,9 @@ public class PicturesCreateUpdate : BaseService
     Team1.Model.Picture? dbObj;
     var isNew = dto.PictureId == 0;
 
-    if (isNew && string.IsNullOrWhiteSpace(dto.Upload))
+    if (isNew && !dto.IsEmbed && file is null)
     {
-      response.Message = "You must have a file uploaded.";
+      response.Message = "You must upload a file.";
       response.Status = System.Net.HttpStatusCode.BadRequest;
       return response;
     }
@@ -69,7 +69,10 @@ public class PicturesCreateUpdate : BaseService
 
     dbObj.Description = dto.Description;
 
-    if (!string.IsNullOrWhiteSpace(dto.Upload))
+    if (dbObj.DocumentObj == null)
+      dbObj.DocumentObj = new DocumentObj();
+
+    if (dto.IsEmbed && !string.IsNullOrWhiteSpace(dto.Upload))
     {
       if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel!.IsAdmin)
       {
@@ -78,17 +81,24 @@ public class PicturesCreateUpdate : BaseService
         return response;
       }
 
-      if (dbObj.DocumentObj == null)
-        dbObj.DocumentObj = new DocumentObj();
+      dbObj.DocumentObj.DocumentFilename = dto.Upload;
+      dbObj.DocumentObj.DocumentDisplayName = "Embed";
+      dbObj.DocumentObj.MimeType = "Embed";
 
-      if (dto.IsEmbed)
+      // clear out file upload
+      dto.Upload = null;
+    }
+    else
+    {
+      if (file is not null)
       {
-        dbObj.DocumentObj.DocumentFilename = dto.Upload;
-        dbObj.DocumentObj.DocumentDisplayName = "Embed";
-        dbObj.DocumentObj.MimeType = "Embed";
-      }
-      else
-      {
+        if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel!.IsAdmin)
+        {
+          response.Message = "You can not change an image once it has been approved.  Contact an admin for more information.";
+          response.Status = System.Net.HttpStatusCode.Unauthorized;
+          return response;
+        }
+
         if (!isNew)
         {
           // delete old file
@@ -111,7 +121,7 @@ public class PicturesCreateUpdate : BaseService
 
         var newFileName = PathManager.GetUserGalleryFilename(fileName, timestamp);
         dto.Document.DocumentFilename = newFileName;
-        
+
         dbObj.DocumentObj.DocumentFilename = dto.Document.DocumentFilename;
         dbObj.DocumentObj.DocumentDisplayName = dto.Document.DocumentDisplayName;
         dbObj.DocumentObj.MimeType = dto.Document.MimeType;
@@ -129,16 +139,11 @@ public class PicturesCreateUpdate : BaseService
         // save the file
         using (var stream = _fileManager.OpenFile(filePathInfo, true))
         {
-          var bytes = Convert.FromBase64String(dto.Upload);
-          var memStream = new MemoryStream(bytes);
-          await memStream.CopyToAsync(stream);
+          await file.CopyToAsync(stream);
         }
       }
-
-      // clear out file upload
-      dto.Upload = null;
     }
-
+   
     if (UserPermissionService.UserPolicies!.CanApprovePicture)
     {
       if (dto.IsApproved && !dbObj.ApprovedDateTime.HasValue)
@@ -158,6 +163,8 @@ public class PicturesCreateUpdate : BaseService
     dbObj.AuditFields.SetUpdated(UserPermissionService.UserClaimModel.UserId, timestamp);
 
     await db.SaveChangesAsync();
+
+    dto.AuditFieldsDto.SetUpdated(dbObj.AuditFields, UserPermissionService.FirstLastName);
 
     if (isNew)
       dto.PictureId = dbObj.PictureId;

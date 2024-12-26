@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+﻿using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Team1.Infrastructure.Dtos;
 using Team1.Infrastructure.Dtos.Helpers;
 using Team1.Infrastructure.Dtos.Users;
@@ -273,12 +274,17 @@ public class AuthorizedClient
     return new List<PictureDto>();
   }
 
-  public async Task<PictureDto?> SaveMedia(PictureDto dto)
+  public async Task<PictureDto?> SaveMedia(PictureDto dto, Stream? file)
   {
     try
     {
+      var content = new MultipartFormDataContent();
+      content.Add(_serviceResponseHandler.BuildJsonContent(dto), "json", "json.json");
+      if (file is not null)
+      {
+        content.Add(new StreamContent(file), "file", "file.name");
+      }
       Task<HttpResponseMessage>? saveTask;
-      var content = _serviceResponseHandler.BuildJsonContent(dto);
       if (dto.PictureId == 0)
         saveTask = _httpClient.PostAsync("api/pictures", content);
       else

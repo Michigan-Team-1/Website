@@ -1,6 +1,6 @@
 ﻿@page "/mygallery"
 @attribute [Authorize]
-<PageTitle>Michigan Team-1 - My Gallery</PageTitle>
+<PageTitle>My Gallery - Michigan Team-1</PageTitle>
 
 <div class="row mb-2">
   <div class="col-sm-6">
@@ -43,7 +43,7 @@ else
               }
               else
               {
-                <img src="@($"api/Pictures/{row.Item.PictureId}/viewing")" />
+                <img src="@row.Item.GetPictureUrl()" />
               }
               <div class="card-body">
                 <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
@@ -114,7 +114,9 @@ else
       if (isNew)
         await smartishTable!.Add(dto);
       else
+      {
         await smartishTable!.UpdateAt(index, dto);
+      }
     }
   }
 

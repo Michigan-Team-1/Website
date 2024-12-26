@@ -41,15 +41,20 @@ public class PictureDto : PictureBase
   {
     return base.GetHashCode();
   }
+
+  public string GetPictureUrl()
+  {
+    return $"api/Pictures/{PictureId}/viewing?_={AuditFieldsDto?.UpdatedDateTime?.Ticks}";
+  }
 }
 
 public class PictureDtoValidator : AbstractValidator<PictureDto>
 {
   public PictureDtoValidator()
   {
-    When(w => w.PictureId == 0, () =>
+    When(w => w.PictureId == 0 && w.IsEmbed, () =>
     {
-      RuleFor(x => x.Upload).NotEmpty().WithMessage("An image or embed html text must be added.");
+      RuleFor(x => x.Upload).NotEmpty().WithMessage("Embed html text must be added.");
     });
   }
 }

@@ -13,6 +13,7 @@
           <Blazored.FluentValidation.FluentValidationValidator />
           <ValidationSummary />
           <div class="form-horizontal">
+            @*
             <EditRadioGroup @bind-Value=Dto.IsEmbed @bind-Value:after=ResetUpload PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsEmbed))" ValidationFor="(() => Dto.IsEmbed)">
               <div class="row">
                 <div class="col-sm-12 col-md">
@@ -23,6 +24,7 @@
                 </div>
               </div>
             </EditRadioGroup>
+            *@
             @if (Dto.IsEmbed)
             {
               <EditTextArea @bind-Value=Dto.Upload PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Upload))" LabelTextOverride="Media Embed" ValidationFor="(() => Dto.Upload)" />
@@ -31,7 +33,7 @@
             {
               @if (Dto.PictureId > 0)
               {
-                <img src="@($"api/Pictures/{Dto.PictureId}/viewing")" class="mb-2 image-thumbnail" />
+                <img src="@Dto.GetPictureUrl()" class="mb-2 image-thumbnail" />
               }
               <div class="mb-3 row gx-2">
                 <label for="" class="col-form-label col-sm-3">
@@ -43,11 +45,11 @@
                   <ValidationMessage For="@(() => Dto.Upload)" />
                 </div>
               </div>
-              @if (!string.IsNullOrEmpty(Dto.Upload))
-              {
-                <img src="data:@Dto.Document.MimeType;base64,@Dto.Upload" class="mb-2 image-thumbnail" />
-              }
+              @* @if (!string.IsNullOrEmpty(Dto.Upload))
+              { *@
+              <img id="newImage" class="mb-2 image-thumbnail d-none" />
             }
+            @* src="data:@Dto.Document.MimeType;base64,@Dto.Upload"*@
             @if (!string.IsNullOrWhiteSpace(Message))
             {
               <div class="alert alert-danger mb-2">@Message</div>
@@ -76,6 +78,7 @@
 
 @inject IModalService ModalService
 @inject AuthorizedClient client
+@inject IJSRuntime jsRuntime
 @code {
   [CascadingParameter]
   private BlazoredModalInstance BlazoredModal { get; set; } = default!;
@@ -88,6 +91,8 @@
   private string? Message { get; set; }
 
   private EditContext _editContext = default!;
+
+  private IBrowserFile? currentFileToBeUploaded;
 
   private bool dataUpdated
   {
@@ -103,7 +108,8 @@
     _editContext = new EditContext(Dto);
   }
 
-  const int maxAllowedSize = 1024 * 1024 * 50;
+  const int maxAllowedSize = 1024 * 1024 * 5;
+
   async Task InputFileOnChange(InputFileChangeEventArgs e)
   {
     Message = null;
@@ -126,13 +132,15 @@
     Dto.Document.MimeType = file.ContentType;
     Dto.Document.DocumentDisplayName = file.Name;
     Dto.Document.DocumentFilename = file.Name;
+
     //var resizedFile = await file.RequestImageFileAsync(file.ContentType, 640, 480); // resize the image file
-    var buf = new byte[file.Size]; // allocate a buffer to fill with the file's data
+    // var buf = new byte[file.Size]; // allocate a buffer to fill with the file's data
     using (var stream = file.OpenReadStream(maxAllowedSize))
     {
-      await stream.ReadAsync(buf); // copy the stream to the buffer
+      var strRef = new DotNetStreamReference(stream);
+      await jsRuntime.InvokeVoidAsync("setSource", "newImage", strRef, Dto.Document.MimeType);
+      currentFileToBeUploaded = file;
     }
-    Dto.Upload = Convert.ToBase64String(buf);
   }
 
   void ResetUpload()
@@ -156,7 +164,8 @@
     Dto.IsUpdated = dataUpdated;
     if (Dto.IsUpdated)
     {
-      var data = await client.SaveMedia(Dto);
+
+      var data = await client.SaveMedia(Dto, currentFileToBeUploaded?.OpenReadStream(maxAllowedSize));
       if (data != null)
         await BlazoredModal.CloseAsync(ModalResult.Ok(data));
     }

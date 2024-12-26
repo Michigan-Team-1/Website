@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Team1.Infrastructure.Dtos;
 using Team1.Infrastructure.Dtos.Helpers;
 using Team1.Infrastructure.Services;
@@ -110,9 +112,9 @@ public class PicturesController : BaseController
   [HttpPost]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> CreatePicture([FromBody] PictureDto dto)
+  public async Task<IActionResult> CreatePicture(IFormFile json, IFormFile file)
   {
-    return await SavePicture(dto);
+    return await SavePicture(json, file);
   }
 
   /// <summary>
@@ -123,9 +125,9 @@ public class PicturesController : BaseController
   [HttpPut]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> UpdatePicture([FromBody] PictureDto dto)
+  public async Task<IActionResult> UpdatePicture(IFormFile json, IFormFile file)
   {
-    return await SavePicture(dto);
+    return await SavePicture(json, file);
   }
 
   /// <summary>
@@ -146,14 +148,26 @@ public class PicturesController : BaseController
 
   #region private helpers
 
-  private async Task<IActionResult> SavePicture(PictureDto dto)
+  private async Task<IActionResult> SavePicture(IFormFile json, IFormFile file)
   {
+    var jsonString = await new StreamReader(json.OpenReadStream()).ReadToEndAsync();
+    var dto = jsonString.DeserializeJson<PictureDto>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
+
     if (!ModelState.IsValid)
       return CreateResponse(new BaseServiceResponse<PictureDto>(dto, System.Net.HttpStatusCode.BadRequest));
 
     var service = GetService<PicturesCreateUpdate>();
-    var response = await service.SavePicture(dto);
+    var response = await service.SavePicture(dto, file.OpenReadStream());
     return CreateResponse(response);
+  }
+
+  public class PictureUpload
+  {
+    [JsonPropertyName("dto")]
+    public PictureDto Dto { get; set; } = default!;
+
+    [JsonPropertyName("file")]
+    public IFormFile? File { get; set; }
   }
 
   #endregion

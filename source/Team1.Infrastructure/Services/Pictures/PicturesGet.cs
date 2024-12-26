@@ -97,6 +97,10 @@ public class PicturesGet : BaseService
                    PictureId = x.PictureId,
                    IsEmbed = x.IsEmbed,
                    IsActive = !x.AuditFields.InactiveDateTime.HasValue,
+                   AuditFieldsDto = new AuditFieldsDto()
+                   {
+                     UpdatedDateTime = x.AuditFields.UpdatedDateTime,
+                   },
                  }).Take(20);
     return query.OrderBy(o => Guid.NewGuid()).Take(5).ToListAsync();
   }
