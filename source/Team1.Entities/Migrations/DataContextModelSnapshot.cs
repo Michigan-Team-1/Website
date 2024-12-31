@@ -292,7 +292,7 @@ namespace Team1.Entities.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<bool>("IsEmbed")
+                    b.Property<bool>("IsVideoLink")
                         .HasColumnType("bit");
 
                     b.Property<int>("OwnerUserId")

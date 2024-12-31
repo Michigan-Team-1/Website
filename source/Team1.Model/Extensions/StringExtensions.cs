@@ -139,4 +139,13 @@ public static class StringExtensions
   {
     return item ?? "";
   }
+
+  public static string SantizeString(this string str)
+  {
+    if (String.IsNullOrEmpty(str))
+      return str;
+
+
+    return str;
+  }
 }

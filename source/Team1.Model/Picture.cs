@@ -16,8 +16,8 @@ public class PictureBase
   [StringLength(Constants.FieldSizes.DescriptionLength, ErrorMessage = Constants.ErrorMessages.StringLengthMax)]
   public string? Description { get; set; }
 
-  [Display(Name = "Picture or Media Embed")]
-  public bool IsEmbed { get; set; }
+  [Display(Name = "Picture or YouTube Link")]
+  public bool IsVideoLink { get; set; }
 }
 
 public class Picture : PictureBase

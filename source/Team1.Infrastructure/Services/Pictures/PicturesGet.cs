@@ -33,10 +33,10 @@ public class PicturesGet : BaseService
               Description = x.Description,
               PictureId = x.PictureId,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
-              IsEmbed = x.IsEmbed,
+              IsVideoLink = x.IsVideoLink,
               Document = new DocumentObjDto()
               {
-                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+                DocumentFilename = x.IsVideoLink ? x.DocumentObj.DocumentFilename : null!
               },
               AuditFieldsDto = new AuditFieldsDto()
               {
@@ -66,11 +66,11 @@ public class PicturesGet : BaseService
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
-              IsEmbed = x.IsEmbed,
+              IsVideoLink = x.IsVideoLink,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
               Document = new DocumentObjDto()
               {
-                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+                DocumentFilename = x.IsVideoLink ? x.DocumentObj.DocumentFilename : null!
               },
               AuditFieldsDto = new AuditFieldsDto()
               {
@@ -88,14 +88,14 @@ public class PicturesGet : BaseService
   public Task<List<PictureDto>> GetRandomPictures()
   {
     var query = (from x in db.PicturesByFilter(UserPermissionService, true)
-                 where x.ApprovedDateTime.HasValue && !x.IsEmbed
+                 where x.ApprovedDateTime.HasValue && !x.IsVideoLink
                  orderby x.AuditFields.CreatedDateTime descending
                  select new PictureDto()
                  {
                    IsApproved = x.ApprovedDateTime.HasValue,
                    Description = x.Description,
                    PictureId = x.PictureId,
-                   IsEmbed = x.IsEmbed,
+                   IsVideoLink = x.IsVideoLink,
                    IsActive = !x.AuditFields.InactiveDateTime.HasValue,
                    AuditFieldsDto = new AuditFieldsDto()
                    {
@@ -122,11 +122,11 @@ public class PicturesGet : BaseService
               IsApproved = x.ApprovedDateTime.HasValue,
               Description = x.Description,
               PictureId = x.PictureId,
-              IsEmbed = x.IsEmbed,
+              IsVideoLink = x.IsVideoLink,
               IsActive = !x.AuditFields.InactiveDateTime.HasValue,
               Document = new DocumentObjDto()
               {
-                DocumentFilename = x.IsEmbed ? x.DocumentObj.DocumentFilename : null!
+                DocumentFilename = x.IsVideoLink ? x.DocumentObj.DocumentFilename : null!
               },
               AuditFieldsDto = new AuditFieldsDto()
               {

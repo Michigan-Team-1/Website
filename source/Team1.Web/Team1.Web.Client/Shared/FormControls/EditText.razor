@@ -4,7 +4,7 @@
   @if (!HideLabel)
   {
     <label for="@($"{_predicate}{nameSuffix}")" class="col-form-label @LabelCss">
-      <DefaultLabel Name=@PropertyReflections.GetLabelName(PropertyInfo) IsRequired="@(IsRequired || PropertyReflections.IsRequired(PropertyInfo))"></DefaultLabel>
+      <DefaultLabel Name=@(LabelTextOverride ?? PropertyReflections.GetLabelName(PropertyInfo)) IsRequired="@(IsRequired || PropertyReflections.IsRequired(PropertyInfo))"></DefaultLabel>
       <InputUnsavedChangesNotifcation Value="@(OldValue.IfNullThenEmptyString() != CurrentValue.IfNullThenEmptyString())" />
     </label>
   }
@@ -38,6 +38,9 @@
 
   [Parameter]
   public System.Linq.Expressions.Expression<Func<string>>? ValidationFor { get; set; }
+
+  [Parameter]
+  public string? LabelTextOverride { get; set; }
 
   [Parameter]
   public bool IsRequired { get; set; }

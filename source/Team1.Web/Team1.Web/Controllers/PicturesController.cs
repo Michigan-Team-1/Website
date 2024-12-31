@@ -112,7 +112,7 @@ public class PicturesController : BaseController
   [HttpPost]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> CreatePicture(IFormFile json, IFormFile file)
+  public async Task<IActionResult> CreatePicture(IFormFile json, IFormFile? file)
   {
     return await SavePicture(json, file);
   }
@@ -125,7 +125,7 @@ public class PicturesController : BaseController
   [HttpPut]
   [ProducesResponseType(typeof(PictureDto), (int)HttpStatusCode.OK)]
   [ProducesResponseType(typeof(string), (int)HttpStatusCode.BadRequest)]
-  public async Task<IActionResult> UpdatePicture(IFormFile json, IFormFile file)
+  public async Task<IActionResult> UpdatePicture(IFormFile json, IFormFile? file)
   {
     return await SavePicture(json, file);
   }
@@ -148,7 +148,7 @@ public class PicturesController : BaseController
 
   #region private helpers
 
-  private async Task<IActionResult> SavePicture(IFormFile json, IFormFile file)
+  private async Task<IActionResult> SavePicture(IFormFile json, IFormFile? file)
   {
     var jsonString = await new StreamReader(json.OpenReadStream()).ReadToEndAsync();
     var dto = jsonString.DeserializeJson<PictureDto>(new JsonSerializerOptions() { PropertyNameCaseInsensitive = true });
@@ -157,7 +157,7 @@ public class PicturesController : BaseController
       return CreateResponse(new BaseServiceResponse<PictureDto>(dto, System.Net.HttpStatusCode.BadRequest));
 
     var service = GetService<PicturesCreateUpdate>();
-    var response = await service.SavePicture(dto, file.OpenReadStream());
+    var response = await service.SavePicture(dto, file?.OpenReadStream());
     return CreateResponse(response);
   }
 

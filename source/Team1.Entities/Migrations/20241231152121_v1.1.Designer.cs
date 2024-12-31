@@ -12,7 +12,7 @@ using Team1.Entities;
 namespace Team1.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240229200944_v1.1")]
+    [Migration("20241231152121_v1.1")]
     partial class v11
     {
         /// <inheritdoc />
@@ -295,7 +295,7 @@ namespace Team1.Entities.Migrations
                         .HasMaxLength(2000)
                         .HasColumnType("nvarchar(2000)");
 
-                    b.Property<bool>("IsEmbed")
+                    b.Property<bool>("IsVideoLink")
                         .HasColumnType("bit");
 
                     b.Property<int>("OwnerUserId")

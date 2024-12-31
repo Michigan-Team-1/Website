@@ -40,7 +40,7 @@ public class PicturesCreateUpdate : BaseService
     Team1.Model.Picture? dbObj;
     var isNew = dto.PictureId == 0;
 
-    if (isNew && !dto.IsEmbed && file is null)
+    if (isNew && !dto.IsVideoLink && file is null)
     {
       response.Message = "You must upload a file.";
       response.Status = System.Net.HttpStatusCode.BadRequest;
@@ -52,7 +52,7 @@ public class PicturesCreateUpdate : BaseService
       {
         OwnerUserId = UserPermissionService.UserClaimModel!.UserId,
         AuditFields = new AuditFields(UserPermissionService.UserClaimModel.UserId, timestamp),
-        IsEmbed = dto.IsEmbed,
+        IsVideoLink = dto.IsVideoLink,
       };
       db.Pictures.Add(dbObj);
     }
@@ -67,38 +67,31 @@ public class PicturesCreateUpdate : BaseService
       }
     }
 
-    dbObj.Description = dto.Description;
+    var primaryValuesUpdated = false;
+    if (dbObj.Description != dto.Description)
+    {
+      dbObj.Description = dto.Description;
+      primaryValuesUpdated = true;
+    }
 
     if (dbObj.DocumentObj == null)
       dbObj.DocumentObj = new DocumentObj();
 
-    if (dto.IsEmbed && !string.IsNullOrWhiteSpace(dto.Upload))
+    if (dto.IsVideoLink)
     {
-      if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel!.IsAdmin)
-      {
-        response.Message = "You can not change an image once it has been approved.  Contact an admin for more information.";
-        response.Status = System.Net.HttpStatusCode.Unauthorized;
-        return response;
-      }
-
-      dbObj.DocumentObj.DocumentFilename = dto.Upload;
       dbObj.DocumentObj.DocumentDisplayName = "Embed";
       dbObj.DocumentObj.MimeType = "Embed";
 
-      // clear out file upload
-      dto.Upload = null;
+      if (dbObj.DocumentObj.DocumentFilename != dto.Document.DocumentFilename)
+      {
+        dbObj.DocumentObj.DocumentFilename = dto.Document.DocumentFilename;
+        primaryValuesUpdated = true;
+      }
     }
     else
     {
       if (file is not null)
       {
-        if (dbObj.ApprovedDateTime.HasValue && !UserPermissionService.UserClaimModel!.IsAdmin)
-        {
-          response.Message = "You can not change an image once it has been approved.  Contact an admin for more information.";
-          response.Status = System.Net.HttpStatusCode.Unauthorized;
-          return response;
-        }
-
         if (!isNew)
         {
           // delete old file
@@ -141,9 +134,10 @@ public class PicturesCreateUpdate : BaseService
         {
           await file.CopyToAsync(stream);
         }
+        primaryValuesUpdated = true;
       }
     }
-   
+
     if (UserPermissionService.UserPolicies!.CanApprovePicture)
     {
       if (dto.IsApproved && !dbObj.ApprovedDateTime.HasValue)
@@ -152,6 +146,14 @@ public class PicturesCreateUpdate : BaseService
         dbObj.ApprovedByUserId = UserPermissionService.UserClaimModel!.UserId;
       }
       else if (!dto.IsApproved && dbObj.ApprovedDateTime.HasValue)
+      {
+        dbObj.ApprovedDateTime = null;
+        dbObj.ApprovedByUserId = null;
+      }
+    }
+    else
+    {
+      if (primaryValuesUpdated)
       {
         dbObj.ApprovedDateTime = null;
         dbObj.ApprovedByUserId = null;
@@ -167,7 +169,10 @@ public class PicturesCreateUpdate : BaseService
     dto.AuditFieldsDto.SetUpdated(dbObj.AuditFields, UserPermissionService.FirstLastName);
 
     if (isNew)
+    {
+      dto.AuditFieldsDto.SetCreated(dbObj.AuditFields, UserPermissionService.FirstLastName);
       dto.PictureId = dbObj.PictureId;
+    }
 
     dto.IsUpdated = false;
 

@@ -102,7 +102,10 @@ public static class PropertyReflections
     get
     {
       if (!properties.ContainsKey(nameof(PictureDto)))
+      {
         properties[nameof(PictureDto)] = typeof(PictureDto).GetProperties().ToList();
+        properties[nameof(PictureDto)].AddRange(typeof(DocumentObjDto).GetProperties().ToList());
+      }
 
       return properties[nameof(PictureDto)];
     }

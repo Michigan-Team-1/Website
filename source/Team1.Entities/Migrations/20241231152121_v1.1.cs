@@ -125,7 +125,7 @@ namespace Team1.Entities.Migrations
                 oldNullable: true);
 
             migrationBuilder.AddColumn<bool>(
-                name: "IsEmbed",
+                name: "IsVideoLink",
                 table: "Pictures",
                 type: "bit",
                 nullable: false,
@@ -271,7 +271,7 @@ namespace Team1.Entities.Migrations
                 table: "Pictures");
 
             migrationBuilder.DropColumn(
-                name: "IsEmbed",
+                name: "IsVideoLink",
                 table: "Pictures");
 
             migrationBuilder.AlterColumn<string>(
