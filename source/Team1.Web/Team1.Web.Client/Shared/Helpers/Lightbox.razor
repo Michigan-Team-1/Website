@@ -1,0 +1,31 @@
+﻿<a href="javascript:void()" @onclick="ShowLightBox">
+  <img src="@Source" class="card-img-top @ImgCSS" />
+</a>
+
+<a href="javascript:void()" class="lightbox @show" @onclick=HideLightBox>
+  <span style="background-image:url('@($"{navigationManager.BaseUri}{Source}")')" />
+</a>
+
+@inject NavigationManager navigationManager
+@code {
+  [Parameter]
+  public string Source { get; set; } = default!;
+
+  [Parameter]
+  public string? ImgCSS { get; set; }
+
+  private string show = "";
+  private string hideTrigger = "";
+
+  private void ShowLightBox()
+  {
+    show = "d-block";
+    StateHasChanged();
+  }
+
+  private void HideLightBox()
+  {
+    show = "";
+    StateHasChanged();
+  }
+}

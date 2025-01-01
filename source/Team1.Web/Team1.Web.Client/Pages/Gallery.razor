@@ -51,7 +51,8 @@ else
               }
               else
               {
-                <img src="@row.Item.GetPictureUrl()" class="card-img-top @(!isMyGallery && string.IsNullOrWhiteSpace(row.Item.Description) ? "card-img-bottom" :"")" />
+                      <Lightbox Source="@row.Item.GetPictureUrl()" ImgCSS="@(!isMyGallery && string.IsNullOrWhiteSpace(row.Item.Description) ? "card-img-bottom" :"")">
+                      </Lightbox>
               }
               @if (isMyGallery)
               {

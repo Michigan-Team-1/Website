@@ -23,6 +23,7 @@ using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
 using Team1.Infrastructure.Dtos;
+using Services.FileManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddScoped<IEmailSender<User>, CustomEmailSender>();
 builder.Services.AddScoped<Services.Email.IEmailer, Services.Email.Emailer>();
 
 builder.Services.AddTransient<Services.FileManager.IFileManager, Services.FileManager.LocalFileManager>();
+builder.Services.Configure<FileManagerSettings>(builder.Configuration.GetSection(nameof(FileManagerSettings)));
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

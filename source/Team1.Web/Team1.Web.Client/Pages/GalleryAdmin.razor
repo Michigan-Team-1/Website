@@ -56,7 +56,8 @@ else
               }
               else
               {
-                <img src="@row.Item.GetPictureUrl()" class="card-img-top" />
+                <Lightbox Source="@row.Item.GetPictureUrl()">
+                </Lightbox>
               }
               <div class="card-body">
                 <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
