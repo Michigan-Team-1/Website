@@ -2,17 +2,16 @@ using Microsoft.EntityFrameworkCore;
 using Services.FileManager;
 using Team1.Infrastructure.Dtos;
 using Team1.Infrastructure.Dtos.Helpers;
-using Team1.Model.Enums;
 
 namespace Team1.Infrastructure.Services.Pictures;
 
 public class PicturesGet : BaseService
 {
-  private IFileManager _fileManager;
+  private IFileManager fileManager;
 
   public PicturesGet(IFileManager fileManager)
   {
-    _fileManager = fileManager;
+    this.fileManager = fileManager;
   }
 
   /// <summary>
@@ -139,31 +138,6 @@ public class PicturesGet : BaseService
   }
 
   /// <summary>
-  /// Gets gallery types the user has access to
-  /// </summary>
-  public List<SelectOptionDto<byte>> GetGalleryTypes()
-  {
-    return GalleryTypeEnum.AdminMode.GetList().Where(w =>
-    {
-      switch (w)
-      {
-        case GalleryTypeEnum.Public:
-          return true;
-        case GalleryTypeEnum.MyGallery:
-          return UserPermissionService.UserClaimModel.IsAuthenticated;
-        case GalleryTypeEnum.AdminMode:
-          return UserPermissionService.UserPolicies.CanApprovePicture;
-      }
-
-      return false;
-    }).Select(s => new SelectOptionDto<byte>()
-    {
-      Text = s.GetDisplayName(),
-      Value = (byte)s,
-    }).ToList();
-  }
-
-  /// <summary>
   /// Gets a Picture
   /// </summary>
   /// <param name="id">id to get</param>
@@ -200,7 +174,7 @@ public class PicturesGet : BaseService
     };
 
     using (var ms = new MemoryStream())
-    using (var stream = _fileManager.OpenFile(filePathInfo, true))
+    using (var stream = fileManager.OpenFile(filePathInfo, true))
     {
       await stream.CopyToAsync(ms);
       response.MimeType = picture.DocumentObj.MimeType;

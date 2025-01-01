@@ -3,6 +3,11 @@
 
 <PageTitle>Michigan Team-1</PageTitle>
 
+@if (pictures != null)
+{
+
+}
+
 @if (announcements == null || events == null)
 {
   <BusyIndicator />
@@ -11,19 +16,25 @@ else
 {
   <div class="row">
     <div class="col-sm col-md-8 order-2 order-md-1">
-        <h4>Announcements</h4>
-      @foreach (var item in announcements)
-      {
-        <div class="card mb-2">
-          <h5 class="card-header">@item.Title</h5>
-          <div class="card-body">
-            @((MarkupString)item.Body)
-          </div>
-          <div class="card-footer">
-            Posted On @item.StartShowingOnDate.ToShortDateString() By @item.AuditFieldsDto.CreatedByName
-          </div>
-        </div>
-      }
+    <h4>Announcements</h4>
+    <SmartishTable.Root SafeList="announcements">
+        <SmartishTable.Repeater Context="row">
+            <RowTemplate>
+            <div class="card mb-2">
+              <h5 class="card-header">@row.Item.Title</h5>
+              <div class="card-body">
+                @((MarkupString)row.Item.Body)
+              </div>
+              <div class="card-footer">
+                Posted On @row.Item.StartShowingOnDate.ToShortDateString() By @row.Item.AuditFieldsDto.CreatedByName
+              </div>
+            </div>
+            </RowTemplate>
+        </SmartishTable.Repeater>
+        <SmartishTable.Pagination Context="Pager">
+          <SmartishTablePager Paginator="Pager" HidePageSizer="true" DefaultPageSize="3"></SmartishTablePager>
+        </SmartishTable.Pagination>
+    </SmartishTable.Root>
     </div>
     <div class="col-sm col-md-4 order-1 order-md-2">
       <h4>Events</h4>

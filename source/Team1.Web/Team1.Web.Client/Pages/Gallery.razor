@@ -1,10 +1,10 @@
 ﻿@page "/gallery"
 @page "/gallery/{GalleryType}"
-<PageTitle>Gallery - Michigan Team-1</PageTitle>
+<PageTitle>@(isMyGallery ? "My Gallery" : "Gallery") - Michigan Team-1</PageTitle>
 
 <div class="row mb-2">
   <div class="col-sm-6">
-    <Team1.Web.Client.Shared.Helpers.PageHeader Name="Gallery" Icon="fas fa-images" />
+    <Team1.Web.Client.Shared.Helpers.PageHeader Name="@(isMyGallery ? "My Gallery" : "Gallery")" Icon="fas fa-images" />
   </div>
   <div class="col-sm-6 text-start text-sm-end">
     <AuthorizeView>
@@ -17,7 +17,7 @@
         {
           <a class="btn btn-secondary me-2" href="gallery/mine">My Gallery</a>
         }
-        <button class="btn btn-primary" type="button" @onclick=@(() => AddEdit(null, -1))><i class="fas fa-plus"></i> Upload/Add YouTube Link</button>
+        <button class="btn btn-primary" type="button" @onclick=@(() => AddEdit(null, -1))><i class="fas fa-plus"></i> Add New</button>
       </Authorized>
     </AuthorizeView>
   </div>

@@ -2,9 +2,14 @@
   <div class="col-md-auto">
     <div class="row gx-2">
       <div class="col-auto">
-        <div class="form-control-plaintext">Display</div>
+        @if (!HidePageSizer)
+        {
+          <div class="form-control-plaintext">Display</div>
+        }
       </div>
       <div class="col-auto">
+        @if (!HidePageSizer)
+        {
         <select class="form-select" @bind="Paginator.PageSize">
           @foreach (var item in Client.Helpers.Constants.PageSizes)
           {
@@ -12,9 +17,10 @@
           }
           if (PageSizeShowAllOption)
           {
-              <option selected=@(Paginator.PageSize == null) value="">All</option>
+          <option selected=@(Paginator.PageSize == null) value="">All</option>
           }
         </select>
+        }
       </div>
     </div>
   </div>
@@ -72,6 +78,9 @@
   [Parameter]
   public bool PageSizeShowAllOption { get; set; } = true;
 
+  [Parameter]
+  public bool HidePageSizer { get; set; } = false;
+
   private int? currentPage
   {
     get => Paginator.Page;
@@ -100,4 +109,4 @@
   {
     currentPage = newPage;
   }
-  }
+}

@@ -92,19 +92,6 @@ public class PicturesController : BaseController
   }
 
   /// <summary>
-  /// Gets the gallery types
-  /// </summary>
-  /// <returns>list of SelectOptionDto of byte</returns>
-  [HttpGet("GalleryTypes")]
-  [ProducesResponseType(typeof(List<SelectOptionDto<byte>>), (int)HttpStatusCode.OK)]
-  public IActionResult GetGalleryTypes()
-  {
-    var service = GetService<PicturesGet>();
-    return Ok(service.GetGalleryTypes());
-  }
-
-
-  /// <summary>
   /// Create a picture
   /// </summary>
   /// <param name="dto">picture object</param>

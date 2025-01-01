@@ -89,6 +89,6 @@ public class AnnouncementsGet : BaseService
                 CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
                 UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
               },
-            }).Take(5).ToListAsync();
+            }).Take(18).ToListAsync();
   }
 }

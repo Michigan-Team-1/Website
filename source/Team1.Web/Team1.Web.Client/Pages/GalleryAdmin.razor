@@ -1,0 +1,144 @@
+﻿@attribute [Authorize(Policy = nameof(PolicyNames.CanApprovePicture))]
+@page "/galleryadmin"
+<PageTitle>Gallery Admin - Michigan Team-1</PageTitle>
+
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <Team1.Web.Client.Shared.Helpers.PageHeader Name="Gallery Admin" Icon="fas fa-images" />
+  </div>
+</div>
+
+@if (Dtos == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <SmartishTable.Root SafeList="Dtos" @ref="smartishTable" HeaderTag="button">
+    <div class="row">
+      <div class="col-md mb-2">
+        <SmartishTable.FilterString Field="x=>x.Description" Context="filterContext" Operator="SmartishTable.Filters.StringOperators.Contains">
+          <input type="text" @bind-value="@filterContext.FilterValue" @bind-value:event="oninput" name="Search" class="form-control form-control-sm" placeholder="Search Description..." />
+        </SmartishTable.FilterString>
+      </div>
+      <div class="col-sm-auto mb-2">
+        <select @bind="activeOperator" class="form-select form-select-sm" title="Is Active">
+          <option value="@SmartishTable.Filters.BooleanOperators.Equals">All</option>
+          @foreach (var item in SmartishTable.Filters.BooleanOperators.Equals.GetList().Where(w => ((byte)w) > 8))
+          {
+            <option selected="@(activeOperator == item)" value="@item">@(item == SmartishTable.Filters.BooleanOperators.IsTrue ? "Active" : "Inactive")</option>
+          }
+        </select>
+        <SmartishTable.FilterBoolean Field="o=>o.IsActive" Operator="activeOperator"></SmartishTable.FilterBoolean>
+      </div>
+      <div class="col-sm-auto mb-2">
+        <select @bind="approvedOperator" class="form-select form-select-sm" title="Is Approved">
+          <option value="@SmartishTable.Filters.BooleanOperators.Equals">All</option>
+          @foreach (var item in SmartishTable.Filters.BooleanOperators.Equals.GetList().Where(w => ((byte)w) > 8))
+          {
+            <option selected="@(approvedOperator == item)" value="@item">@(item == SmartishTable.Filters.BooleanOperators.IsTrue ? "Approved" : "Not Approved")</option>
+          }
+        </select>
+        <SmartishTable.FilterBoolean Field="o=>o.IsApproved" Operator="approvedOperator"></SmartishTable.FilterBoolean>
+      </div>
+      <div class="col-sm mb-2">
+        <SmartishTable.Sort StartingSortDescending="true" Field="o=>o.AuditFieldsDto.CreatedDateTime" IsDefaultSort="true" Css="canSelect btn btn-outline-primary btn-sm">Sort By Upload Date</SmartishTable.Sort>
+      </div>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 mb-2 g-2">
+      <SmartishTable.Repeater Context="row">
+        <RowTemplate>
+          <div class="col">
+            <div class="card h-100 bg-body-tertiary">
+              @if (row.Item.IsVideoLink)
+              {
+                <iframe allowfullscreen src="@(row.Item.Document.DocumentFilename)" class="card-img-top"></iframe>
+              }
+              else
+              {
+                <img src="@row.Item.GetPictureUrl()" class="card-img-top" />
+              }
+              <div class="card-body">
+                <button type="button" class="btn btn-sm btn-link" @onclick=@(() => AddEdit(row.Item, row.Index))>
+                  <span class="fa fa-edit"></span>&nbsp;
+                  @if (string.IsNullOrWhiteSpace(row.Item.Description))
+                  {
+                    <text>Edit</text>
+                  }
+                  else
+                  {
+                    @row.Item.Description
+                  }
+                </button>
+                <div>
+                  <div><IsActive Value="@row.Item.IsActive" /> Is Active</div>
+                  <div><IsActive Value="@row.Item.IsApproved" /> Is Approved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </RowTemplate>
+        <EmptyTemplate>
+          <div>Nothing found</div>
+        </EmptyTemplate>
+      </SmartishTable.Repeater>
+    </div>
+    <SmartishTable.Pagination Context="Pager">
+      <SmartishTablePager Paginator="Pager"></SmartishTablePager>
+    </SmartishTable.Pagination>
+  </SmartishTable.Root>
+}
+
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+@inject IModalService modalService
+@inject AuthorizedClient authClient
+@inject AnonymousClient anonymousClient
+@code {
+  private SmartishTable.Root<PictureDto>? smartishTable;
+  private List<PictureDto>? Dtos;
+
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  private SmartishTable.Filters.BooleanOperators? activeOperator = SmartishTable.Filters.BooleanOperators.IsTrue;
+  private SmartishTable.Filters.BooleanOperators? approvedOperator = SmartishTable.Filters.BooleanOperators.IsFalse;
+
+  private async Task AddEdit(PictureDto? dto, int index)
+  {
+    var parameters = new Blazored.Modal.ModalParameters();
+    parameters.Add(nameof(MediaAddEdit.DtoOriginal), dto!);
+    var modalReference = modalService.Show<MediaAddEdit>("Media Add/Edit", parameters, new ModalOptions() { });
+    var modalResult = await modalReference.Result;
+    dto = modalResult.Data as PictureDto;
+    if (dto != null)
+    {
+      await smartishTable!.UpdateAt(index, dto);
+    }
+  }
+
+  protected override async Task OnParametersSetAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Gallery), out var restored))
+    {
+        Dtos = await authClient.GetAdminMedia();
+    }
+    else
+    {
+      Dtos = restored!;
+    }
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(Gallery), Dtos);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+}
