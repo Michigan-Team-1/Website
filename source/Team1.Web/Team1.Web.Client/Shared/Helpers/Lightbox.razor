@@ -1,8 +1,8 @@
-﻿<a href="javascript:void()" @onclick="ShowLightBox">
+﻿<a href="javascript:void(0)" @onclick="ShowLightBox">
   <img src="@Source" class="card-img-top @ImgCSS" />
 </a>
 
-<a href="javascript:void()" class="lightbox @show" @onclick=HideLightBox>
+<a href="javascript:void(0)" class="lightbox @show" @onclick=HideLightBox>
   <span style="background-image:url('@($"{navigationManager.BaseUri}{Source}")')" />
 </a>
 
@@ -15,7 +15,6 @@
   public string? ImgCSS { get; set; }
 
   private string show = "";
-  private string hideTrigger = "";
 
   private void ShowLightBox()
   {

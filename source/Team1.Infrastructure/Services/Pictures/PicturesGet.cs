@@ -101,7 +101,7 @@ public class PicturesGet : BaseService
                      UpdatedDateTime = x.AuditFields.UpdatedDateTime,
                    },
                  }).Take(20);
-    return query.OrderBy(o => Guid.NewGuid()).Take(5).ToListAsync();
+    return query.OrderBy(o => Guid.NewGuid()).Take(10).ToListAsync();
   }
 
   /// <summary>

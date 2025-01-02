@@ -5,7 +5,22 @@
 
 @if (pictures != null)
 {
-
+  <div class="main-carousel">
+    @foreach (var pic in pictures)
+    {
+      <div class="carousel-cell">
+        <a href="javascript:void(0)" @onclick="(() => ShowLightBox(pic.GetPictureUrl()))">
+          <img data-flickity-lazyload="@pic.GetPictureUrl()" class="home-page-image" />
+        </a>
+      </div>
+    }
+  </div>
+  @if (!string.IsNullOrWhiteSpace(lightBoxUrl))
+  {
+    <a href="javascript:void(0)" class="lightbox @show" @onclick=HideLightBox>
+      <span style="background-image:url('@(lightBoxUrl)')" />
+    </a>
+  }
 }
 
 @if (announcements == null || events == null)
@@ -16,10 +31,10 @@ else
 {
   <div class="row">
     <div class="col-sm col-md-8 order-2 order-md-1">
-    <h4>Announcements</h4>
-    <SmartishTable.Root SafeList="announcements">
+      <h4>Announcements</h4>
+      <SmartishTable.Root SafeList="announcements">
         <SmartishTable.Repeater Context="row">
-            <RowTemplate>
+          <RowTemplate>
             <div class="card mb-2">
               <h5 class="card-header">@row.Item.Title</h5>
               <div class="card-body">
@@ -29,12 +44,12 @@ else
                 Posted On @row.Item.StartShowingOnDate.ToShortDateString() By @row.Item.AuditFieldsDto.CreatedByName
               </div>
             </div>
-            </RowTemplate>
+          </RowTemplate>
         </SmartishTable.Repeater>
         <SmartishTable.Pagination Context="Pager">
           <SmartishTablePager Paginator="Pager" HidePageSizer="true" DefaultPageSize="3"></SmartishTablePager>
         </SmartishTable.Pagination>
-    </SmartishTable.Root>
+      </SmartishTable.Root>
     </div>
     <div class="col-sm col-md-4 order-1 order-md-2">
       <h4>Events</h4>
@@ -50,7 +65,7 @@ else
               @if (item.EventAlternateDate.HasValue)
               {
                 <div>
-                    Alternate Date @item.EventAlternateDate.Value.ToShortDateString()
+                  Alternate Date @item.EventAlternateDate.Value.ToShortDateString()
                 </div>
               }
               @for (int i = 0; i < item.Locations!.Count; i++)
@@ -73,12 +88,18 @@ else
 @inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AnonymousClient client
+@inject IJSRuntime jsRuntime
 @code {
   private PersistingComponentStateSubscription persistingSubscription;
 
   private List<AnnouncementDto>? announcements;
   private List<EventDto>? events;
   private List<PictureDto>? pictures;
+
+  private string? lightBoxUrl;
+  private string show = "";
+
+  private static bool dragInProgress = false;
 
   protected override async Task OnInitializedAsync()
   {
@@ -110,7 +131,14 @@ else
     {
       pictures = restoredPictures!;
     }
+  }
 
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (pictures?.Count > 0)
+    {
+      await jsRuntime.InvokeVoidAsync("carouselInit", ".main-carousel");
+    }
   }
 
   private Task PersistData()
@@ -131,13 +159,13 @@ else
       address += $" {dto!.AddressObj!.Address3}";
 
     if (dto!.AddressObj!.City != null)
-      address += $", { dto!.AddressObj!.City}";
+      address += $", {dto!.AddressObj!.City}";
 
     if (dto!.AddressObj!.GoverningDistrictName != null)
-      address += $", { dto!.AddressObj!.GoverningDistrictName}";
+      address += $", {dto!.AddressObj!.GoverningDistrictName}";
 
     if (dto!.AddressObj!.PostalCode != null)
-      address += $", { dto!.AddressObj!.PostalCode}";
+      address += $", {dto!.AddressObj!.PostalCode}";
 
     return HttpUtility.UrlEncode(address);
   }
@@ -145,5 +173,35 @@ else
   void IDisposable.Dispose()
   {
     persistingSubscription.Dispose();
+  }
+
+  [JSInvokable]
+  public static Task DragStarted()
+  {
+    dragInProgress = true;
+    return Task.CompletedTask;
+  }
+
+  [JSInvokable]
+  public static Task Settled()
+  {
+    dragInProgress = false;
+    return Task.CompletedTask;
+  }
+
+  private void ShowLightBox(string url)
+  {
+    if (dragInProgress) return;
+
+    lightBoxUrl = url;
+    show = "d-block";
+    StateHasChanged();
+  }
+
+  private void HideLightBox()
+  {
+    lightBoxUrl = "";
+    show = "";
+    StateHasChanged();
   }
 }

@@ -14,3 +14,28 @@
     }
     element.src = url;
 }
+
+function carouselInit(elementSelector) {
+    var flkty = new Flickity(elementSelector, {
+        wrapAround: true,
+        groupCells: true,
+        autoPlay: true,
+        pageDots: false,
+        lazyLoad: true
+    });
+
+    flkty.on('dragStart', flickityDragStart);
+    flkty.on('settle', flickitySettle);
+}
+
+function flickityDragStart() {
+    var jsObjectReference = DotNet.createJSObjectReference(window);
+    DotNet.invokeMethodAsync('Team1.Web.Client', 'DragStarted', jsObjectReference);
+    DotNet.disposeJSObjectReference(jsObjectReference);
+}
+
+function flickitySettle() {
+    var jsObjectReference = DotNet.createJSObjectReference(window);
+    DotNet.invokeMethodAsync('Team1.Web.Client', 'Settled', jsObjectReference);
+    DotNet.disposeJSObjectReference(jsObjectReference);
+}
