@@ -44,10 +44,10 @@ else
       <SmartishTable.Repeater Context="row">
         <RowTemplate>
           <div class="col">
-            <div class="card h-100 bg-body-tertiary">
+            <div class="card h-100 bg-body-tertiary gallergy-card">
               @if (row.Item.IsVideoLink)
               {
-                <iframe allowfullscreen src="@(row.Item.Document.DocumentFilename)" class="card-img-top @(!isMyGallery && string.IsNullOrWhiteSpace(row.Item.Description) ? "card-img-bottom" :"")"></iframe>
+                <iframe allowfullscreen src="@(row.Item.Document.DocumentFilename)" class="video-iframe card-img-top @(!isMyGallery && string.IsNullOrWhiteSpace(row.Item.Description) ? "card-img-bottom" :"")"></iframe>
               }
               else
               {

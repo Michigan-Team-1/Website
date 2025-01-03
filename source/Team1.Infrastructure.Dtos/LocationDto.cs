@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using System.ComponentModel.DataAnnotations;
+using System.Text;
 using Team1.Model;
 using Team1.Model.Constants;
 
@@ -16,6 +17,27 @@ public class LocationDto : LocationBase
   public AddressObjDto AddressObj { get; set; } = default!;
 
   public AuditFieldsDto AuditFieldsDto { get; set; } = default!;
+
+  public string GetAddress()
+  {
+    var sb = new StringBuilder();
+    sb.Append(AddressObj!.Address1);
+    if (AddressObj!.Address2 != null)
+      sb.Append($" {AddressObj!.Address2}");
+    if (AddressObj!.Address3 != null)
+      sb.Append($" {AddressObj!.Address3}");
+
+    if (AddressObj!.City != null)
+      sb.Append($", {AddressObj!.City}");
+
+    if (AddressObj!.GoverningDistrictName != null)
+      sb.Append($", {AddressObj!.GoverningDistrictName}");
+
+    if (AddressObj!.PostalCode != null)
+      sb.Append($", {AddressObj!.PostalCode}");
+
+    return sb.ToString();
+  }
 
   public override bool Equals(object? obj)
   {
