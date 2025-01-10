@@ -2,8 +2,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34322.80
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Web.Site", "source\Team1.Web.Site\Team1.Web.Site.csproj", "{E197BB23-02CB-409A-A8A9-35E9F64DB456}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Data", "Data", "{5A1663C1-09C6-4B90-8680-1C1F88BC0058}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Team1.Entities", "source\Team1.Entities\Team1.Entities.csproj", "{F1DC70E7-B810-44BA-89CF-23F9A180AFCD}"
@@ -38,9 +36,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E197BB23-02CB-409A-A8A9-35E9F64DB456}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F1DC70E7-B810-44BA-89CF-23F9A180AFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F1DC70E7-B810-44BA-89CF-23F9A180AFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1DC70E7-B810-44BA-89CF-23F9A180AFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
