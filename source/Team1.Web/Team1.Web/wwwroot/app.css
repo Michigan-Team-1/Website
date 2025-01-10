@@ -137,3 +137,8 @@ html, body {
     height: max(300px, 60%);
     aspect-ratio: 16 / 9;
 }
+
+.image-add-edit {
+    max-height: 400px;
+    max-width: 600px;
+}

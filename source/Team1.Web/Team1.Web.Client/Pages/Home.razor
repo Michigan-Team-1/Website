@@ -35,7 +35,7 @@
 else
 {
   <div class="row">
-    <div class="col-sm col-md-8 order-2 order-md-1">
+    <div class="col-12 col-md-8 order-2 order-md-1">
       <h4>Announcements</h4>
       <SmartishTable.Root SafeList="announcements">
         <SmartishTable.Repeater Context="row">
@@ -58,7 +58,7 @@ else
         </SmartishTable.Pagination>
       </SmartishTable.Root>
     </div>
-    <div class="col-sm col-md-4 order-1 order-md-2">
+    <div class="col-12 col-md-4 order-1 order-md-2">
       <h4>Events <button class="btn btn-primary btn-sm" type="button" @onclick=DownloadEvents><span class="fas fa-calendar-alt">&nbsp;</span> All Launches <i class="fa-solid fa-download">&nbsp;</i></button></h4>
       @foreach (var item in events)
       {

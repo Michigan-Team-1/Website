@@ -40,7 +40,7 @@
             {
               @if (Dto.PictureId > 0)
               {
-                <img src="@Dto.GetPictureUrl()" class="mb-2 image-thumbnail" />
+                <img src="@Dto.GetPictureUrl()" class="mb-2 image-thumbnail image-add-edit" />
               }
               <div class="mb-3 row gx-2">
                 <label for="" class="col-form-label col-sm-3">
@@ -52,7 +52,7 @@
                   <ValidationMessage For="@(() => Dto.Document.DocumentFilename)" />
                 </div>
               </div>
-              <img id="newImage" class="mb-2 image-thumbnail d-none" />
+              <img id="newImage" class="mb-2 image-thumbnail d-none image-add-edit" />
             }
             @if (!string.IsNullOrWhiteSpace(Message))
             {
