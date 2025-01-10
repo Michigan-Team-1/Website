@@ -1,0 +1,18 @@
+﻿@using Blazored.Toast
+@using Blazored.Toast.Configuration
+@inherits LayoutComponentBase
+
+<NavMenu />
+
+<div class="container-fluid body-content">
+  @Body
+</div>
+
+<BlazoredToasts Position="Blazored.Toast.Configuration.ToastPosition.TopRight" ShowProgressBar="true" IconType="IconType.FontAwesome" 
+  SuccessIcon="fa fa-thumbs-up" InfoIcon="fa fa-info" ErrorIcon="fa fa-bug" WarningIcon="fa fa-triangle-exclamation" Timeout="7"/>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

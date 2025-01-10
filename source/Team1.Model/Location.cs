@@ -19,7 +19,7 @@ namespace Team1.Model
 
         [Display(Name= "FAA Waiver")]
         [StringLength(Constants.FieldSizes.NameLength, ErrorMessage = ErrorMessages.StringLengthMax)]
-        public string FAAWaiver { get; set; }
+        public string? FAAWaiver { get; set; }
     }
 
     public class Location : LocationBase

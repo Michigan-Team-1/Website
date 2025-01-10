@@ -1,0 +1,171 @@
+﻿<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block modal-lg" style="pointer-events: none;" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col"><h5 class="modal-title">@BlazoredModal.Title</h5></div>
+        <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="(async () => await BlazoredModal.CancelAsync())">
+        </button>
+      </div>
+      <EditForm EditContext="_editContext" OnValidSubmit="Save">
+        <div class="modal-body">
+          <Blazored.FluentValidation.FluentValidationValidator />
+          <ValidationSummary />
+          <div class="form-horizontal">
+            @if (Dto.PictureId > 0)
+            {
+              <p>Picture or YouTube Link can not be changed once saved.</p>
+            }
+            else
+            {
+              <EditRadioGroup @bind-Value=Dto.IsVideoLink @bind-Value:after=ResetUpload PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsVideoLink))" ValidationFor="(() => Dto.IsVideoLink)">
+                <div class="row">
+                  <div class="col-sm-12 col-md">
+                    <label class="form-check-label"><InputRadio Value="false" class="form-check-input" TValue="bool" /> Picture Upload </label>
+                  </div>
+                  <div class="col-sm-12 col-md">
+                    <label class="form-check-label"><InputRadio Value="true" class="form-check-input" TValue="bool" /> YouTube Link</label>
+                  </div>
+                </div>
+              </EditRadioGroup>
+            }
+            @if (Dto.IsVideoLink)
+            {
+              <p>YouTube Link MUST be in the following format: <strong>@PictureDto.YouTubeLinkFormat</strong></p>
+              <EditText @bind-Value=Dto.Document.DocumentFilename PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Document.DocumentFilename))" 
+              LabelTextOverride="YouTube Link (Url)" ValidationFor="(() => Dto.Document.DocumentFilename)" />
+            }
+            else
+            {
+              @if (Dto.PictureId > 0)
+              {
+                <img src="@Dto.GetPictureUrl()" class="mb-2 image-thumbnail image-add-edit" />
+              }
+              <div class="mb-3 row gx-2">
+                <label for="" class="col-form-label col-sm-3">
+                  <DefaultLabel Name="Picture Upload" IsRequired="@(PropertyReflections.IsRequired(PropertyReflections.GetPictureDtoProperty(nameof(Dto.Document.DocumentFilename))))"></DefaultLabel>
+                  <InputUnsavedChangesNotifcation Value="@(currentFileToBeUploaded != null)" />
+                </label>
+                <div class="col-sm">
+                  <InputFile class="form-control" OnChange="InputFileOnChange" accept="image/png, image/jpeg, image/gif" id="inputFile" />
+                  <ValidationMessage For="@(() => Dto.Document.DocumentFilename)" />
+                </div>
+              </div>
+              <img id="newImage" class="mb-2 image-thumbnail d-none image-add-edit" />
+            }
+            @if (!string.IsNullOrWhiteSpace(Message))
+            {
+              <div class="alert alert-danger mb-2">@Message</div>
+            }
+
+            <EditText @bind-Value="Dto.Description" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.Description))" ValidationFor="(() => Dto.Description)" />
+
+            <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsActive))" />
+
+            <AuthorizeView Policy=@nameof(PolicyNames.CanApprovePicture) Context="authContext">
+              <Authorized>
+                <EditCheckbox @bind-Value="@Dto.IsApproved" PropertyInfo="PropertyReflections.GetPictureDtoProperty(nameof(Dto.IsApproved))" />
+                <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
+              </Authorized>
+            </AuthorizeView>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+          <div class="col text-end"><ModalDefaultFooterButtons OnCancel="BlazoredModal.CancelAsync" /></div>
+        </div>
+      </EditForm>
+    </div>
+  </div>
+</div>
+
+@inject IModalService ModalService
+@inject AuthorizedClient client
+@inject IJSRuntime jsRuntime
+@code {
+  [CascadingParameter]
+  private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public PictureDto DtoOriginal { get; set; } = default!;
+
+  private PictureDto Dto { get; set; } = default!;
+
+  private string? Message { get; set; }
+
+  private EditContext _editContext = default!;
+
+  private IBrowserFile? currentFileToBeUploaded;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override void OnInitialized()
+  {
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<PictureDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  const int maxAllowedSize = 1024 * 1024 * 5;
+
+  async Task InputFileOnChange(InputFileChangeEventArgs e)
+  {
+    Message = null;
+    var file = e.GetMultipleFiles().FirstOrDefault(); // get the files selected by the users
+    if (file == null)
+    {
+      if (Dto.Document.MimeType != null)
+      {
+        Dto.Document.MimeType = DtoOriginal.Document.MimeType;
+        Dto.Document.DocumentDisplayName = DtoOriginal.Document.DocumentDisplayName;
+      }
+      return;
+    }
+    if (file.Size > maxAllowedSize)
+    {
+      Message = $"File size is too large.  Please resize the image to <= {maxAllowedSize} bytes.";
+      return;
+    }
+    Dto.Document.MimeType = file.ContentType;
+    Dto.Document.DocumentDisplayName = file.Name;
+    Dto.Document.DocumentFilename = file.Name;
+
+    using (var stream = file.OpenReadStream(maxAllowedSize))
+    {
+      var strRef = new DotNetStreamReference(stream);
+      await jsRuntime.InvokeVoidAsync("setSource", "newImage", strRef, Dto.Document.MimeType);
+      currentFileToBeUploaded = file;
+    }
+  }
+
+  void ResetUpload()
+  {
+    if (Dto.IsVideoLink)
+    {
+      Dto.Document.MimeType = "Embed";
+      Dto.Document.DocumentDisplayName = "Embed";
+    }
+    else
+    {
+      Dto.Document.MimeType = null!;
+      Dto.Document.DocumentDisplayName = null!;
+    }
+  }
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await client.SaveMedia(Dto, currentFileToBeUploaded?.OpenReadStream(maxAllowedSize));
+      if (data != null)
+        await BlazoredModal.CloseAsync(ModalResult.Ok(data));
+    }
+  }
+}

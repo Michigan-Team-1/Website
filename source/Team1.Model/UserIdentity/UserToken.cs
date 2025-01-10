@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace Team1.Model.UserIdentity
 {
-    public class UserTokenBase
+  public class UserTokenBase
     {
         /// <summary>
         /// Gets or sets the primary key of the user that the token belongs to.
@@ -17,19 +14,21 @@ namespace Team1.Model.UserIdentity
         /// Gets or sets the LoginProvider this token is from.
         /// </summary>
         [StringLength(2000)]
-        public string LoginProvider { get; set; }
+    [Required]
+    public string LoginProvider { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the token.
         /// </summary>
         [StringLength(1000)]
-        public string Name { get; set; }
+    [Required]
+    public string Name { get; set; }
 
         /// <summary>
         /// Gets or sets the token value.
         /// </summary>
         [StringLength(2000)]
-        public string Value { get; set; }
+        public string? Value { get; set; }
     }
 
     public class UserToken : UserTokenBase

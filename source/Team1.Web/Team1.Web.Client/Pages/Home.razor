@@ -1,0 +1,221 @@
+﻿@page "/"
+@using System.Web
+@using Ical.Net
+@using Ical.Net.CalendarComponents
+@using Ical.Net.DataTypes
+@using Ical.Net.Serialization
+@using Team1.Web.Client.Helpers
+
+<PageTitle>Michigan Team-1</PageTitle>
+
+@if (pictures != null)
+{
+  <div class="main-carousel">
+    @foreach (var pic in pictures)
+    {
+      <div class="carousel-cell">
+        <a href="javascript:void(0)" @onclick="(() => ShowLightBox(pic.GetPictureUrl()))">
+          <img data-flickity-lazyload="@pic.GetPictureUrl()" class="home-page-image" />
+        </a>
+      </div>
+    }
+  </div>
+  @if (!string.IsNullOrWhiteSpace(lightBoxUrl))
+  {
+    <a href="javascript:void(0)" class="lightbox @show" @onclick=HideLightBox>
+      <span style="background-image:url('@(lightBoxUrl)')" />
+    </a>
+  }
+}
+
+@if (announcements == null || events == null)
+{
+  <BusyIndicator />
+}
+else
+{
+  <div class="row">
+    <div class="col-12 col-md-8 order-2 order-md-1">
+      <h4>Announcements</h4>
+      <SmartishTable.Root SafeList="announcements">
+        <SmartishTable.Repeater Context="row">
+          <RowTemplate>
+            <Card AllowToggle=true>
+              <HeaderContent>
+                @row.Item.Title
+              </HeaderContent>
+              <ChildContent>
+                @((MarkupString)row.Item.Body)
+              </ChildContent>
+              <FooterContent>
+                Posted On @row.Item.StartShowingOnDate.ToShortDateString() By @row.Item.AuditFieldsDto.CreatedByName
+              </FooterContent>
+            </Card>
+          </RowTemplate>
+        </SmartishTable.Repeater>
+        <SmartishTable.Pagination Context="Pager">
+          <SmartishTablePager Paginator="Pager" HidePageSizer="true" DefaultPageSize="3"></SmartishTablePager>
+        </SmartishTable.Pagination>
+      </SmartishTable.Root>
+    </div>
+    <div class="col-12 col-md-4 order-1 order-md-2">
+      <h4>Events <button class="btn btn-primary btn-sm" type="button" @onclick=DownloadEvents><span class="fas fa-calendar-alt">&nbsp;</span> All Launches <i class="fa-solid fa-download">&nbsp;</i></button></h4>
+      @foreach (var item in events)
+      {
+        <div class="card mb-2">
+          <h5 class="card-header">
+            @item.Name
+          </h5>
+          <div class="card-body">
+            <div class="card-text">
+              <div>Date @item.EventDate.ToShortDateString()</div>
+              @if (item.EventAlternateDate.HasValue)
+              {
+                <div>
+                  Alternate Date @item.EventAlternateDate.Value.ToShortDateString()
+                </div>
+              }
+              @for (int i = 0; i < item.Locations!.Count; i++)
+              {
+                @(i == 0 ? "At" : "Alternate") <a href="https://www.google.com/maps/search/?api=1&query=@HttpUtility.UrlEncode(item.Locations[i].GetAddress())" class="btn btn-info btn-sm" target="_blank"><i class="fas fa-map-marked"></i> @item.Locations[i].LocationName <i class="fas fa-external-link-alt"></i></a>
+                @if (!string.IsNullOrWhiteSpace(item.Locations[i].FAAWaiver))
+                {
+                  <div class="card-text">Altitude @item.Locations[i].FAAWaiver</div>
+                }
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@implements IDisposable
+@inject PersistentComponentState ApplicationState
+@inject IModalService modalService
+@inject AnonymousClient client
+@inject IJSRuntime jsRuntime
+@code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  private List<AnnouncementDto>? announcements;
+  private List<EventDto>? events;
+  private List<PictureDto>? pictures;
+
+  private string? lightBoxUrl;
+  private string show = "";
+
+  private static bool dragInProgress = false;
+
+  private async Task DownloadEvents()
+  {
+    if (events == null || events.Count == 0)
+      return;
+
+    var calendar = new Calendar();
+    calendar.AddTimeZone(new VTimeZone("US/Eastern"));
+
+    foreach (var evnt in events.Where(w => w.Locations[0].FAAWaiver != null))
+    {
+      var icalEvent = new CalendarEvent
+        {
+          Summary = !(evnt.Name?.Contains(Constants.ClubName) ?? false) ? $"{Constants.ClubName} {evnt.Name}" : evnt.Name,
+          Start = new CalDateTime(evnt.EventDate.Year, evnt.EventDate.Month, evnt.EventDate.Day, 9, 0, 0),
+          End = new CalDateTime(evnt.EventDate.Year, evnt.EventDate.Month, evnt.EventDate.Day, 17, 0, 0),
+          Location = evnt.Locations![0].GetAddress()
+        };
+
+      calendar.Events.Add(icalEvent);
+    }
+
+    var iCalSerializer = new CalendarSerializer();
+    string result = iCalSerializer.SerializeToString(calendar);
+    byte[] file = System.Text.Encoding.UTF8.GetBytes(result);
+    await jsRuntime.InvokeVoidAsync("BlazorDownloadFile", "team-1_events.ics", "text/calendar", file);
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<List<AnnouncementDto>>(nameof(Home) + nameof(announcements), out var restored))
+    {
+      announcements = await client.GetAnnouncementsForHome();
+    }
+    else
+    {
+      announcements = restored!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<EventDto>>(nameof(Home) + nameof(events), out var restoredEvents))
+    {
+      events = await client.GetEventsForHome();
+    }
+    else
+    {
+      events = restoredEvents!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Home) + nameof(pictures), out var restoredPictures))
+    {
+      pictures = await client.GetRandomPictures();
+    }
+    else
+    {
+      pictures = restoredPictures!;
+    }
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (pictures?.Count > 0)
+    {
+      await jsRuntime.InvokeVoidAsync("carouselInit", ".main-carousel");
+    }
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(announcements), announcements);
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(events), events);
+    ApplicationState.PersistAsJson(nameof(Home) + nameof(pictures), pictures);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+
+  [JSInvokable]
+  public static Task DragStarted()
+  {
+    dragInProgress = true;
+    return Task.CompletedTask;
+  }
+
+  [JSInvokable]
+  public static Task Settled()
+  {
+    dragInProgress = false;
+    return Task.CompletedTask;
+  }
+
+  private void ShowLightBox(string url)
+  {
+    if (dragInProgress) return;
+
+    lightBoxUrl = url;
+    show = "d-block";
+    StateHasChanged();
+  }
+
+  private void HideLightBox()
+  {
+    lightBoxUrl = "";
+    show = "";
+    StateHasChanged();
+  }
+}

@@ -1,0 +1,22 @@
+﻿@if(ColSpan.HasValue)
+{
+  <tr>
+    <td colspan="@ColSpan.Value" class="text-center">
+      <strong>
+        @Message
+      </strong>
+    </td>
+  </tr>  
+}
+else
+{
+  @Message
+}
+
+@code {
+    [Parameter]
+    public string Message { get; set; } = "No Data";
+
+    [Parameter]
+    public int? ColSpan { get; set; }
+}

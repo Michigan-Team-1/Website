@@ -1,0 +1,70 @@
+﻿@if (Value && HideOnTrue)
+{
+  // do nothing
+}
+else
+{
+  if (UseValueText)
+  {
+    <span class="@css">@(Value ? ValueTrueText : ValueFalseText)</span>
+  }
+  else
+  {
+    <span class="@css" title="@(Value ? active : inactive)"></span>
+  }
+}
+
+@code {
+
+  [Parameter]
+  public bool Value { get; set; }
+
+  /// <summary>
+  /// When this parameter is set to TRUE, It will replace the CSS indicators that represent Active or Inactive, with text instead.
+  /// </summary>
+  [Parameter]
+  public bool UseValueText { get; set; }
+
+  /// <summary>
+  /// When using the <see cref="UseValueText"/> is set to TRUE, use this optional parameter to set the text you want to show to the user when <see cref="Value"/> is TRUE.
+  /// If no value is specified in the parameter, it's value is defaulted to '(Active)'.
+  /// </summary>
+  [Parameter]
+  public string ValueTrueText { get; set; } = $"({active})";
+
+  /// <summary>
+  /// When using the <see cref="UseValueText"/> is set to TRUE, use this optional parameter to set the text you want to show to the user when <see cref="Value"/> is FALSE.
+  /// If no value is specified in the parameter, it's value is defaulted to '(Inactive)'.
+  /// </summary>
+  [Parameter]
+  public string ValueFalseText { get; set; } = $"({inactive})";
+
+  /// <summary>
+  /// Optional parameter that will will cause the icon for active to not be rendered, if the value is 'true'.
+  /// A use case example for this would be where only inactive status icons would want to be displayed, like in drop down lists.
+  /// </summary>
+  [Parameter]
+  public bool HideOnTrue { get; set; }
+
+  private string css = "ms-1 ";
+
+  private const string active = "Active";
+
+  private const string inactive = "Inactive";
+
+  protected override void OnParametersSet()
+  {
+    if (!UseValueText)
+    {
+      css = "far ";
+      if (Value)
+      {
+        css += "fa-check-square text-success";
+      }
+      else
+      {
+        css += "fa-square text-warning";
+      }
+    }
+  }
+}

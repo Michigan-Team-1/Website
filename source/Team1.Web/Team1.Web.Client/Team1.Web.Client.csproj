@@ -1,0 +1,54 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <NoDefaultLaunchSettingsFile>true</NoDefaultLaunchSettingsFile>
+    <StaticWebAssetProjectMode>Default</StaticWebAssetProjectMode>
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\logo-white.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\FormControls\EditCheckbox.razor" />
+    <None Include="Shared\FormControls\EditDate.razor" />
+    <None Include="Shared\FormControls\EditNumber.razor" />
+    <None Include="Shared\FormControls\EditSelect.razor" />
+    <None Include="Shared\FormControls\EditText.razor" />
+    <None Include="Shared\SmartishTableHelpers\EmptyDataRow.razor" />
+    <None Include="Shared\SmartishTableHelpers\SmartishTablePager.razor" />
+    <None Include="Shared\UnsavedChangesNotification\InputUnsavedChangesNotifcation.razor" />
+    <None Include="Shared\UnsavedChangesNotification\UnsavedChangesNotifcation.razor" />
+    <None Include="wwwroot\logo-white.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.FluentValidation" Version="2.1.0" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.4.0" />
+    <PackageReference Include="Blazored.Modal" Version="7.2.0" />
+    <PackageReference Include="Blazored.Toast" Version="4.1.0" />
+    <PackageReference Include="Ical.Net" Version="4.3.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.1" />
+    <PackageReference Include="SmartishTable" Version="1.2.0-beta.202310161529" />
+    <PackageReference Include="TinyMCE.Blazor" Version="1.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj" />
+    <ProjectReference Include="..\..\Team1.Web.Common\Team1.Web.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+</Project>

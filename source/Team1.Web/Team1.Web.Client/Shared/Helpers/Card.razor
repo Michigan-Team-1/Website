@@ -1,0 +1,60 @@
+﻿<div class="card @CardClass">
+  @if (AllowToggle)
+  {
+    <div class="card-header @CardHeaderClass" role="button" @onclick="Toggle">
+      <i class="@BtnClass">&nbsp;</i>
+      @HeaderContent
+    </div>
+
+  }
+  else
+  {
+    <div class="card-header @CardHeaderClass">
+      @HeaderContent
+    </div>
+  }
+
+  @if (_showCardBody)
+  {
+    <div class="card-body">
+      @ChildContent
+    </div>
+    @if (FooterContent != null)
+    {
+      <div class="card-footer">
+        @FooterContent
+      </div>
+    }
+  }
+</div>
+
+@code {
+  [Parameter]
+  public RenderFragment HeaderContent { get; set; } = default!;
+
+  [Parameter]
+  public RenderFragment ChildContent { get; set; } = default!;
+
+  [Parameter]
+  public RenderFragment? FooterContent { get; set; }
+
+  [Parameter] public bool ShowCardBody { get; set; } = true;
+  [Parameter] public bool AllowToggle { get; set; } = false;
+
+  public string BtnClass => _showCardBody ? "fa-fw fa fa-chevron-down" : "fa-fw fa fa-chevron-right";
+  [Parameter] public string CardClass { get; set; } = "mb-2";
+  [Parameter] public string CardHeaderClass { get; set; } = "";
+
+  public bool _showCardBody { get; set; }
+
+
+  protected override void OnInitialized()
+  {
+    _showCardBody = ShowCardBody;
+  }
+
+  public void Toggle()
+  {
+    _showCardBody = !_showCardBody;
+  }
+}

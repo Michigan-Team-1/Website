@@ -1,20 +1,14 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Team1.Model;
-using Team1.Model.UserIdentity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Security.Claims;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
+using Team1.Model;
+using Team1.Model.UserIdentity;
 
 namespace Team1.Entities.UserIdentity
 {
-    public class UserStore :
+  public class UserStore :
         IUserStore<User>,
         IUserPasswordStore<User>,
         IUserSecurityStampStore<User>,
@@ -262,11 +256,11 @@ namespace Team1.Entities.UserIdentity
                 UserId = null,
                 EventDateTime = DateTime.UtcNow,
                 LogTypeId = Model.Enums.LogTypeEnum.LoginFindUserName,
-                EventDescription = String.Format("A request to find a user with the user id ({0}) was made.", userId)
+                EventDescription = $"{nameof(FindByIdAsync)}: {userId}",
             });
             Context.SaveChanges();
 
-            return Users.FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.UserId == id && w.IsLoginEnabled, cancellationToken);
+            return Users.Include(i=>i.UserRoles).ThenInclude(i=>i.Role).FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.UserId == id && w.IsLoginEnabled, cancellationToken);
         }
 
         /// <summary>
@@ -287,11 +281,11 @@ namespace Team1.Entities.UserIdentity
                 UserId = null,
                 EventDateTime = DateTime.UtcNow,
                 LogTypeId = Model.Enums.LogTypeEnum.LoginFindUserName,
-                EventDescription = String.Format("A request to find a user with the user name ({0}) was made.", userName)
+                EventDescription = $"{nameof(FindByNameAsync)}: {userName}",
             });
             Context.SaveChanges();
 
-            return Users.FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.Email == userName && w.IsLoginEnabled, cancellationToken);
+            return Users.Include(i => i.UserRoles).ThenInclude(i => i.Role).FirstOrDefaultAsync(w => !w.AuditFields.InactiveDateTime.HasValue && w.Email == userName && w.IsLoginEnabled, cancellationToken);
         }
 
         #endregion

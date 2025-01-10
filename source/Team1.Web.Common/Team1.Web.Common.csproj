@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj" />
+    <ProjectReference Include="..\Team1.Infrastructure.UserIdentity\Team1.Infrastructure.UserIdentity.csproj" />
+  </ItemGroup>
+
+</Project>

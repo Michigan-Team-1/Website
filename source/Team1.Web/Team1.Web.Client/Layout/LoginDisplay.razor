@@ -1,0 +1,135 @@
+﻿@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.WebAssembly.Authentication
+@using Team1.Web.Client.Helpers
+
+@inject NavigationManager NavigationManager
+
+<ul class="navbar-nav">
+  <AuthorizeView>
+    <Authorized>
+      <li class="nav-item dropdown">
+        <button class="btn btn-link nav-link dropdown-toggle" @onclick="ToggleProfileMenu" @onfocusout="OutFocusProfileMenu">@context.User.Identity.Name</button>
+        <div class="dropdown-menu dropdown-menu-right @profileCss" aria-labelledby="profileLink">
+          <a class="dropdown-item hover" href="gallery/mine" Match="NavLinkMatch.All">
+            <span class="fas fa-images fa-fw" aria-hidden="true"></span>&nbsp; My Gallery
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="/UserProfile"><i class="fas fa-user fa-fw"></i> My Account</a>
+          <a class="dropdown-item" href="/Account/Manage/ChangePassword"><i class="fa-solid fa-key fa-fw"></i> Change Password</a>
+          <a class="dropdown-item" href=""><i class="fas fa-user fa-fw"></i> Renew Online!</a>
+          <div class="dropdown-divider"></div>
+          <form action="Account/Logout" method="post">
+            <AntiforgeryToken />
+            <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+            <button type="submit" class="dropdown-item">
+              <i class="fas fa-sign-out-alt fa-fw"></i> Log out
+            </button>
+          </form>
+        </div>
+      </li>
+    </Authorized>
+    <NotAuthorized>
+      <li class="nav-item"><a href="UserRegister" class="nav-link"><i class="fas fa-user-plus fa-fw"></i> Register</a></li>
+      <li class="nav-item"><a href="Account/Login" class="nav-link"><i class="fas fa-sign-in-alt fa-fw"></i> Log in</a></li>
+    </NotAuthorized>
+  </AuthorizeView>
+  @if (!NavigationManager.Uri.Contains("Account/", StringComparison.InvariantCultureIgnoreCase))
+  {
+    <li class="nav-item dropdown">
+      <button class="nav-link dropdown-toggle" id="bd-theme" type="button" aria-expanded="false" data-bs-toggle="dropdown" data-bs-display="static" aria-label="Toggle theme (dark)"
+            @onclick="ToggleTheme" @onfocusout="OutFocusTheme">
+      <i class="fa-solid fa-circle-half-stroke fa-fw"></i>
+      <span class="d-lg-none ms-2" id="bd-theme-text">Toggle theme</span>
+    </button>
+    <ul class="dropdown-menu dropdown-menu-end @(expandTheme ? "show" : "")" aria-labelledby="bd-theme-text" data-bs-popper="static">
+      <li>
+        <button type="button" class="dropdown-item hover @(theme == "light" ? "active" : "")" data-bs-theme-value="light" @onclick=@(() => SetTheme("light"))>
+          <i class="fa-regular fa-sun fa-fw"></i>
+          Light
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item hover  @(theme == "dark" ? "active" : "")" data-bs-theme-value="dark" @onclick=@(() => SetTheme("dark"))>
+          <i class="fa-solid fa-moon fa-fw"></i>
+          Dark
+        </button>
+      </li>
+      <li>
+        <button type="button" class="dropdown-item hover @(theme == "auto" ? "active" : "")" data-bs-theme-value="auto" @onclick=@(() => SetTheme("auto"))>
+          <i class="fa-solid fa-circle-half-stroke  fa-fw"></i>
+          Auto
+        </button>
+      </li>
+    </ul>
+  </li>
+  }
+</ul>
+
+@inject IJSRuntime jsRuntime
+@code {
+  private string? currentUrl;
+  private string? theme;
+
+  protected override async Task OnInitializedAsync()
+  {
+    currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    NavigationManager.LocationChanged += OnLocationChanged;
+  }
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      theme = await jsRuntime.InvokeAsync<string>("getStoredTheme");
+      if (string.IsNullOrWhiteSpace(theme))
+        theme = "auto";
+    }
+  }
+
+  private async Task SetTheme(string theme)
+  {
+    this.theme = theme;
+    await jsRuntime.InvokeVoidAsync("setAndSaveTheme", theme);
+    StateHasChanged();
+  }
+
+  private bool collapseProfileMenu = true;
+  private bool expandTheme = false;
+
+  private string? profileCss => collapseProfileMenu ? null : "show";
+
+  private void ToggleProfileMenu()
+  {
+    collapseProfileMenu = !collapseProfileMenu;
+  }
+
+  private async Task OutFocusProfileMenu()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    collapseProfileMenu = true;
+  }
+
+  private void ToggleTheme()
+  {
+    expandTheme = !expandTheme;
+  }
+
+  private async Task OutFocusTheme()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandTheme = false;
+  }
+
+  private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+  {
+    currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    collapseProfileMenu = true;
+    expandTheme = false;
+    StateHasChanged();
+  }
+
+  public void Dispose()
+  {
+    NavigationManager.LocationChanged -= OnLocationChanged;
+  }
+}

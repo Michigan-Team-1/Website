@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Team1.Entities;
 
+#nullable disable
+
 namespace Team1.Entities.Migrations
 {
     [DbContext(typeof(DataContext))]
@@ -15,16 +17,18 @@ namespace Team1.Entities.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("Team1.Model.APILog", b =>
                 {
                     b.Property<long>("APILogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("APILogId"));
 
                     b.Property<bool>("IncomingRequest")
                         .HasColumnType("bit");
@@ -34,6 +38,7 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ResponseContentBlock")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("ResponseDateTime")
@@ -41,8 +46,8 @@ namespace Team1.Entities.Migrations
 
                     b.Property<string>("TargetURL")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTime>("TransmissionDateTime")
                         .HasColumnType("datetime2");
@@ -56,8 +61,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("AddressId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AddressId"));
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -73,8 +79,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("AnnouncementId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AnnouncementId"));
 
                     b.Property<string>("Body")
                         .IsRequired()
@@ -85,8 +92,8 @@ namespace Team1.Entities.Migrations
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("AnnouncementId");
 
@@ -100,26 +107,26 @@ namespace Team1.Entities.Migrations
 
                     b.Property<string>("Alpha2")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2)")
-                        .HasMaxLength(2);
+                        .HasMaxLength(2)
+                        .HasColumnType("nvarchar(2)");
 
                     b.Property<string>("Alpha3")
                         .IsRequired()
-                        .HasColumnType("nvarchar(3)")
-                        .HasMaxLength(3);
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("GoverningDistrictName")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("PostalCodeMask")
-                        .HasColumnType("nvarchar(10)")
-                        .HasMaxLength(10);
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.HasKey("CountryId");
 
@@ -130,8 +137,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("EventId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("EventId"));
 
                     b.Property<DateTime?>("EventAlternateDate")
                         .HasColumnType("Date");
@@ -141,8 +149,8 @@ namespace Team1.Entities.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("EventId");
 
@@ -170,16 +178,17 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Code")
-                        .HasColumnType("nvarchar(5)")
-                        .HasMaxLength(5);
+                        .IsRequired()
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<int>("CountryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("GoverningDistrictId");
 
@@ -192,22 +201,23 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("LocationId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("LocationId"));
 
                     b.Property<string>("FAAWaiver")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("LocationDescription")
                         .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("LocationName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("LocationId");
 
@@ -220,8 +230,9 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("LogTypeId");
 
@@ -234,8 +245,9 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("MemberTypeId");
 
@@ -249,13 +261,13 @@ namespace Team1.Entities.Migrations
 
                     b.Property<string>("MobileCarrierName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("TextingEmailSuffix")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.HasKey("MobileCarrierId");
 
@@ -266,8 +278,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("PictureId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PictureId"));
 
                     b.Property<int?>("ApprovedByUserId")
                         .HasColumnType("int");
@@ -276,18 +289,18 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
+
+                    b.Property<bool>("IsVideoLink")
+                        .HasColumnType("bit");
 
                     b.Property<int>("OwnerUserId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("PictureId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Pictures");
                 });
@@ -296,8 +309,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<long>("LogId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("LogId"));
 
                     b.Property<DateTimeOffset>("EventDateTime")
                         .HasColumnType("datetimeoffset");
@@ -307,8 +321,8 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<Guid?>("LogGroupKey")
                         .HasColumnType("uniqueidentifier");
@@ -328,71 +342,15 @@ namespace Team1.Entities.Migrations
                     b.ToTable("SystemLogs");
                 });
 
-            modelBuilder.Entity("Team1.Model.Task", b =>
-                {
-                    b.Property<int>("TaskId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
-
-                    b.Property<byte>("DueDay")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("DueMonth")
-                        .HasColumnType("tinyint");
-
-                    b.Property<byte>("TaskCategoryId")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("TaskId");
-
-                    b.HasIndex("TaskCategoryId");
-
-                    b.ToTable("Tasks");
-                });
-
-            modelBuilder.Entity("Team1.Model.TaskCategory", b =>
-                {
-                    b.Property<byte>("TaskCategoryId")
-                        .HasColumnType("tinyint");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
-
-                    b.HasKey("TaskCategoryId");
-
-                    b.ToTable("TaskCategories");
-                });
-
-            modelBuilder.Entity("Team1.Model.TaskMemberType", b =>
-                {
-                    b.Property<int>("TaskId")
-                        .HasColumnType("int");
-
-                    b.Property<byte>("MemberTypeId")
-                        .HasColumnType("tinyint");
-
-                    b.HasKey("TaskId", "MemberTypeId");
-
-                    b.HasIndex("MemberTypeId");
-
-                    b.ToTable("TaskMemberTypes");
-                });
-
             modelBuilder.Entity("Team1.Model.UserIdentity.Role", b =>
                 {
                     b.Property<byte>("RoleId")
                         .HasColumnType("tinyint");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Data")
                         .HasColumnType("nvarchar(max)");
@@ -401,16 +359,18 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("NormalizedName")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Type")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("RoleId");
 
@@ -421,18 +381,19 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("RoleClaimId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("RoleClaimId"));
 
                     b.Property<string>("ClaimType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ClaimValue")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<byte>("RoleId")
                         .HasColumnType("tinyint");
@@ -448,8 +409,9 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("UserId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserId"));
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
@@ -464,33 +426,34 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("tinyint");
 
                     b.Property<string>("ConcurrencyStamp")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<bool>("EmailConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("IpAddress")
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<bool>("IsLoginEnabled")
                         .HasColumnType("bit");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<DateTimeOffset?>("LastPasswordChangeDateTime")
                         .HasColumnType("datetimeoffset");
@@ -508,43 +471,37 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NarNumber")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("NormalizedEmail")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
-
-                    b.Property<bool>("OptOutOfGeneralEmails")
-                        .HasColumnType("bit");
-
-                    b.Property<bool>("OptOutOfMemberEmails")
-                        .HasColumnType("bit");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("PaidThroughYear")
                         .HasColumnType("int");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(200)")
-                        .HasMaxLength(200);
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasColumnType("nvarchar(25)")
-                        .HasMaxLength(25);
+                        .HasMaxLength(25)
+                        .HasColumnType("nvarchar(25)");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
                     b.Property<string>("SecurityStamp")
                         .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
+                        .HasMaxLength(256)
+                        .HasColumnType("nvarchar(256)");
 
                     b.Property<string>("TripoliNumber")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
@@ -560,18 +517,19 @@ namespace Team1.Entities.Migrations
                 {
                     b.Property<int>("UserClaimId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("UserClaimId"));
 
                     b.Property<string>("ClaimType")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ClaimValue")
                         .IsRequired()
-                        .HasColumnType("nvarchar(500)")
-                        .HasMaxLength(500);
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -586,16 +544,16 @@ namespace Team1.Entities.Migrations
             modelBuilder.Entity("Team1.Model.UserIdentity.UserLogin", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -634,8 +592,8 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("RefreshToken")
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("UserId");
 
@@ -665,16 +623,16 @@ namespace Team1.Entities.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(1000)")
-                        .HasMaxLength(1000);
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
 
                     b.Property<string>("Value")
-                        .HasColumnType("nvarchar(2000)")
-                        .HasMaxLength(2000);
+                        .HasMaxLength(2000)
+                        .HasColumnType("nvarchar(2000)");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -692,43 +650,43 @@ namespace Team1.Entities.Migrations
                     b.OwnsOne("Team1.Model.OwnedTypes.AddressObj", "AddressObj", b1 =>
                         {
                             b1.Property<int>("AddressId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                                .HasColumnType("int");
 
                             b1.Property<string>("Address1")
                                 .IsRequired()
-                                .HasColumnName("Address1")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address1");
 
                             b1.Property<string>("Address2")
-                                .HasColumnName("Address2")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address2");
 
                             b1.Property<string>("Address3")
-                                .HasColumnName("Address3")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address3");
 
                             b1.Property<string>("City")
-                                .HasColumnName("City")
+                                .IsRequired()
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("City");
 
-                            b1.Property<int>("CountryId")
-                                .HasColumnName("CountryId")
-                                .HasColumnType("int");
+                            b1.Property<int?>("CountryId")
+                                .IsRequired()
+                                .HasColumnType("int")
+                                .HasColumnName("CountryId");
 
                             b1.Property<int?>("GoverningDistrictId")
-                                .HasColumnName("GoverningDistrictId")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("GoverningDistrictId");
 
                             b1.Property<string>("PostalCode")
-                                .HasColumnName("PostalCode")
+                                .HasMaxLength(12)
                                 .HasColumnType("nvarchar(12)")
-                                .HasMaxLength(12);
+                                .HasColumnName("PostalCode");
 
                             b1.HasKey("AddressId");
 
@@ -751,38 +709,40 @@ namespace Team1.Entities.Migrations
                                 .WithMany()
                                 .HasForeignKey("GoverningDistrictId")
                                 .OnDelete(DeleteBehavior.Restrict);
+
+                            b1.Navigation("Country");
+
+                            b1.Navigation("GoverningDistrict");
                         });
 
                     b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
                         {
                             b1.Property<int>("AddressId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
                                 .HasColumnType("int");
 
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
 
                             b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
 
                             b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
 
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
 
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
 
                             b1.HasKey("AddressId");
 
@@ -791,6 +751,14 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("AddressId");
                         });
+
+                    b.Navigation("AddressObj")
+                        .IsRequired();
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.Announcement", b =>
@@ -798,33 +766,31 @@ namespace Team1.Entities.Migrations
                     b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
                         {
                             b1.Property<int>("AnnouncementId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
                                 .HasColumnType("int");
 
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
 
                             b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
 
                             b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
 
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
 
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
 
                             b1.HasKey("AnnouncementId");
 
@@ -833,6 +799,9 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("AnnouncementId");
                         });
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Team1.Model.Event", b =>
@@ -840,33 +809,31 @@ namespace Team1.Entities.Migrations
                     b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
                         {
                             b1.Property<int>("EventId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
                                 .HasColumnType("int");
 
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
 
                             b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
 
                             b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
 
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
 
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
 
                             b1.HasKey("EventId");
 
@@ -875,6 +842,9 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("EventId");
                         });
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Team1.Model.EventLocation", b =>
@@ -890,6 +860,10 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Event");
+
+                    b.Navigation("Location");
                 });
 
             modelBuilder.Entity("Team1.Model.GoverningDistrict", b =>
@@ -899,6 +873,8 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("CountryId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Country");
                 });
 
             modelBuilder.Entity("Team1.Model.Location", b =>
@@ -906,43 +882,43 @@ namespace Team1.Entities.Migrations
                     b.OwnsOne("Team1.Model.OwnedTypes.AddressObj", "AddressObj", b1 =>
                         {
                             b1.Property<int>("LocationId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                                .HasColumnType("int");
 
                             b1.Property<string>("Address1")
                                 .IsRequired()
-                                .HasColumnName("Address1")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address1");
 
                             b1.Property<string>("Address2")
-                                .HasColumnName("Address2")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address2");
 
                             b1.Property<string>("Address3")
-                                .HasColumnName("Address3")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("Address3");
 
                             b1.Property<string>("City")
-                                .HasColumnName("City")
+                                .IsRequired()
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("City");
 
-                            b1.Property<int>("CountryId")
-                                .HasColumnName("CountryId")
-                                .HasColumnType("int");
+                            b1.Property<int?>("CountryId")
+                                .IsRequired()
+                                .HasColumnType("int")
+                                .HasColumnName("CountryId");
 
                             b1.Property<int?>("GoverningDistrictId")
-                                .HasColumnName("GoverningDistrictId")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("GoverningDistrictId");
 
                             b1.Property<string>("PostalCode")
-                                .HasColumnName("PostalCode")
+                                .HasMaxLength(12)
                                 .HasColumnType("nvarchar(12)")
-                                .HasMaxLength(12);
+                                .HasColumnName("PostalCode");
 
                             b1.HasKey("LocationId");
 
@@ -965,38 +941,40 @@ namespace Team1.Entities.Migrations
 
                             b1.WithOwner()
                                 .HasForeignKey("LocationId");
+
+                            b1.Navigation("Country");
+
+                            b1.Navigation("GoverningDistrict");
                         });
 
                     b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
                         {
                             b1.Property<int>("LocationId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
                                 .HasColumnType("int");
 
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
 
                             b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
 
                             b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
 
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
 
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
 
                             b1.HasKey("LocationId");
 
@@ -1005,78 +983,44 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("LocationId");
                         });
+
+                    b.Navigation("AddressObj")
+                        .IsRequired();
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Team1.Model.Picture", b =>
                 {
-                    b.HasOne("Team1.Model.UserIdentity.User", "User")
+                    b.HasOne("Team1.Model.UserIdentity.User", "OwnerUser")
                         .WithMany("Pictures")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict);
-
-                    b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
-                        {
-                            b1.Property<int>("PictureId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.HasKey("PictureId");
-
-                            b1.ToTable("Pictures");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PictureId");
-                        });
+                        .HasForeignKey("OwnerUserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.OwnsOne("Team1.Model.OwnedTypes.DocumentObj", "DocumentObj", b1 =>
                         {
                             b1.Property<int>("PictureId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                                .HasColumnType("int");
 
                             b1.Property<string>("DocumentDisplayName")
                                 .IsRequired()
-                                .HasColumnName("DocumentDisplayName")
+                                .HasMaxLength(500)
                                 .HasColumnType("nvarchar(500)")
-                                .HasMaxLength(500);
+                                .HasColumnName("DocumentDisplayName");
 
                             b1.Property<string>("DocumentFilename")
                                 .IsRequired()
-                                .HasColumnName("DocumentFilename")
+                                .HasMaxLength(1000)
                                 .HasColumnType("nvarchar(1000)")
-                                .HasMaxLength(1000);
+                                .HasColumnName("DocumentFilename");
 
                             b1.Property<string>("MimeType")
                                 .IsRequired()
-                                .HasColumnName("MimeType")
+                                .HasMaxLength(200)
                                 .HasColumnType("nvarchar(200)")
-                                .HasMaxLength(200);
+                                .HasColumnName("MimeType");
 
                             b1.HasKey("PictureId");
 
@@ -1085,6 +1029,51 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("PictureId");
                         });
+
+                    b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
+                        {
+                            b1.Property<int>("PictureId")
+                                .HasColumnType("int");
+
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
+
+                            b1.Property<int?>("InactivatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
+
+                            b1.Property<DateTimeOffset?>("InactiveDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
+
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
+
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
+
+                            b1.HasKey("PictureId");
+
+                            b1.ToTable("Pictures");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PictureId");
+                        });
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
+
+                    b.Navigation("DocumentObj")
+                        .IsRequired();
+
+                    b.Navigation("OwnerUser");
                 });
 
             modelBuilder.Entity("Team1.Model.SystemLog", b =>
@@ -1099,69 +1088,10 @@ namespace Team1.Entities.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict);
-                });
 
-            modelBuilder.Entity("Team1.Model.Task", b =>
-                {
-                    b.HasOne("Team1.Model.TaskCategory", "TaskCategory")
-                        .WithMany("Tasks")
-                        .HasForeignKey("TaskCategoryId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("LogType");
 
-                    b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
-                        {
-                            b1.Property<int>("TaskId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
-
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
-
-                            b1.HasKey("TaskId");
-
-                            b1.ToTable("Tasks");
-
-                            b1.WithOwner()
-                                .HasForeignKey("TaskId");
-                        });
-                });
-
-            modelBuilder.Entity("Team1.Model.TaskMemberType", b =>
-                {
-                    b.HasOne("Team1.Model.MemberType", "MemberType")
-                        .WithMany("TaskMemberTypes")
-                        .HasForeignKey("MemberTypeId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Team1.Model.Task", "Task")
-                        .WithMany("TaskMemberTypes")
-                        .HasForeignKey("TaskId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.RoleClaim", b =>
@@ -1171,6 +1101,8 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.User", b =>
@@ -1183,33 +1115,31 @@ namespace Team1.Entities.Migrations
                     b.OwnsOne("Team1.Model.OwnedTypes.AuditFields", "AuditFields", b1 =>
                         {
                             b1.Property<int>("UserId")
-                                .ValueGeneratedOnAdd()
-                                .HasColumnType("int")
-                                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                            b1.Property<int>("CreatedById")
-                                .HasColumnName("CreatedById")
                                 .HasColumnType("int");
 
-                            b1.Property<DateTimeOffset>("CreatedDateTime")
-                                .HasColumnName("CreatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<int?>("CreatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("CreatedById");
+
+                            b1.Property<DateTimeOffset?>("CreatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("CreatedDateTime");
 
                             b1.Property<int?>("InactivatedById")
-                                .HasColumnName("InactivatedById")
-                                .HasColumnType("int");
+                                .HasColumnType("int")
+                                .HasColumnName("InactivatedById");
 
                             b1.Property<DateTimeOffset?>("InactiveDateTime")
-                                .HasColumnName("InactiveDateTime")
-                                .HasColumnType("datetimeoffset");
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("InactiveDateTime");
 
-                            b1.Property<int>("UpdatedById")
-                                .HasColumnName("UpdatedById")
-                                .HasColumnType("int");
+                            b1.Property<int?>("UpdatedById")
+                                .HasColumnType("int")
+                                .HasColumnName("UpdatedById");
 
-                            b1.Property<DateTimeOffset>("UpdatedDateTime")
-                                .HasColumnName("UpdatedDateTime")
-                                .HasColumnType("datetimeoffset");
+                            b1.Property<DateTimeOffset?>("UpdatedDateTime")
+                                .HasColumnType("datetimeoffset")
+                                .HasColumnName("UpdatedDateTime");
 
                             b1.HasKey("UserId");
 
@@ -1218,6 +1148,11 @@ namespace Team1.Entities.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
                         });
+
+                    b.Navigation("AuditFields")
+                        .IsRequired();
+
+                    b.Navigation("MobileCarrier");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserClaim", b =>
@@ -1227,6 +1162,8 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserLogin", b =>
@@ -1236,6 +1173,8 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserMemberType", b =>
@@ -1251,6 +1190,10 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("MemberType");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserRefreshToken", b =>
@@ -1265,6 +1208,10 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("ImpersonationUser");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserRole", b =>
@@ -1280,6 +1227,10 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Role");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Team1.Model.UserIdentity.UserToken", b =>
@@ -1289,6 +1240,60 @@ namespace Team1.Entities.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Team1.Model.Country", b =>
+                {
+                    b.Navigation("GoverningDistricts");
+                });
+
+            modelBuilder.Entity("Team1.Model.Event", b =>
+                {
+                    b.Navigation("EventLocations");
+                });
+
+            modelBuilder.Entity("Team1.Model.Location", b =>
+                {
+                    b.Navigation("EventLocations");
+                });
+
+            modelBuilder.Entity("Team1.Model.LogType", b =>
+                {
+                    b.Navigation("SystemLogs");
+                });
+
+            modelBuilder.Entity("Team1.Model.MemberType", b =>
+                {
+                    b.Navigation("UserMemberTypes");
+                });
+
+            modelBuilder.Entity("Team1.Model.MobileCarrier", b =>
+                {
+                    b.Navigation("Users");
+                });
+
+            modelBuilder.Entity("Team1.Model.UserIdentity.Role", b =>
+                {
+                    b.Navigation("UserRoles");
+                });
+
+            modelBuilder.Entity("Team1.Model.UserIdentity.User", b =>
+                {
+                    b.Navigation("Addresses");
+
+                    b.Navigation("Claims");
+
+                    b.Navigation("Logins");
+
+                    b.Navigation("Pictures");
+
+                    b.Navigation("Tokens");
+
+                    b.Navigation("UserMemberTypes");
+
+                    b.Navigation("UserRoles");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,149 @@
+﻿@page "/UserProfile"
+@using Blazored.Toast.Services
+@attribute [Authorize(Policy = nameof(PolicyNames.UserProfileEdit))]
+<PageTitle>User Profile - Michigan Team-1</PageTitle>
+
+@if (Dto == null)
+{
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <PageHeader Name="User Profile" Icon="fas fa-user" />
+    </div>
+  </div>
+  <BusyIndicator />
+}
+else
+{
+  <EditForm EditContext="_editContext" OnValidSubmit="Save">
+    <Blazored.FluentValidation.FluentValidationValidator />
+    <div class="row mb-2">
+      <div class="col-sm-4">
+        <PageHeader Name="User Profile" Icon="fas fa-user" />
+      </div>
+      <div class="col-sm-4">
+        <UnsavedChangesNotifcation Value="dataUpdated" />
+      </div>
+      <div class="col-sm-4 text-sm-start text-md-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" OnPage=Helpers.PageEnum.UserProfile />
+    <div class="modal-footer">
+      <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+      <div class="col text-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+  </EditForm>
+}
+
+@implements IDisposable
+@inject AuthorizedClient client
+@inject AnonymousClient anonClient
+@inject PersistentComponentState ApplicationState
+@inject IToastService toastService;
+@code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  public UserDto? DtoOriginal { get; set; } = default!;
+
+  private UserDto Dto { get; set; } = default!;
+
+  private List<SelectOptionDto<int>>? mobileCarriers;
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
+
+  private EditContext _editContext = default!;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(UserProfile) + nameof(Dto), out var restored))
+    {
+      DtoOriginal = await client.GetUserProfile();
+    }
+    else
+    {
+      DtoOriginal = restored!;
+    }
+
+    if (DtoOriginal == null)
+      return;
+
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + nameof(mobileCarriers), out var restoredMobileCarriers))
+    {
+      mobileCarriers = await anonClient.GetMobileCarriers(); ;
+    }
+    else
+    {
+      mobileCarriers = restoredMobileCarriers!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(UserProfile) + nameof(countries), out var restoredCountries))
+    {
+      countries = await anonClient.GetCountries();
+    }
+    else
+    {
+      countries = restoredCountries!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(UserProfile) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    {
+      governingDistricts = await anonClient.GetGoverningDistricts();
+    }
+    else
+    {
+      governingDistricts = restoredGoverningDistricts!;
+    }
+
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(Dto), DtoOriginal);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(governingDistricts), governingDistricts);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await client.SaveUserProfile(Dto);
+      if (data != null)
+      {
+        toastService.ShowSuccess("Save successful!");
+        DtoOriginal = data;
+        Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+        _editContext = new EditContext(Dto);
+      }
+    }
+  }
+
+  private void ChildUpdated()
+  {
+    StateHasChanged();
+  }
+}

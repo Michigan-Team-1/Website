@@ -1,0 +1,72 @@
+﻿<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block " style="pointer-events: none;" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="col"><h5 class="modal-title">@BlazoredModal.Title</h5></div>
+        <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+        <button type="button" class="btn-close" aria-label="Close" @onclick="(async () => await BlazoredModal.CancelAsync())">
+        </button>
+      </div>
+      <EditForm EditContext="_editContext" OnValidSubmit="Save">
+        <div class="modal-body">
+          <Blazored.FluentValidation.FluentValidationValidator />
+          <ValidationSummary />
+          <div class="form-horizontal">
+            <EditText @bind-Value="Dto.Title" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.Title))" ValidationFor="(() => Dto.Title)" />
+            <EditDate @bind-Value="Dto.StartShowingOnDate" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.StartShowingOnDate))" ValidationFor="(() => Dto.StartShowingOnDate)" />
+              
+            <EditRichText @bind-Value="Dto.Body" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.Body))" ValidationFor="(() => Dto.Body)" />
+
+            <EditCheckbox @bind-Value="@Dto.IsActive" PropertyInfo="PropertyReflections.GetAnnouncementDtoProperty(nameof(Dto.IsActive))" />
+
+            <AuditFields Dto="Dto.AuditFieldsDto" LayoutHorizontal=true />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+          <div class="col text-end"><ModalDefaultFooterButtons OnCancel="BlazoredModal.CancelAsync" /></div>
+        </div>
+      </EditForm>
+    </div>
+  </div>
+</div>
+
+@inject IModalService ModalService
+@inject AuthorizedClient client
+@code {
+  [CascadingParameter]
+  private BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+  [Parameter, EditorRequired]
+  public AnnouncementDto DtoOriginal { get; set; } = default!;
+
+  private AnnouncementDto Dto { get; set; } = default!;
+
+  private EditContext _editContext = default!;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<AnnouncementDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await client.SaveAnnouncement(Dto);
+      if (data != null)
+        await BlazoredModal.CloseAsync(ModalResult.Ok(data));
+    }
+  }
+}

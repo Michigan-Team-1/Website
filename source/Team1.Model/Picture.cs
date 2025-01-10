@@ -1,35 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Team1.Model
+namespace Team1.Model;
+
+public class PictureBase
 {
-    public class PictureBase
-    {
-        [Key]
-        public int PictureId { get; set; }
+  [Key]
+  public int PictureId { get; set; }
 
-        public int OwnerUserId { get; set; }
+  public int OwnerUserId { get; set; }
 
-        public int? ApprovedByUserId { get; set; }
-        
-        public DateTime? ApprovedDateTime { get; set; }
+  public int? ApprovedByUserId { get; set; }
 
-        [StringLength(Constants.FieldSizes.DescriptionLength, ErrorMessage = Constants.ErrorMessages.StringLengthMax)]
-        public string Description { get; set; }
-    }
+  public DateTime? ApprovedDateTime { get; set; }
 
-    public class Picture : PictureBase
-    {
-        public OwnedTypes.AuditFields AuditFields { get; set; }
+  [StringLength(Constants.FieldSizes.DescriptionLength, ErrorMessage = Constants.ErrorMessages.StringLengthMax)]
+  public string? Description { get; set; }
 
-        public OwnedTypes.DocumentObj DocumentObj { get; set; }
+  [Display(Name = "Picture or YouTube Link")]
+  public bool IsVideoLink { get; set; }
+}
 
-        #region Navigation Links
+public class Picture : PictureBase
+{
+  public OwnedTypes.AuditFields AuditFields { get; set; }
 
-        public virtual UserIdentity.User User { get; set; }
+  public OwnedTypes.DocumentObj DocumentObj { get; set; }
 
-        #endregion
-    }
+  #region Navigation Links
+
+  public virtual UserIdentity.User OwnerUser { get; set; }
+
+  #endregion
 }

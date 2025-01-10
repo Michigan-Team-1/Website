@@ -1,0 +1,144 @@
+html, body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar-brand img {
+    max-height: 4rem;
+}
+
+.body-content {
+    margin-top:1rem;
+}
+
+.canSelect{
+    cursor:pointer;
+}
+
+.paging-input-width-form-control{
+    max-width:80px;
+}
+
+/******** Busy indicator ******************************/
+.busy-indicator-wrapper {
+    padding: 4rem;
+}
+
+.busy-indicator {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    opacity: 1;
+}
+
+    .busy-indicator img {
+        max-height: 100px;
+        animation: rotation 2s infinite linear;
+        margin-right: 10px;
+    }
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(359deg);
+    }
+}
+/***** end busy indicator **********************/
+
+/*Blazored Toast overrides*/
+.position-topright {
+    top: 5px !important;
+}
+
+.blazored-toast-container {
+    z-index: 10000 !important;
+}
+/***********************************/
+
+.valid.modified:not([type=checkbox]):not([type=radio]) {
+    outline: 1px solid #26b050;
+}
+
+.invalid {
+    outline: 1px solid red;
+}
+
+.validation-message {
+    color: red;
+}
+
+.hover:hover {
+    background-color: lightgray !important;
+}
+
+[data-bs-theme=dark] .hover:hover {
+    background-color: dimgray !important;
+}
+
+.toolbar-logo {
+    display:inline;
+}
+
+.toolbar-logo-dark {
+    display: none;
+}
+
+[data-bs-theme=dark] .toolbar-logo {
+    display: none;
+}
+
+[data-bs-theme=dark] .toolbar-logo-dark {
+    display: inline;
+}
+
+/************************ lightbox ********************************/
+.lightbox {
+    /* Default to hidden */
+    display: none;
+    /* Overlay entire screen */
+    position: fixed;
+    z-index: 19000;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    /* A bit of padding around image */
+    padding: 1em;
+    /* Translucent background */
+    background: rgba(0, 0, 0, 0.8);
+}
+
+    .lightbox span {
+        /* Full width and height */
+        display: block;
+        width: 100%;
+        height: 100%;
+        /* Size and position background image */
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: contain;
+    }
+/****************************************************************/
+
+.home-page-image
+{
+    max-height: min(400px, 45vh);
+    margin:10px;
+}
+
+/************************** Gallery *******************************/
+.gallergy-card {
+}
+
+.video-iframe {
+    height: max(300px, 60%);
+    aspect-ratio: 16 / 9;
+}
+
+.image-add-edit {
+    max-height: 400px;
+    max-width: 600px;
+}

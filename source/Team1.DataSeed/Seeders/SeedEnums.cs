@@ -2,44 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using Team1.Entities;
 using Team1.Model;
 using Team1.Model.Enums;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Team1.DataSeed.Seeders
 {
-    public class SeedEnums : SeedBase
+  public class SeedEnums : SeedBase
     {
         public SeedEnums(DataContext context) : base(context) { }
 
         public override async System.Threading.Tasks.Task Seed()
         {
-            await TaskCategories();
             await MemberTypes();
             await LogTypes();
-        }
-
-        private async System.Threading.Tasks.Task TaskCategories()
-        {
-            var enumValues = TaskCategoryEnum.Confirmation.GetList();
-            var values = await _context.TaskCategories.ToListAsync();
-            foreach (var item in enumValues)
-            {
-                var dbObj = values.FirstOrDefault(w => w.TaskCategoryId == item);
-                if (dbObj == null)
-                {
-                    dbObj = new TaskCategory()
-                    {
-                        TaskCategoryId = item
-                    };
-                    _context.TaskCategories.Add(dbObj);
-                }
-
-                var displayName = item.GetDisplayName();
-                if (dbObj.Name != displayName)
-                    dbObj.Name = displayName;
-            }
-
-            await _context.SaveChangesAsync();
         }
 
         private async System.Threading.Tasks.Task MemberTypes()

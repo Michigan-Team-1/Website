@@ -1,0 +1,197 @@
+﻿@page "/member/{UserId:int?}"
+@using Blazored.Toast.Services
+@attribute [Authorize(Policy = nameof(PolicyNames.UserAddEditDelete))]
+<PageTitle>Member Add/Edit - Michigan Team-1</PageTitle>
+
+@if (Dto == null)
+{
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <PageHeader Name="Member Add/Edit" Icon="fas fa-user" />
+    </div>
+  </div>
+  <BusyIndicator />
+}
+else
+{
+  <EditForm EditContext="_editContext" OnValidSubmit="Save">
+    <Blazored.FluentValidation.FluentValidationValidator />
+    <div class="row mb-2">
+      <div class="col-sm-4">
+        <PageHeader Name="Member Add/Edit" Icon="fas fa-user" />
+      </div>
+      <div class="col-sm-4">
+        <UnsavedChangesNotifcation Value="dataUpdated" />
+      </div>
+      <div class="col-sm-4 text-sm-start text-md-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+        <NavLink class="btn btn-warning" href="members">
+          <i class="fa-solid fa-circle-arrow-left"></i> Back To Members
+        </NavLink>
+      </div>
+    </div>
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Roles="roles" Countries="countries" GoverningDistricts="governingDistricts" OnPage=Helpers.PageEnum.MemberAddEdit />
+    <div class="modal-footer">
+      <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+      <div class="col text-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+        <NavLink class="btn btn-warning" href="members">
+          <i class="fa-solid fa-circle-arrow-left"></i>  Back To Members
+        </NavLink>
+      </div>
+    </div>
+  </EditForm>
+}
+
+@implements IDisposable
+@inject AuthorizedClient client
+@inject AnonymousClient anonClient
+@inject PersistentComponentState ApplicationState
+@inject IToastService toastService;
+@code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  [Parameter]
+  public int UserId { get; set; }
+
+  public UserDto? DtoOriginal { get; set; } = default!;
+
+  private UserDto Dto { get; set; } = default!;
+
+  private List<SelectOptionDto<int>>? mobileCarriers;
+  private List<RoleDto>? roles;
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
+
+  private EditContext _editContext = default!;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+    if (UserId > 0)
+    {
+      if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(MemberAddEdit) + nameof(Dto), out var restored))
+      {
+        DtoOriginal = await client.GetUser(UserId);
+      }
+      else
+      {
+        DtoOriginal = restored!;
+      }
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(MemberAddEdit) + nameof(mobileCarriers), out var restoredMobileCarriers))
+    {
+      mobileCarriers = await anonClient.GetMobileCarriers();
+    }
+    else
+    {
+      mobileCarriers = restoredMobileCarriers!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<RoleDto>>(nameof(MemberAddEdit) + nameof(roles), out var restoredRoles))
+    {
+      roles = await client.GetRoles();
+    }
+    else
+    {
+      roles = restoredRoles!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(MemberAddEdit) + nameof(countries), out var restoredCountries))
+    {
+      countries = await anonClient.GetCountries();
+    }
+    else
+    {
+      countries = restoredCountries!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(MemberAddEdit) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    {
+      governingDistricts = await anonClient.GetGoverningDistricts();
+    }
+    else
+    {
+      governingDistricts = restoredGoverningDistricts!;
+    }
+
+    if (UserId == 0)
+    {
+      var country = countries!.First(w => w.CountryId == 840);
+      DtoOriginal = new UserDto()
+        {
+          Addresses = new List<AddressDto>()
+        {
+          new AddressDto()
+          {
+              IsActive = true,
+                AddressObj = new AddressObjDto()
+                {
+                  CountryId = country.CountryId,
+                  GoverningDistrictName = country.GoverningDistrictName,
+                  GoverningDistrictId = 27,
+                  PostalCodeMask = country.PostalCodeMask,
+                },
+          }
+        },
+          EmailConfirmed = true,
+          BirthDate = DateTime.Today.AddYears(-35),
+          UserRoles = new List<UserRoleDto>(),
+          UserMemberTypes = new List<UserMemberTypeDto>(),
+          AuditFieldsDto = new AuditFieldsDto(),
+          IsActive = true,
+          IsLoginEnabled = true,
+        };
+    }
+
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(Dto), DtoOriginal);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(roles), roles);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(MemberAddEdit) + nameof(governingDistricts), governingDistricts);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await client.SaveUser(Dto);
+      if (data != null)
+      {
+        toastService.ShowSuccess("Save successful!");
+        DtoOriginal = data;
+        Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+        _editContext = new EditContext(Dto);
+      }
+    }
+  }
+
+  private void ChildUpdated()
+  {
+    StateHasChanged();
+  }
+}

@@ -18,28 +18,31 @@ namespace Team1.Model.UserIdentity
         /// <summary>
         /// Gets or sets the name for this role.
         /// </summary>
+        [Required]
         [StringLength(Constants.FieldSizes.NameLength)]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the normalized name for this role.
-        /// </summary>
-        [StringLength(Constants.FieldSizes.NameLength)]
+    /// <summary>
+    /// Gets or sets the normalized name for this role.
+    /// </summary>
+    [Required]
+    [StringLength(Constants.FieldSizes.NameLength)]
         public string NormalizedName { get; set; }
 
-        /// <summary>
-        /// A random value that should change whenever a role is persisted to the store
-        /// </summary>
-        [StringLength(Constants.FieldSizes.ConcurrencyStampLength)]
+    /// <summary>
+    /// A random value that should change whenever a role is persisted to the store
+    /// </summary>
+    [Required]
+    [StringLength(Constants.FieldSizes.ConcurrencyStampLength)]
         public string ConcurrencyStamp { get; set; } = Guid.NewGuid().ToString();
 
         [StringLength(50)]
-        public string Type { get; set; }
+        public string? Type { get; set; }
 
         public int Level { get; set; }
 
         [Column(TypeName = "nvarchar(max)")]
-        public string Data { get; set; }
+        public string? Data { get; set; }
     }
 
     public class Role : RoleBase

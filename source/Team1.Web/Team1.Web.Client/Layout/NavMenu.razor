@@ -1,0 +1,185 @@
+﻿@using Team1.Web.Client.Helpers
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-lg-top shadow-lg py-0">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="" title="Michigan Team-1">
+      <img src="logo.png" class="toolbar-logo" alt="logo" />
+      <img src="logo-white.png" class="toolbar-logo-dark" alt="logo" />
+    </a>
+    @if (!BrandingOnly)
+    {
+      <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse navbarCollapse @NavMenuCssClass">
+        <ul class="navbar-nav me-auto ">
+          <li class="nav-item">
+            <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+              <span class="fas fa-home fa-fw fa-sm" aria-hidden="true"></span> Home
+            </NavLink>
+          </li>
+          <li class="nav-item">
+            <NavLink class="nav-link" href="joinus" Match="NavLinkMatch.All">
+              <span class="fas fa-user-astronaut fa-fw fa-sm" aria-hidden="true"></span> Join Us
+            </NavLink>
+          </li>
+          <li class="nav-item">
+            <NavLink class="nav-link" href="gallery" Match="NavLinkMatch.All">
+              <span class="fas fa-images fa-fw fa-sm" aria-hidden="true"></span> Gallery
+            </NavLink>
+          </li>
+          <li class="nav-item">
+            <NavLink class="nav-link" href="members" Match="NavLinkMatch.All">
+              <span class="fas fa-users fa-fw fa-sm" aria-hidden="true"></span> Members
+            </NavLink>
+          </li>
+          <li class="nav-item" dropdown>
+            <a class="nav-link dropdown-toggle canSelect" href="javascript:void(0)" @onclick="ToggleDownloads" @onfocusout="OutFocusDownloads">
+              <i class="fas fa-file-download"></i> Downloads
+            </a>
+            <ul class="dropdown-menu @(expandDownloads ? "show" : "")" aria-labelledby="downloadMenuLink">
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/Team-1_launch_card.pdf" target="_blank"><i class="fas fa-rocket"></i> Launch Card</a></li>
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/Team-1_launch_registration_form.pdf" target="_blank"><i class="fas fa-clipboard"></i> Registration Form</a></li>
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/Team-1_BOD_hallofhonor.xlsx" target="_blank"><i class="fas fa-award"></i> BoD Hall Of Honor</a></li>
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/Team-1_Membership_Application.pdf" target="_blank"><i class="fab fa-wpforms"></i> Membership Application</a></li>
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/Birch_Run_Launch_Site_Map.pdf" target="_blank"><i class="fas fa-sitemap"></i> Birch Run Site Map</a></li>
+              <li><a class="dropdown-item hover" href="https://downloads.team1.org/TeamTalk_Page.zip" target="_blank"><i class="fas fa-file-archive"></i> Team Talks</a></li>
+            </ul>
+          </li>
+          @if (userInfo.HasAdminPolicy)
+          {
+            <li class="nav-item">
+              <a class="nav-link dropdown-toggle @AdministrationMenuCss" href="javascript:void(0)" @onclick="ToggleAdmin" @onfocusout="OutFocusAdmin">
+                <i class="fas fa-unlock fa-fw"></i> Admin
+              </a>
+              <ul class="dropdown-menu @(expandAdmin ? "show" : "")" aria-labelledby="navbarDropdownMenuLink">
+                <AuthorizeView Policy=@nameof(PolicyNames.AnnouncementAddEditDelete)>
+                  <li>
+                    <NavLink class="dropdown-item hover" href="announcements" Match="NavLinkMatch.All">
+                      <span class="fas fa-bullhorn fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Announcements
+                    </NavLink>
+                  </li>
+                </AuthorizeView>
+                <AuthorizeView Policy=@nameof(PolicyNames.EventAddEditDelete)>
+                  <li>
+                    <NavLink class="dropdown-item hover" href="events" Match="NavLinkMatch.All">
+                      <span class="fas fa-calendar-alt fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Events
+                    </NavLink>
+                  </li>
+                </AuthorizeView>
+                <AuthorizeView Policy=@nameof(PolicyNames.LocationAddEditDelete)>
+                  <li>
+                    <NavLink class="dropdown-item hover" href="locations" Match="NavLinkMatch.All">
+                      <span class="fas fa-map-marked-alt fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Locations
+                    </NavLink>
+                  </li>
+                </AuthorizeView>
+                <AuthorizeView Policy=@nameof(PolicyNames.CanApprovePicture)>
+                  <li>
+                    <NavLink class="dropdown-item hover" href="galleryadmin" Match="NavLinkMatch.All">
+                      <span class="fas fa-images fa-fw fa-sm" aria-hidden="true"></span>&nbsp; Gallery Admin
+                    </NavLink>
+                  </li>
+                </AuthorizeView>
+              </ul>
+            </li>
+          }
+        </ul>
+        <LoginDisplay />
+      </div>
+    }
+    else
+    {
+      <ul class="navbar-nav me-auto ">
+        <li class="nav-item">
+          <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">
+            <span class="fas fa-home fa-fw fa-sm" aria-hidden="true"></span> Home
+          </NavLink>
+        </li>
+      </ul>
+      <AuthorizeView>
+        <NotAuthorized>
+          <LoginDisplay />
+        </NotAuthorized>
+      </AuthorizeView>
+    }
+  </div>
+</nav>
+
+@code {
+  [CascadingParameter]
+  private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+  [Parameter]
+  public bool BrandingOnly { get; set; }
+
+  private Team1.Web.Common.UserIdentity.UserClaimBuilder userInfo;
+  private string? currentUrl;
+
+  private string AdministrationMenuCss => NavigationManager.Uri.Contains("/announcements", StringComparison.InvariantCultureIgnoreCase)
+                                             || NavigationManager.Uri.Contains("/events", StringComparison.InvariantCultureIgnoreCase)
+                                             || NavigationManager.Uri.Contains("/locations", StringComparison.InvariantCultureIgnoreCase)
+                                                ? "active" : "";
+  private bool expandAdmin;
+  private bool expandDownloads;
+
+  protected override async Task OnInitializedAsync()
+  {
+    var authState = await authenticationStateTask;
+    userInfo = new Team1.Web.Common.UserIdentity.UserClaimBuilder(authState.User);
+
+    currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    NavigationManager.LocationChanged += OnLocationChanged;
+  }
+
+  private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+  {
+    currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    expandDownloads = false;
+    expandAdmin = false;
+    collapseNavMenu = true;
+    StateHasChanged();
+  }
+
+  public void Dispose()
+  {
+    NavigationManager.LocationChanged -= OnLocationChanged;
+  }
+
+  private bool collapseNavMenu = true;
+
+  private string? NavMenuCssClass => collapseNavMenu ? null : "show";
+
+  private void ToggleNavMenu()
+  {
+    collapseNavMenu = !collapseNavMenu;
+  }
+
+  private void ToggleAdmin()
+  {
+    expandAdmin = !expandAdmin;
+  }
+
+  private async Task OutFocusAdmin()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandAdmin = false;
+    collapseNavMenu = true;
+  }
+
+  private void ToggleDownloads()
+  {
+    expandDownloads = !expandDownloads;
+  }
+
+  private async Task OutFocusDownloads()
+  {
+    await Task.Delay(Constants.FocusOutDelayMS);
+    expandDownloads = false;
+    collapseNavMenu = true;
+  }
+}
+

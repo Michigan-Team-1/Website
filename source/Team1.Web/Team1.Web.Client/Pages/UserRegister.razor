@@ -1,0 +1,166 @@
+﻿@page "/UserRegister"
+@using Blazored.Toast.Services
+<PageTitle>Register - Michigan Team-1</PageTitle>
+
+@if (Dto == null)
+{
+  <div class="row mb-2">
+    <div class="col-sm-6">
+      <PageHeader Name="Register" Icon="fas fa-user" />
+    </div>
+  </div>
+  <BusyIndicator />
+}
+else
+{
+  <EditForm EditContext="_editContext" OnValidSubmit="Save">
+    <Blazored.FluentValidation.FluentValidationValidator />
+    <div class="row mb-2">
+      <div class="col-sm-4">
+        <PageHeader Name="Register" Icon="fas fa-user" />
+      </div>
+      <div class="col-sm-4">
+        <UnsavedChangesNotifcation Value="dataUpdated" />
+      </div>
+      <div class="col-sm-4 text-sm-start text-md-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+    <EditUserDetails Dto="Dto" MobileCarriers="mobileCarriers" Updated="ChildUpdated" DtoOriginal="DtoOriginal" Countries="countries" GoverningDistricts="governingDistricts" OnPage=Helpers.PageEnum.UserRegister />
+    <div class="modal-footer">
+      <div class="col"><UnsavedChangesNotifcation Value="dataUpdated" /></div>
+      <div class="col text-end">
+        <button type="submit" class="btn btn-primary me-2" accesskey="S"><i class="far fa-save"></i> Save</button>
+      </div>
+    </div>
+  </EditForm>
+}
+
+@implements IDisposable
+@inject AuthorizedClient client
+@inject AnonymousClient anonClient
+@inject PersistentComponentState ApplicationState
+@inject IToastService toastService;
+@inject NavigationManager navMan;
+@code {
+  private PersistingComponentStateSubscription persistingSubscription;
+
+  public UserDto? DtoOriginal { get; set; } = default!;
+
+  private UserDto Dto { get; set; } = default!;
+
+  private List<SelectOptionDto<int>>? mobileCarriers;
+  private List<CountryDto>? countries;
+  private List<GoverningDistrictDto>? governingDistricts;
+
+  private EditContext _editContext = default!;
+
+  private bool dataUpdated
+  {
+    get
+    {
+      return !Dto.Equals(DtoOriginal);
+    }
+  }
+
+  protected override async Task OnInitializedAsync()
+  {
+    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
+
+
+
+    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + nameof(mobileCarriers), out var restoredMobileCarriers))
+    {
+      mobileCarriers = await anonClient.GetMobileCarriers(); ;
+    }
+    else
+    {
+      mobileCarriers = restoredMobileCarriers!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(UserProfile) + nameof(countries), out var restoredCountries))
+    {
+      countries = await anonClient.GetCountries();
+    }
+    else
+    {
+      countries = restoredCountries!;
+    }
+
+    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(UserProfile) + nameof(governingDistricts), out var restoredGoverningDistricts))
+    {
+      governingDistricts = await anonClient.GetGoverningDistricts();
+    }
+    else
+    {
+      governingDistricts = restoredGoverningDistricts!;
+    }
+
+    var country = countries!.First(w => w.CountryId == 840);
+    DtoOriginal = new UserDto()
+      {
+        UserId = -1, // required to make the password field required
+        Addresses = new List<AddressDto>()
+        {
+          new AddressDto()
+          {
+              IsActive = true,
+                AddressObj = new AddressObjDto()
+                {
+                  CountryId = country.CountryId,
+                  GoverningDistrictName = country.GoverningDistrictName,
+                  GoverningDistrictId = 27,
+                  PostalCodeMask = country.PostalCodeMask,
+                },
+          }
+        },
+        BirthDate = DateTime.Today.AddYears(-35),
+        AuditFieldsDto = new AuditFieldsDto(),
+        IsActive = true,
+      };
+
+    Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+    _editContext = new EditContext(Dto);
+  }
+
+  private Task PersistData()
+  {
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(mobileCarriers), mobileCarriers);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(countries), countries);
+    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(governingDistricts), governingDistricts);
+
+    return Task.CompletedTask;
+  }
+
+  void IDisposable.Dispose()
+  {
+    persistingSubscription.Dispose();
+  }
+
+  async Task Save()
+  {
+    Dto.IsUpdated = dataUpdated;
+    if (Dto.IsUpdated)
+    {
+      var data = await anonClient.SaveUserRegister(Dto);
+      if (data != null)
+      {
+        RenderFragment renderFragment = (myBuilder) =>
+        {
+          myBuilder.AddMarkupContent(0, "Save successful!<br/><strong class='text-danger'>Check your email for an email confirmation!<br/>Taking you to the Join Us page for instructions on how to join our discussion group.</strong>");
+        };
+        toastService.ShowSuccess(renderFragment, c => c.Timeout = 30);
+        DtoOriginal = data;
+        Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
+        _editContext = new EditContext(Dto);
+        await Task.Delay(4000);
+        navMan.NavigateTo("joinus/true");
+      }
+    }
+  }
+
+  private void ChildUpdated()
+  {
+    StateHasChanged();
+  }
+}

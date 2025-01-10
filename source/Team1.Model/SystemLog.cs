@@ -1,13 +1,10 @@
+using System.ComponentModel.DataAnnotations;
 using Team1.Model.Constants;
 using Team1.Model.UserIdentity;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace Team1.Model
 {
-    public class SystemLogBase
+  public class SystemLogBase
     {
         [Key]
         public long LogId { get; set; }
@@ -32,7 +29,7 @@ namespace Team1.Model
         /// IPAddress of the incoming request if available
         /// </summary>
         [StringLength(FieldSizes.IpAddressLength)]
-        public string IpAddress { get; set; }
+        public string? IpAddress { get; set; }
     }
 
     public class SystemLog : SystemLogBase

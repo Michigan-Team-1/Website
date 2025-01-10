@@ -1,0 +1,67 @@
+﻿@page "/joinus/{Highlight:bool?}"
+
+<PageTitle>Join Us - Michigan Team-1</PageTitle>
+
+<Team1.Web.Client.Shared.Helpers.PageHeader Name="Join Michigan Team-1" Icon="fas fa-user-astronaut" />
+<div>
+  <p>
+    Team-1 is Michigan's oldest, largest and most experienced High Power Rocketry club. Founded in 1988, we now have over 100 members, and it's those members that make Team-1 Michigan's premier rocketry group. Team-1 flies everything from the largest N powered rockets to the smallest Estes rockets and everything in between. We conduct well run, safe, and insured launches that have waivers from the Federal Aviation Administration (FAA).
+  </p>
+  <AuthorizeView>
+    <NotAuthorized>
+      <p>
+        <a class="btn btn-info" href="userregister"><i class="fas fa-user-plus fa-fw"></i> Register now to get started!</a>
+      </p>
+    </NotAuthorized>
+  </AuthorizeView>
+  <div><h5>Board of Directors</h5></div>
+  <div class="row mb-3">
+    @if (boardOfDirectors != null)
+    {
+      foreach (var item in boardOfDirectors)
+      {
+        <div class="col-auto">
+          <a class="btn btn-link" href="mailto:@item.Email">
+            <i class="fa-solid fa-envelope"></i> @item.UserMemberTypesString: @item.FirstName @item.LastName
+          </a>
+        </div>
+      }
+    }
+  </div>
+  <hr />
+  <div class="card @(Highlight == true ? "text-bg-success" : "")">
+  <h5 class="card-header">Join our discussion forum!</h5>
+  <div class="card-body">
+    <p>
+      We are using Google Groups as our discussion forum.  Can I join the group without a gmail account.  Yes, you can.  Both methods below will guide you on how to join with or without a gmail account.
+    </p>
+    <p>
+      Method 1:
+    </p>
+    <ul>
+      <li>Send an email to <a href="mailto:michiganteam-1+subscribe@googlegroups.com">michiganteam-1+subscribe@googlegroups.com</a></li>
+      <li>You'll get an email back asking you to confirm your join request.  Reply to the email.</li>
+      <li>That's it, you're done!</li>
+    </ul>
+    <p>Method 2:</p>
+    <ul><li>Send the board of directors an email and we’ll manually add you to the group.  We are going to assume you want to join the group with the email you send from.</li></ul>
+    <p>If you have an account that can login to gmail, then you’ll be able to view the conversations on the page itself.  If you can’t login to gmail, that’s OK.  You’ll still receive emails and be able to send emails to the group.</p>
+    <p>
+      The group email address is:  <a href="mailto:michiganteam-1@googlegroups.com">
+        michiganteam-1@googlegroups.com
+      </a>.&nbsp; Only members can send emails to the group.
+    </p>
+  </div>
+</div>
+</div>
+@inject AnonymousClient anonymousClient
+@code {
+    [Parameter]
+  public bool? Highlight { get; set; }
+
+  private List<UserDto>? boardOfDirectors;
+  protected override async Task OnInitializedAsync()
+  {
+    boardOfDirectors = await anonymousClient.GetBoardOfDirectors();
+  }
+}

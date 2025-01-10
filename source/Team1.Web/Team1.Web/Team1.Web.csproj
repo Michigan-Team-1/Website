@@ -1,0 +1,46 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+		<NoWarn>1701;1702;1705;1591</NoWarn>
+    <UserSecretsId>aspnet-Team1.Web-40ce3d01-ab0d-418e-a180-05fee784cd9b</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Components\Account\Pages\Manage\ChangePassword.razor" />
+    <None Include="Components\Account\Pages\Manage\DeletePersonalData.razor" />
+    <None Include="Components\Account\Pages\Manage\Disable2fa.razor" />
+    <None Include="Components\Account\Pages\Manage\Email.razor" />
+    <None Include="Components\Account\Pages\Manage\EnableAuthenticator.razor" />
+    <None Include="Components\Account\Pages\Manage\ExternalLogins.razor" />
+    <None Include="Components\Account\Pages\Manage\GenerateRecoveryCodes.razor" />
+    <None Include="Components\Account\Pages\Manage\Index.razor" />
+    <None Include="Components\Account\Pages\Manage\PersonalData.razor" />
+    <None Include="Components\Account\Pages\Manage\ResetAuthenticator.razor" />
+    <None Include="Components\Account\Pages\Manage\SetPassword.razor" />
+    <None Include="Components\Account\Pages\Manage\TwoFactorAuthentication.razor" />
+    <None Include="Components\Account\Pages\Manage\_Imports.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Services.Email\Services.Email.csproj" />
+    <ProjectReference Include="..\..\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj" />
+    <ProjectReference Include="..\..\Team1.Infrastructure\Team1.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Team1.Web.Common\Team1.Web.Common.csproj" />
+    <ProjectReference Include="..\Team1.Web.Client\Team1.Web.Client.csproj" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HeaderPropagation" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\fontawesome\" />
+  </ItemGroup>
+
+</Project>
