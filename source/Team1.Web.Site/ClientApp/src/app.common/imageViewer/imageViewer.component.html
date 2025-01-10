@@ -1,4 +1,0 @@
-<div class="modal-body text-center imageZoomOut"  (click)="close(true)">
-  <img [src]="imageUrl | secureImage | async" class="image-fluid" [class.imageModelToScreenHeight]="isMiddleZoom"
-       [class.imageZoomIn]="isMiddleZoom" [class.imageZoomOut]="!isMiddleZoom" (click)="close(false);$event.stopPropagation();"/>
-</div>
