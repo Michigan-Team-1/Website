@@ -37,21 +37,21 @@ else
   </EditForm>
 }
 
-@implements IDisposable
 @inject AuthorizedClient client
 @inject AnonymousClient anonClient
-@inject PersistentComponentState ApplicationState
 @inject IToastService toastService;
 @code {
-  private PersistingComponentStateSubscription persistingSubscription;
-
+  [PersistentState]
   public UserDto? DtoOriginal { get; set; } = default!;
 
   private UserDto Dto { get; set; } = default!;
 
-  private List<SelectOptionDto<int>>? mobileCarriers;
-  private List<CountryDto>? countries;
-  private List<GoverningDistrictDto>? governingDistricts;
+  [PersistentState]
+  public List<SelectOptionDto<int>>? mobileCarriers{ get; set; }
+  [PersistentState]
+  public List<CountryDto>? countries{ get; set; }
+  [PersistentState]
+  public List<GoverningDistrictDto>? governingDistricts{ get; set; }
 
   private EditContext _editContext = default!;
 
@@ -65,66 +65,18 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-    if (!ApplicationState.TryTakeFromJson<UserDto>(nameof(UserProfile) + nameof(Dto), out var restored))
-    {
-      DtoOriginal = await client.GetUserProfile();
-    }
-    else
-    {
-      DtoOriginal = restored!;
-    }
+    DtoOriginal = await client.GetUserProfile();
 
     if (DtoOriginal == null)
       return;
 
-    if (!ApplicationState.TryTakeFromJson<List<SelectOptionDto<int>>>(nameof(UserProfile) + nameof(mobileCarriers), out var restoredMobileCarriers))
-    {
-      mobileCarriers = await anonClient.GetMobileCarriers(); ;
-    }
-    else
-    {
-      mobileCarriers = restoredMobileCarriers!;
-    }
-
-    if (!ApplicationState.TryTakeFromJson<List<CountryDto>>(nameof(UserProfile) + nameof(countries), out var restoredCountries))
-    {
-      countries = await anonClient.GetCountries();
-    }
-    else
-    {
-      countries = restoredCountries!;
-    }
-
-    if (!ApplicationState.TryTakeFromJson<List<GoverningDistrictDto>>(nameof(UserProfile) + nameof(governingDistricts), out var restoredGoverningDistricts))
-    {
-      governingDistricts = await anonClient.GetGoverningDistricts();
-    }
-    else
-    {
-      governingDistricts = restoredGoverningDistricts!;
-    }
+    mobileCarriers = await anonClient.GetMobileCarriers(); ;
+    countries = await anonClient.GetCountries();
+    governingDistricts = await anonClient.GetGoverningDistricts();
 
     Dto = DtoOriginal.SerializeJson().DeserializeJson<UserDto>()!;
     _editContext = new EditContext(Dto);
   }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(Dto), DtoOriginal);
-    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(mobileCarriers), mobileCarriers);
-    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(countries), countries);
-    ApplicationState.PersistAsJson(nameof(UserProfile) + nameof(governingDistricts), governingDistricts);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
-  }
-
 
   async Task Save()
   {

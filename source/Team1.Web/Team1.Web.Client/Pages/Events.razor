@@ -124,16 +124,14 @@ else
   </SmartishTable.Root>
 }
 
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AuthorizedClient authClient
 @inject AnonymousClient client
 @code {
-  private PersistingComponentStateSubscription persistingSubscription;
   private SmartishTable.Root<EventDto>? smartishTable;
 
-  private List<EventDto>? Dtos;
+  [PersistentState]
+  public List<EventDto>? Dtos{ get; set; }
 
   private List<SelectOptionDto<int>>? locations;
 
@@ -146,28 +144,7 @@ else
   protected override async Task OnInitializedAsync()
   {
     stringOperators = PropertyReflections.EventDtoProperties.GetStringOperatorsForTypeProperties();
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-    if (!ApplicationState.TryTakeFromJson<List<EventDto>>(nameof(Events), out var restored))
-    {
-      Dtos = await authClient.GetEvents();
-    }
-    else
-    {
-      Dtos = restored!;
-    }
-  }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(Events), Dtos);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
+    Dtos = await authClient.GetEvents();
   }
 
   private async Task AddEdit(EventDto? dto, int index)

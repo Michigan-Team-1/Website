@@ -91,16 +91,14 @@ else
   </div>
 }
 
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AnonymousClient client
 @inject IJSRuntime jsRuntime
 @code {
-  private PersistingComponentStateSubscription persistingSubscription;
-
-  private List<AnnouncementDto>? announcements;
-  private List<EventDto>? events;
+  [PersistentState]
+  public List<AnnouncementDto>? announcements { get; set; }
+  [PersistentState]
+  public List<EventDto>? events { get; set; }
   private List<PictureDto>? pictures;
 
   private string? lightBoxUrl;
@@ -137,34 +135,13 @@ else
 
   protected override async Task OnInitializedAsync()
   {
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-    if (!ApplicationState.TryTakeFromJson<List<AnnouncementDto>>(nameof(Home) + nameof(announcements), out var restored))
-    {
-      announcements = await client.GetAnnouncementsForHome();
-    }
-    else
-    {
-      announcements = restored!;
-    }
-
-    if (!ApplicationState.TryTakeFromJson<List<EventDto>>(nameof(Home) + nameof(events), out var restoredEvents))
-    {
-      events = await client.GetEventsForHome();
-    }
-    else
-    {
-      events = restoredEvents!;
-    }
-
-    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Home) + nameof(pictures), out var restoredPictures))
-    {
-      pictures = await client.GetRandomPictures();
-    }
-    else
-    {
-      pictures = restoredPictures!;
-    }
+      var announcementsTasks = client.GetAnnouncementsForHome();
+      var eventsTask = client.GetEventsForHome();
+      var picturesTask = client.GetRandomPictures();
+      await Task.WhenAll(announcementsTasks, eventsTask, picturesTask);
+      announcements = announcementsTasks.Result;
+      events = eventsTask.Result;
+      pictures = picturesTask.Result;
   }
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -173,20 +150,6 @@ else
     {
       await jsRuntime.InvokeVoidAsync("carouselInit", ".main-carousel");
     }
-  }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(Home) + nameof(announcements), announcements);
-    ApplicationState.PersistAsJson(nameof(Home) + nameof(events), events);
-    ApplicationState.PersistAsJson(nameof(Home) + nameof(pictures), pictures);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
   }
 
   [JSInvokable]

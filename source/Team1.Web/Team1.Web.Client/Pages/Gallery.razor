@@ -97,8 +97,6 @@ else
   </SmartishTable.Root>
 }
 
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AuthorizedClient authClient
 @inject AnonymousClient anonymousClient
@@ -106,9 +104,8 @@ else
   [Parameter]
   public string? GalleryType { get; set; }
   private SmartishTable.Root<PictureDto>? smartishTable;
-  private List<PictureDto>? Dtos;
-
-  private PersistingComponentStateSubscription persistingSubscription;
+  [PersistentState]
+  public List<PictureDto>? Dtos { get; set; }
 
   private bool isMyGallery;
 
@@ -145,30 +142,10 @@ else
   protected override async Task OnParametersSetAsync()
   {
     isMyGallery = GalleryType == "mine";
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
 
-    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Gallery), out var restored))
-    {
       if (isMyGallery)
         Dtos = await authClient.GetMyMedia();
       else
         Dtos = await anonymousClient.GetPublicMedia();
-    }
-    else
-    {
-      Dtos = restored!;
-    }
-  }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(Gallery), Dtos);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
   }
 }

@@ -123,16 +123,14 @@ else
   </SmartishTable.Root>
 }
 
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AuthorizedClient authClient
 @inject AnonymousClient client
 @code {
-  private PersistingComponentStateSubscription persistingSubscription;
   private SmartishTable.Root<LocationDto>? smartishTable;
 
-  private List<LocationDto>? Dtos;
+  [PersistentState]
+  public List<LocationDto>? Dtos{ get; set; }
 
   private List<CountryDto>? countries;
   private List<GoverningDistrictDto>? governingDistricts;
@@ -145,28 +143,7 @@ else
   protected override async Task OnInitializedAsync()
   {
     stringOperators = PropertyReflections.LocationDtoProperties.GetStringOperatorsForTypeProperties();
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-    if (!ApplicationState.TryTakeFromJson<List<LocationDto>>(nameof(Locations), out var restored))
-    {
-      Dtos = await authClient.GetLocations();
-    }
-    else
-    {
-      Dtos = restored!;
-    }
-  }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(Locations), Dtos);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
+    Dtos = await authClient.GetLocations();
   }
 
   private async Task AddEdit(LocationDto? dto, int index)

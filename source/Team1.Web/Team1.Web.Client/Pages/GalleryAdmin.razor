@@ -90,16 +90,14 @@ else
   </SmartishTable.Root>
 }
 
-@implements IDisposable
-@inject PersistentComponentState ApplicationState
 @inject IModalService modalService
 @inject AuthorizedClient authClient
 @inject AnonymousClient anonymousClient
 @code {
   private SmartishTable.Root<PictureDto>? smartishTable;
-  private List<PictureDto>? Dtos;
 
-  private PersistingComponentStateSubscription persistingSubscription;
+  [PersistentState]
+  public List<PictureDto>? Dtos { get; set; }
 
   private SmartishTable.Filters.BooleanOperators? activeOperator = SmartishTable.Filters.BooleanOperators.IsTrue;
   private SmartishTable.Filters.BooleanOperators? approvedOperator = SmartishTable.Filters.BooleanOperators.IsFalse;
@@ -119,27 +117,6 @@ else
 
   protected override async Task OnParametersSetAsync()
   {
-    persistingSubscription = ApplicationState.RegisterOnPersisting(PersistData);
-
-    if (!ApplicationState.TryTakeFromJson<List<PictureDto>>(nameof(Gallery), out var restored))
-    {
-        Dtos = await authClient.GetAdminMedia();
-    }
-    else
-    {
-      Dtos = restored!;
-    }
-  }
-
-  private Task PersistData()
-  {
-    ApplicationState.PersistAsJson(nameof(Gallery), Dtos);
-
-    return Task.CompletedTask;
-  }
-
-  void IDisposable.Dispose()
-  {
-    persistingSubscription.Dispose();
+    Dtos = await authClient.GetAdminMedia();
   }
 }
