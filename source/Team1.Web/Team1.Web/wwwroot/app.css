@@ -94,6 +94,30 @@ html, body {
     display: inline;
 }
 
+/* *********************** Card animation ***********************/
+.card:has(.card-body-grid:not(.show)) .card-header {
+    border-bottom: 0;
+    transition: border-bottom 300ms ease;
+}
+
+.card:has(.card-body-grid.show) .card-header {
+    transition: border-bottom 300ms ease;
+}
+
+.card .card-body-grid {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 400ms;
+}
+
+    .card .card-body-grid.show {
+        grid-template-rows: 1fr;
+    }
+
+.card .card-body-grid > div {
+   overflow:hidden;
+}
+
 /************************ lightbox ********************************/
 .lightbox {
     /* Default to hidden */

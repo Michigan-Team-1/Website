@@ -14,20 +14,23 @@
     </div>
   }
 
-  @if (_showCardBody)
-  {
-    <div class="card-body">
-      @ChildContent
+  <div class="card-body-grid @(_showCardBody ? "show" : "")" @ontransitionend="OnTransitionEnd">
+    <div>
+      @if (_renderCardBody)
+      {
+        <div class="card-body">
+          @ChildContent
+        </div>
+        @if (FooterContent != null)
+        {
+          <div class="card-footer">
+            @FooterContent
+          </div>
+        }
+      }
     </div>
-    @if (FooterContent != null)
-    {
-      <div class="card-footer">
-        @FooterContent
-      </div>
-    }
-  }
+  </div>
 </div>
-
 @code {
   [Parameter]
   public RenderFragment HeaderContent { get; set; } = default!;
@@ -46,15 +49,37 @@
   [Parameter] public string CardHeaderClass { get; set; } = "";
 
   public bool _showCardBody { get; set; }
+  private bool _renderCardBody { get; set; }
 
 
   protected override void OnInitialized()
   {
     _showCardBody = ShowCardBody;
+    _renderCardBody = ShowCardBody;
   }
 
   public void Toggle()
   {
-    _showCardBody = !_showCardBody;
+    if (_showCardBody)
+    {
+      // Start hide animation; keep rendered until transition finishes
+      _showCardBody = false;
+    }
+    else
+    {
+      // Ensure element is rendered, then start show animation
+      _renderCardBody = true;
+      _showCardBody = true;
+    }
+  }
+
+  private void OnTransitionEnd()
+  {
+    // When hide animation finishes, remove element from DOM
+    if (!_showCardBody && _renderCardBody)
+    {
+      _renderCardBody = false;
+      InvokeAsync(StateHasChanged);
+    }
   }
 }
