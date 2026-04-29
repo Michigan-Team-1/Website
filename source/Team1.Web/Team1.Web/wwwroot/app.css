@@ -166,3 +166,115 @@ html, body {
     max-height: 400px;
     max-width: 600px;
 }
+
+/* container based css **********************************************************/
+@container (min-width: 576px) {
+    .ct-text-sm-start {
+        text-align: start;
+    }
+
+    .ct-text-sm-end {
+        text-align: end;
+    }
+
+    .ct-text-sm-center {
+        text-align: center;
+    }
+
+    .ct-d-sm-none {
+        display: none !important;
+    }
+
+    .ct-d-sm-block {
+        display: block !important;
+    }
+}
+
+@container (min-width: 768px) {
+    .ct-text-md-start {
+        text-align: start;
+    }
+
+    .ct-text-md-end {
+        text-align: end;
+    }
+
+    .ct-text-md-center {
+        text-align: center;
+    }
+
+    .ct-d-md-none {
+        display: none !important;
+    }
+
+
+    .ct-d-md-block {
+        display: block !important;
+    }
+}
+
+@container (min-width: 992px) {
+    .ct-text-lg-start {
+        text-align: start;
+    }
+
+    .ct-text-lg-end {
+        text-align: end;
+    }
+
+    .ct-text-lg-center {
+        text-align: center;
+    }
+
+    .ct-d-lg-none {
+        display: none !important;
+    }
+
+    .ct-d-lg-block {
+        display: block !important;
+    }
+}
+
+@container (min-width: 1200px) {
+    .ct-text-xl-start {
+        text-align: start;
+    }
+
+    .ct-text-xl-end {
+        text-align: end;
+    }
+
+    .ct-text-xl-center {
+        text-align: center;
+    }
+
+    .ct-d-xl-none {
+        display: none !important;
+    }
+
+    .ct-d-xl-block {
+        display: block !important;
+    }
+}
+
+@container (min-width: 1400px) {
+    .ct-text-xxl-start {
+        text-align: start;
+    }
+
+    .ct-text-xxl-end {
+        text-align: end;
+    }
+
+    .ct-text-xxl-center {
+        text-align: center;
+    }
+
+    .ct-d-xxl-none {
+        display: none !important;
+    }
+
+    .ct-d-xxl-block {
+        display: block !important;
+    }
+}
