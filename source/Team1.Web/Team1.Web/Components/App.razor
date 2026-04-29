@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="@Assets["Team1.Web.styles.css"]" />
   <link href="@Assets["_content/SmartishTable/smartish-table.css"]" rel="stylesheet" />
   <link href="@Assets["fontawesome/css/all.css"]" rel="stylesheet" />
+  <ImportMap />
   <link rel="icon" type="image/ico" href="favicon.ico" />
   <HeadOutlet @rendermode="@RenderModeForPage" />
 </head>
@@ -24,13 +25,13 @@
   <script src="@Assets["theme.js"]"></script>
   <script src="@Assets["tinyMce.js"]"></script>
   <script src="@Assets["inputmask.js"]"></script>
-  <script src="@Assets["_framework/blazor.web.js"]"></script>
+  <script src="@Assets["_framework/blazor.web.js"]" autostart="false"></script>
   <script src="@Assets["_content/TinyMCE.Blazor/tinymce-blazor.js"]"></script>
   <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
   <script>
-    Blazor.start({
-      ssr: { disableDomPreservation: true }
-    });
+    // Blazor.start({
+    //   ssr: { disableDomPreservation: true }
+    // });
 
     function inputmaskInit(id) {
       Inputmask().mask(document.getElementById(id));
@@ -45,6 +46,6 @@
   private HttpContext HttpContext { get; set; } = default!;
 
   private IComponentRenderMode? RenderModeForPage => HttpContext.AcceptsInteractiveRouting()
-      ? InteractiveServer
+      ? InteractiveAuto
       : null;
 }
