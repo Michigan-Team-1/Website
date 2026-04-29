@@ -1,0 +1,154 @@
+﻿:root {
+    --js-grid-gap-y: 0;
+    --js-grid-gap-x: 0;
+    --js-grid-bg-color: #fff;
+    --js-grid-border-color: #ccc;
+    --js-grid-bg-striped-color: rgba(0, 0, 0, 0.05);
+    --js-grid-bg-hover-color: rgba(0, 0, 0, 0.1);
+    
+    --is-active-column-max-width: 90px;
+    --users-name-column-min-width: 210px;
+}
+
+.js-grid-container {
+    container-type: inline-size;
+}
+
+.js-grid {
+    display: grid;
+    gap: var(--js-grid-gap-y) var(--js-grid-gap-x);
+    border-bottom: 1px solid var(--js-grid-border-color);
+    grid-auto-flow: dense;
+    font-size:0.9em;
+}
+
+.js-child-grid {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-flow: dense;
+    grid-column: 1 / -1;
+}
+
+.js-grid-col-xxl,
+.js-grid-col-xl,
+.js-grid-col-lg,
+.js-grid-col-md,
+.js-grid-col-sm,
+.js-grid-col {
+    grid-column: 1 / -1;
+}
+
+.js-grid-row-wrapper,
+.js-grid-header,
+.js-grid-footer,
+.js-grid-body {
+    display: contents;
+}
+
+.js-grid-row-wrapper > div {
+    background-color: var(--js-grid-bg-color);
+    padding: .5rem .5rem;
+    border-bottom: var(--bs-border-width) solid var(--js-grid-border-color);
+    align-content:center;
+}
+
+.js-grid-hover .js-grid-body .js-grid-row-wrapper:hover > div {
+    background-color: var(--js-grid-bg-hover-color);
+}
+
+.js-grid-header > div {
+    background-color: var(--js-grid-bg-color);
+    padding: .5rem .5rem;
+    border-bottom: var(--bs-border-width) solid var(--js-grid-border-color);
+    font-weight: bold;
+}
+
+.js-grid-striped .js-grid-body .js-grid-row-wrapper:nth-child(odd) > div {
+    --js-grid-bg-color: var(--js-grid-bg-striped-color);
+}
+
+@container (min-width: 576px) {
+    .js-grid-col-sm {
+        grid-column: unset;
+    }
+}
+
+@container (min-width: 768px) {
+    .js-grid-col-md {
+        grid-column: unset;
+    }
+}
+
+@container (min-width: 992px) {
+    .js-grid-col-lg {
+        grid-column: unset;
+    }
+}
+
+@container (min-width: 1200px) {
+    .js-grid-col-xl {
+        grid-column: unset;
+    }
+}
+
+@container (min-width: 1400px) {
+    .js-grid-col-xxl {
+        grid-column: unset;
+    }
+}
+
+.js-grid-row-wrapper.filters-row > div {
+    --js-grid-bg-color: rgb(242 253 255);
+}
+
+.js-grid-row-wrapper.add-new-row > div {
+    --js-grid-bg-color: rgb(245 255 245);
+}
+
+
+.js-sticky {
+    top: 0;
+    position: sticky;
+    z-index: 1020;
+}
+
+/* used to make sticky headers work */
+.child-grid {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-flow: dense;
+    grid-column: 1 / -1;
+}
+
+
+/* end DCI grid ***************************************************************/
+
+
+.global-search-grid-container {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    width: 100%;
+    --js-grid-bg-color: transparent;
+    row-gap: 1rem;
+}
+
+.global-search-grid-results-body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr)
+}
+
+.global-search-grid-filters-body {
+    display: grid;
+    grid-template-columns: repeat(1, auto);
+}
+
+.global-search-grid-filters-border {
+    border-right: var(--bs-border-width) solid var(--js-grid-border-color);
+}
+
+.js-grid.js-grid-row-highlighting .js-grid-row-wrapper:has(.invalid),
+.js-grid.js-grid-row-highlighting .js-grid-row-wrapper:has(.validation-message) {
+  --js-grid-bg-color: #fff3cd;
+  --js-grid-bg-striped-color: #f3e6c0;
+  --js-grid-bg-hover-color: #eadfc3;
+}
