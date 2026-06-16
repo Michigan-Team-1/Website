@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="10.0.7" />
+    <PackageReference Include="QuestPDF" Version="2026.6.0" />
   </ItemGroup>
 
   <ItemGroup>
