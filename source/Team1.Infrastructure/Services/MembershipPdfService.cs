@@ -1,18 +1,18 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Team1.Infrastructure.Services;
 
-public class MembershipPdfService : BaseService
+public class MembershipPdfService
 {
-    public byte[] GenerateApplication()
+    static MembershipPdfService()
     {
         QuestPDF.Settings.License = LicenseType.Community;
+    }
 
+    public byte[] GenerateApplication()
+    {
         return Document.Create(container =>
         {
             container.Page(page =>
