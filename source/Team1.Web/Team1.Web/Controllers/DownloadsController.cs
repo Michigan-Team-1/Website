@@ -8,16 +8,30 @@ namespace Team1.Web.Controllers;
 public class DownloadsController : BaseController
 {
     private readonly MembershipPdfService _membershipPdfService;
+    private readonly IWebHostEnvironment _env;
+    private readonly IHttpClientFactory _httpClientFactory;
 
-    public DownloadsController(MembershipPdfService membershipPdfService)
+    public DownloadsController(
+        MembershipPdfService membershipPdfService,
+        IWebHostEnvironment env,
+        IHttpClientFactory httpClientFactory)
     {
         _membershipPdfService = membershipPdfService;
+        _env = env;
+        _httpClientFactory = httpClientFactory;
     }
 
     [HttpGet("membership-application")]
-    public IActionResult MembershipApplication()
+    public async Task<IActionResult> MembershipApplication()
     {
-        var pdfBytes = _membershipPdfService.GenerateApplication();
-        return File(pdfBytes, "application/pdf", "Michigan-Team1-Membership-Application.pdf");
+        var client = _httpClientFactory.CreateClient();
+
+        var logoBytes = await client.GetByteArrayAsync(
+            $"{Request.Scheme}://{Request.Host}/logo.png");
+
+        var pdfBytes = _membershipPdfService.GenerateApplication(logoBytes);
+
+        return File(pdfBytes, "application/pdf",
+            "Michigan-Team1-Membership-Application.pdf");
     }
 }
