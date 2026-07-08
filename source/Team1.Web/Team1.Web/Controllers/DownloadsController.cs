@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Team1.Infrastructure.Services;
+using Team1.Infrastructure.Services.Users;
 
 namespace Team1.Web.Controllers;
 
@@ -29,8 +30,12 @@ public class DownloadsController : BaseController
         var logoBytes = await client.GetByteArrayAsync(
             $"{Request.Scheme}://{Request.Host}/logo.png");
 
-        var pdfBytes = _membershipPdfService.GenerateApplication(logoBytes);
+        var usersGet = GetService<UsersGet>();
 
+        var secretary = await usersGet.GetSecretary();
+
+
+        var pdfBytes = _membershipPdfService.GenerateApplication(secretary, logoBytes);
         return File(pdfBytes, "application/pdf",
             "Michigan-Team1-Membership-Application.pdf");
     }

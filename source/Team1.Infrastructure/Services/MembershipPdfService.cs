@@ -1,6 +1,7 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using Team1.Infrastructure.Dtos.Users;
 
 namespace Team1.Infrastructure.Services;
 
@@ -11,7 +12,7 @@ public class MembershipPdfService
         QuestPDF.Settings.License = LicenseType.Community;
     }
 
-    public byte[] GenerateApplication(byte[]? logoBytes = null)
+    public byte[] GenerateApplication(UserDto? secretary,byte[]? logoBytes = null)
     {
         return Document.Create(container =>
         {
@@ -21,7 +22,7 @@ public class MembershipPdfService
                 page.Margin(0.6f, Unit.Inch);
                 page.DefaultTextStyle(x => x.FontSize(10).FontFamily("Arial"));
 
-                page.Content().Element(c => ComposeContent(c, logoBytes));
+                page.Content().Element(c => ComposeContent(c, secretary, logoBytes));
             });
         }).GeneratePdf();
 
@@ -29,7 +30,7 @@ public class MembershipPdfService
 
 
     // MAIN CONTENT
-    private void ComposeContent(IContainer container, byte[]? logoBytes)
+    private void ComposeContent(IContainer container,UserDto? secretary,byte[]? logoBytes)
     {
         container.Column(col =>
         {
@@ -68,9 +69,37 @@ public class MembershipPdfService
                 row.RelativeItem().Column(c =>
                 {
                     c.Item().Text("Team-1 Membership").Bold();
-                    c.Item().Text("c/o Robert Schultz").Bold();
-                    c.Item().Text("5402 Red Fox Drive").Bold();
-                    c.Item().Text("Brighton, MI 48114").Bold();
+
+                    if (secretary != null)
+                    {
+                        var address = secretary.Addresses.FirstOrDefault();
+
+                        c.Item().Text($"c/o {secretary.FirstName} {secretary.LastName}").Bold();
+
+                        if (address != null)
+                        {
+                            if (!string.IsNullOrWhiteSpace(address.AddressObj.Address1))
+                                c.Item().Text(address.AddressObj.Address1).Bold();
+
+                            if (!string.IsNullOrWhiteSpace(address.AddressObj.Address2))
+                                c.Item().Text(address.AddressObj.Address2).Bold();
+
+                            var zip = address.AddressObj.PostalCode;
+
+                            if (!string.IsNullOrWhiteSpace(zip))
+                            {
+                                zip = zip.Replace("-", "");
+
+                                if (zip.Length == 9)
+                                    zip = $"{zip[..5]}-{zip[5..]}";
+                            }
+
+                            c.Item().Text(
+                                $"{address.AddressObj.City}, " +
+                                $"{address.AddressObj.GoverningDistrictName} {zip}")
+                            .Bold();
+                        }
+                    }
                 });
             });
 
