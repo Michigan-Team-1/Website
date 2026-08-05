@@ -15,9 +15,6 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="QuestPDF" Version="2026.6.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
