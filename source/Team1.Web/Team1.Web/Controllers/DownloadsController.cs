@@ -10,30 +10,35 @@ public class DownloadsController : BaseController
 {
     private readonly MembershipPdfService _membershipPdfService;
     private readonly IWebHostEnvironment _env;
-    private readonly IHttpClientFactory _httpClientFactory;
 
     public DownloadsController(
         MembershipPdfService membershipPdfService,
-        IWebHostEnvironment env,
-        IHttpClientFactory httpClientFactory)
+        IWebHostEnvironment env)
     {
         _membershipPdfService = membershipPdfService;
         _env = env;
-        _httpClientFactory = httpClientFactory;
     }
 
     [HttpGet("membership-application")]
     public async Task<IActionResult> MembershipApplication()
     {
-        var client = _httpClientFactory.CreateClient();
+        var logoFile = _env.WebRootFileProvider.GetFileInfo("logo.png");
 
-        var logoBytes = await client.GetByteArrayAsync(
-            $"{Request.Scheme}://{Request.Host}/logo.png");
+        if (!logoFile.Exists)
+        {
+            return NotFound("logo.png not found via WebRootFileProvider");
+        }
+
+        byte[] logoBytes;
+        using (var stream = logoFile.CreateReadStream())
+        using (var ms = new MemoryStream())
+        {
+            await stream.CopyToAsync(ms);
+            logoBytes = ms.ToArray();
+        }
 
         var usersGet = GetService<UsersGet>();
-
         var secretary = await usersGet.GetSecretary();
-
 
         var pdfBytes = _membershipPdfService.GenerateApplication(secretary, logoBytes);
         return File(pdfBytes, "application/pdf",

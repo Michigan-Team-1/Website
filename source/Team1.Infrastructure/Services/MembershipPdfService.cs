@@ -1,6 +1,7 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Text;
 using Team1.Infrastructure.Dtos.Users;
 
 namespace Team1.Infrastructure.Services;
@@ -11,6 +12,7 @@ public class MembershipPdfService
     {
         QuestPDF.Settings.License = LicenseType.Community;
     }
+    private int membershipdues = 30;
 
     public byte[] GenerateApplication(UserDto? secretary,byte[]? logoBytes = null)
     {
@@ -94,9 +96,9 @@ public class MembershipPdfService
                                     zip = $"{zip[..5]}-{zip[5..]}";
                             }
 
+                             
                             c.Item().Text(
-                                $"{address.AddressObj.City}, " +
-                                $"{address.AddressObj.GoverningDistrictName} {zip}")
+                                $"{address.AddressObj.City}, {address.AddressObj.GoverningDistrictName} {zip}")
                             .Bold();
                         }
                     }
@@ -108,7 +110,7 @@ public class MembershipPdfService
             //Dues line 
             col.Item().Text(t =>
             {
-                t.Span("Dues are $30 per year, make checks payable to: ").Bold();
+                t.Span($"Dues are ${membershipdues} per year, make checks payable to: ").Bold();
                 t.Span("Michigan Team-1").Bold().FontSize(12);
             });
 
@@ -228,22 +230,25 @@ public class MembershipPdfService
 
             col.Item().PaddingTop(14);
 
+
+            var sb = new StringBuilder();
+            sb.Append("I am applying for TRIPOLI Prefecture 9, (Michigan Team-1) membership status. ");
+            sb.Append("I agree to all regulations, safety codes, rules and I am a member in good standing ");
+            sb.Append("with the TRIPOLI ROCKETRY ASSOCIATION, INC. It is further understood that by my ");
+            sb.Append("signature the purpose and objectives of our group is scientific and recreational.");
+            
+
+
             //Paragraph 1
-            col.Item().Text(
-                "I am applying for TRIPOLI Prefecture 9, (Michigan Team-1) membership status. " +
-                "I agree to all regulations, safety codes, rules and I am a member in good standing " +
-                "with the TRIPOLI ROCKETRY ASSOCIATION, INC. It is further understood that by my " +
-                "signature the purpose and objectives of our group is scientific and recreational."
-            ).FontSize(9).LineHeight(1.3f);
+            col.Item().Text(sb.ToString()).FontSize(9).LineHeight(1.3f);
 
             col.Item().PaddingTop(8);
-
+            sb.Clear();
+            sb.Append("I also agree to hold harmless TRIPOLI Prefecture 9, (Michigan TEAM-1) and TRIPOLI ");
+            sb.Append("ROCKETRY ASSOCIATION, INC. from any liability of group activities. This will remain ");
+            sb.Append("in effect until I submit a letter of resignation or my membership is allowed to lapse.");
             //Paragraph 2
-            col.Item().Text(
-                "I also agree to hold harmless TRIPOLI Prefecture 9, (Michigan TEAM-1) and TRIPOLI " +
-                "ROCKETRY ASSOCIATION, INC. from any liability of group activities. This will remain " +
-                "in effect until I submit a letter of resignation or my membership is allowed to lapse."
-            ).FontSize(9).LineHeight(1.3f);
+            col.Item().Text( sb.ToString()).FontSize(9).LineHeight(1.3f);
 
             col.Item().PaddingTop(14);
 
