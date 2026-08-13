@@ -258,4 +258,42 @@ public class UsersGet : BaseService
               Data = withRoleData ? r.Data : null
             }).ToListAsync();
   }
+
+
+    public Task<UserDto?> GetSecretary()
+    {
+        return (from u in db.UsersByFilter(UserPermissionService, true)
+                where !u.AuditFields.InactiveDateTime.HasValue
+                   && u.UserMemberTypes.Any(m => m.MemberTypeId == MemberTypeEnum.Secretary)
+                select new UserDto()
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+
+                    Addresses = u.Addresses
+                        .Where(a => !a.AuditFields.InactiveDateTime.HasValue)
+                        .Select(a => new AddressDto()
+                        {
+                            AddressId = a.AddressId,
+                            UserId = a.UserId,
+                            AddressObj = new AddressObjDto()
+                            {
+                                Address1 = a.AddressObj.Address1,
+                                Address2 = a.AddressObj.Address2,
+                                Address3 = a.AddressObj.Address3,
+                                City = a.AddressObj.City,
+                                GoverningDistrictId = a.AddressObj.GoverningDistrictId,
+                                PostalCode = a.AddressObj.PostalCode,
+                                CountryId = a.AddressObj.CountryId,
+
+                                GoverningDistrictName = a.AddressObj.GoverningDistrict != null
+                                ? a.AddressObj.GoverningDistrict.Name
+                                : null,
+                            }
+                        }).ToList()
+                }).SingleOrDefaultAsync();
+    }
+
+
 }

@@ -15,6 +15,7 @@
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
+
   <ItemGroup>
     <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
   </ItemGroup>

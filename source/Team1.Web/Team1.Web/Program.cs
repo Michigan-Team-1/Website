@@ -1,13 +1,16 @@
 using Blazored.Modal;
 using Blazored.Toast;
-using FluentValidation.AspNetCore;
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
+using Services.FileManager;
 using Team1.Entities;
+using Team1.Infrastructure.Dtos;
+using Team1.Infrastructure.Services;
 using Team1.Infrastructure.Services.Announcements;
 using Team1.Infrastructure.Services.Events;
 using Team1.Infrastructure.Services.Locations;
@@ -22,8 +25,6 @@ using Team1.Web.Common.UserIdentity;
 using Team1.Web.Common.UserIdentity.Policies;
 using Team1.Web.Components;
 using Team1.Web.Components.Account;
-using Team1.Infrastructure.Dtos;
-using Services.FileManager;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +46,8 @@ builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
 builder.Services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+builder.Services.AddScoped<MembershipPdfService>();
+
 
 builder.Services.AddAuthentication(options =>
     {

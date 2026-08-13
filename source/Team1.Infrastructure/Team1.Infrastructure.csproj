@@ -31,6 +31,7 @@
     <ProjectReference Include="..\Services.Filemanager\Services.FileManager.csproj" />
     <ProjectReference Include="..\Team1.Entities\Team1.Entities.csproj" />
     <ProjectReference Include="..\Team1.Infrastructure.Dtos\Team1.Infrastructure.Dtos.csproj" />
+	  <PackageReference Include="QuestPDF" Version="2026.6.0" />
     <ProjectReference Include="..\Team1.Model\Team1.Model.csproj" />
   </ItemGroup>
 
