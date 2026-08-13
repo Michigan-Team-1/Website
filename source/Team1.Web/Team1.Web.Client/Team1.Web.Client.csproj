@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="wwwroot\logo-white.png" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="Shared\FormControls\EditCheckbox.razor" />
     <None Include="Shared\FormControls\EditDate.razor" />
     <None Include="Shared\FormControls\EditNumber.razor" />
@@ -23,9 +19,6 @@
     <None Include="Shared\SmartishTableHelpers\SmartishTablePager.razor" />
     <None Include="Shared\UnsavedChangesNotification\InputUnsavedChangesNotifcation.razor" />
     <None Include="Shared\UnsavedChangesNotification\UnsavedChangesNotifcation.razor" />
-    <None Include="wwwroot\logo-white.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -45,6 +38,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\logo-white.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\logo.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
