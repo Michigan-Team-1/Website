@@ -1,5 +1,5 @@
 ﻿<CascadingBlazoredModal DisableBackgroundCancel="true" UseCustomLayout="true">
-  <Router AppAssembly="@typeof(Program).Assembly">
+  <Router AppAssembly="@typeof(Program).Assembly" NotFoundPage="typeof(Pages.NotFound)">
     <Found Context="routeData">
       <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
         <NotAuthorized>

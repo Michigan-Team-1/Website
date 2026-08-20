@@ -48,7 +48,7 @@ public class UsersGet : BaseService
                   CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
                   UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
                 },
-              }).ToListAsync();
+              }).AsSplitQuery().ToListAsync();
     }
 
     if (UserPermissionService.UserClaimModel!.IsAuthenticated)
@@ -61,7 +61,7 @@ public class UsersGet : BaseService
         IsActive = !u.AuditFields.InactiveDateTime.HasValue,
         CertificationLevel = u.CertificationLevel,
         UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
-      }).ToListAsync();
+      }).AsSplitQuery().ToListAsync();
 
     return query.Select(u => new UserDto()
     {
@@ -71,7 +71,7 @@ public class UsersGet : BaseService
       IsActive = !u.AuditFields.InactiveDateTime.HasValue,
       CertificationLevel = u.CertificationLevel,
       UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
-    }).ToListAsync();
+    }).AsSplitQuery().ToListAsync();
   }
 
   /// <summary>
@@ -94,7 +94,7 @@ public class UsersGet : BaseService
               TripoliNumber = u.TripoliNumber,
               NarNumber = u.NarNumber,
               UserMemberTypes = u.UserMemberTypes.Select(s => new UserMemberTypeDto() { MemberTypeId = s.MemberTypeId, UserId = s.UserId }).ToList(),
-            }).ToListAsync();
+            }).AsSplitQuery().ToListAsync();
   }
 
   /// <summary>
@@ -171,7 +171,7 @@ public class UsersGet : BaseService
                 CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
                 UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
               },
-            }).SingleOrDefaultAsync();
+            }).AsSplitQuery().SingleOrDefaultAsync();
   }
 
   /// <summary>
@@ -233,7 +233,7 @@ public class UsersGet : BaseService
                 CreatedByName = createdBy != null ? string.Concat(createdBy.FirstName, " ", createdBy.LastName) : " - ",
                 UpdatedByName = updatedBy != null ? string.Concat(updatedBy.FirstName, " ", updatedBy.LastName) : " - "
               },
-            }).SingleOrDefaultAsync();
+            }).AsSplitQuery().SingleOrDefaultAsync();
   }
 
   /// <summary>
@@ -292,7 +292,7 @@ public class UsersGet : BaseService
                                 : null,
                             }
                         }).ToList()
-                }).SingleOrDefaultAsync();
+                }).AsSplitQuery().SingleOrDefaultAsync();
     }
 
 

@@ -25,13 +25,13 @@
   <script src="@Assets["theme.js"]"></script>
   <script src="@Assets["tinyMce.js"]"></script>
   <script src="@Assets["inputmask.js"]"></script>
-  <script src="@Assets["_framework/blazor.web.js"]" autostart="true"></script>
+  <script src="@Assets["_framework/blazor.web.js"]"></script>
   <script src="@Assets["_content/TinyMCE.Blazor/tinymce-blazor.js"]"></script>
   <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
   <script>
-    Blazor.start({
-      ssr: { disableDomPreservation: true }
-    });
+    // Blazor.start({
+    //   ssr: { disableDomPreservation: true }
+    // });
 
     function inputmaskInit(id) {
       Inputmask().mask(document.getElementById(id));

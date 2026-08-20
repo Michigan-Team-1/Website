@@ -16,9 +16,9 @@
           <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="/UserProfile"><i class="fas fa-user fa-fw"></i> My Account</a>
           <a class="dropdown-item" href="/Account/Manage/ChangePassword"><i class="fa-solid fa-key fa-fw"></i> Change Password</a>
-          <a class="dropdown-item" href=""><i class="fas fa-user fa-fw"></i> Renew Online!</a>
+          @* <a class="dropdown-item" href=""><i class="fas fa-user fa-fw"></i> Renew Online!</a> *@
           <div class="dropdown-divider"></div>
-          <form action="Account/Logout" method="post">
+          <form action="account/logout" method="post">
             <AntiforgeryToken />
             <input type="hidden" name="ReturnUrl" value="@currentUrl" />
             <button type="submit" class="dropdown-item">

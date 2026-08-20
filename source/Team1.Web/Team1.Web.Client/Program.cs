@@ -30,6 +30,7 @@ builder.Services.AddAuthorizationCore(config =>
   config.AddPolicy(PolicyNames.UserAddEditDelete, policy => policy.Requirements.Add(new UserAddEditDeleteRequirement()));
   config.AddPolicy(PolicyNames.UserProfileEdit, policy => policy.Requirements.Add(new UserProfileEditRequirement()));
 });
+
 builder.Services.AddScoped<IAuthorizationHandler, AnnouncementAddEditDelete>();
 builder.Services.AddScoped<IAuthorizationHandler, CanApprovePicture>();
 builder.Services.AddScoped<IAuthorizationHandler, CanImpersonate>();
